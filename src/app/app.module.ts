@@ -1,3 +1,4 @@
+import { ExpandableHeader } from './../components/expandable-header/expandable-header';
 import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
@@ -13,7 +14,8 @@ import { SplashScreen } from '@ionic-native/splash-screen';
   declarations: [
     MyApp,
     HomePage,
-    ListPage
+    ListPage,
+    ExpandableHeader
   ],
   imports: [
     BrowserModule,

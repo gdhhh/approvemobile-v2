@@ -1,0 +1,34 @@
+<ion-content>
+  <ion-slides pager="false" autoplay="2000" loop="true" speed="1500" effect="fade">
+    <ion-slide class="slide-background swiper-no-swiping" *ngFor="let background of backgrounds" [ngStyle]="{'background-image': 'url(' + background +')'}">
+    </ion-slide>
+  </ion-slides>
+  <div class="login-container" >
+    <img class="logo" src="assets/img/logo/logo-nimble.png" />
+    <form (submit)="doLogin()" [formGroup]="loginForm">
+      <ion-item>
+        <ion-input type="text" formControlName="username" placeholder="请输入OA账号"></ion-input>
+      </ion-item>
+      <ion-card *ngIf="formErrors?.username" color="danger" class="animation-alert">
+        <ion-card-content>
+          {{formErrors?.username}}
+        </ion-card-content>
+      </ion-card>
+      <ion-item>
+        <ion-input type="password" formControlName="password" placeholder="请输入密码..." ></ion-input>
+      </ion-item>
+      <ion-card *ngIf="formErrors?.password" color="danger" class="animation-alert">
+        <ion-card-content>
+          {{formErrors?.password}}
+        </ion-card-content>
+      </ion-card>
+      <button ion-button margin color="danger">登录</button>
+      <ion-card *ngIf="formErrors?.invalid" color="danger" class="animation-alert">
+        <ion-card-content>
+          {{formErrors?.invalid}}
+        </ion-card-content>
+      </ion-card>
+      <!--<p (click)="openResetPassword()"><strong>Forgot your password?</strong></p>-->
+    </form>
+  </div>
+</ion-content>

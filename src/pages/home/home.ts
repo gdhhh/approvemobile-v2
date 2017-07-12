@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { Component, ViewChild } from '@angular/core';
+import { NavController, Slides, IonicPage } from 'ionic-angular';
 
 @Component({
   selector: 'page-home',
@@ -7,8 +7,31 @@ import { NavController } from 'ionic-angular';
 })
 export class HomePage {
 
-  constructor(public navCtrl: NavController) {
+  @ViewChild('slider') slider: Slides;
 
+  slides = [
+    {
+      imageUrl: "assets/img/background/bg-1.png",
+      private: false
+    },
+    {
+      imageUrl: "assets/img/background/bg-3.png",
+      private: false
+    },
+    {
+      imageUrl: "assets/img/background/bg-5.png",
+      private: true
+    },
+    {
+      imageUrl: "assets/img/background/bg-7.png",
+      private: true
+    }
+  ]
+
+
+  constructor(public navCtrl: NavController) {
   }
+
+ 
 
 }

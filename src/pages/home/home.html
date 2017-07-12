@@ -1,18 +1,60 @@
 <ion-header>
+
+  <expandable-header [scrollArea]="mycontent" headerHeight="125">
+    <ion-slides autoplay="2500" loop="true" effect="fade">
+      <ion-slide *ngFor="let slide of slides;let i = index" [ngStyle]="{'background' : 'url(' + slide.imageUrl + ')'}">
+      </ion-slide>
+    </ion-slides>
+  </expandable-header>
+
   <ion-navbar>
-    <button ion-button menuToggle>
-      <ion-icon name="menu"></ion-icon>
-    </button>
-    <ion-title>Home</ion-title>
+    <ion-grid>
+      <ion-row class="header-button-area">
+        <ion-col calss="header-button">
+          <div class="wrapper">
+            <a href="#" class="button" style="background-image:url('assets/buttons/KK.ico')"></a>
+          </div>
+          <div>KK</div>
+          <ion-badge class="notifications-badge" color="danger">5</ion-badge>
+        </ion-col>
+        <ion-col class="header-button">
+          <div class="wrapper">
+            <a href="#" class="button" style="background-image:url('assets/buttons/nc.png')"></a>
+            <div>NC业务审批</div>
+          </div>
+          <ion-badge class="notifications-badge" color="danger">5</ion-badge>
+        </ion-col>
+        <ion-col class="header-button">
+          <div>
+            <button id="notification-button" ion-button clear>
+                <ion-icon name="notifications">
+                  <ion-badge class="notifications-badge" color="danger">5</ion-badge>
+                </ion-icon>              
+            </button>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
   </ion-navbar>
 </ion-header>
 
-<ion-content padding>
-  <h3>Ionic Menu Starter</h3>
-
-  <p>
-    If you get lost, the <a href="http://ionicframework.com/docs/v2">docs</a> will show you the way.
-  </p>
-
-  <button ion-button secondary menuToggle>Toggle Menu</button>
+<ion-content fullscreen #mycontent>
+  <h1>1</h1>
+  <h1>1</h1>
+  <h1>1</h1>
+  <h1>1</h1>
+  <h1>1</h1>
+  <h1>1</h1>
+  <h1>1</h1>
+  <h1>1</h1>
+  <h1>1</h1>
+  <h1>1</h1>
+  <h1>1</h1>
+  <h1>1</h1>
+  <h1>1</h1>
+  <h1>1</h1>
+  <h1>1</h1>
+  <h1>1</h1>
+  <h1>1</h1>
+  <h1>1</h1>
 </ion-content>
