@@ -8,7 +8,16 @@
 </ion-header>
 
 <ion-content>
-  <ion-list>
+  <div animates #animation="animates" text-center>
+    <button ion-button (click)="animation.start({type: 'rubberBand', duration: '1000'})">Click me!</button>
+  </div>
+  <div animates #animation1="animates" text-center>
+    <button ion-button (click)="animation1.start({type: 'rubberBand', duration: '1000'})">Click me!</button>
+  </div>
+  <div animates #animation2="animates" text-center>
+    <button ion-button (click)="animation2.start({type: 'rubberBand', duration: '1000'})">Click me!</button>
+  </div>
+   <!-- <ion-list>
     <button ion-item *ngFor="let item of items" (click)="itemTapped($event, item)">
       <ion-icon [name]="item.icon" item-left></ion-icon>
       {{item.title}}
@@ -19,5 +28,6 @@
   </ion-list>
   <div *ngIf="selectedItem" padding>
     You navigated here from <b>{{selectedItem.title}}</b>
-  </div>
+  </div>  -->
+
 </ion-content>

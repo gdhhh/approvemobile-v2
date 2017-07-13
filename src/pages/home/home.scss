@@ -1,86 +1,38 @@
 page-home {
-  h2 {
-    color: white;
-  }
   ion-slides,
   .swiper-container {
-    height: 70vh;
+    height: 30vh;
     width: auto;
   }
   .swiper-slide {
     background-size: cover !important;
     background-position: center !important;
   }
-  .swiper-pagination-bullet {
-    background-color: white;
-  } // Custom Pagination Style 1
-  .custom-pagination.swiper-pagination-bullet {
-    width: 20px;
-    height: 20px;
-    text-align: center;
-    line-height: 20px;
-    font-size: 12px;
-    color: #000;
-    opacity: 1;
-    background: rgba(0, 0, 0, 0.2);
-  }
-  .custom-pagination.swiper-pagination-bullet-active {
-    color: #fff;
-    background: #f52c2c;
-    transition: transform 0.3s;
-    transform: scale(1.5);
-  } // Custom Pagination Style 2
-  .custom-pagination-2.swiper-pagination-bullet {
-    width: 20px;
-    height: 20px;
-    text-align: center;
-    font-size: 12px;
-    opacity: 1;
-    line-height: 18px;
-    color: #fff;
-    background: rgba(0, 0, 0, 0.2);
-    border: 1px solid white;
-  }
-  .custom-pagination-2.swiper-pagination-bullet-active {
-    color: #fff;
-    border-color: #a0f;
-    background: transparent;
-  } // Custom Pagination with Icons
-  .custom-pagination-3.swiper-pagination-bullet {
-    width: 20px;
-    height: 20px;
-    opacity: 1;
-    border-radius: 0;
-    background-size: cover;
-    background-position: center;
-  }
-  .custom-pagination-3.swiper-pagination-bullet-active {
-    width: 25px;
-    height: 25px;
-    transition: transform 0.3s;
-    transform: scale(1.5);
-  } // Icons developed by Paomedia: https://www.iconfinder.com/iconsets/small-n-flat
-  .swiper-pagination-bullet.bullet-icon-1 {
-    background: url(../assets/icon/camera.svg) no-repeat;
-  }
-  .bullet-icon-2 {
-    background: url(../assets/icon/map.svg) no-repeat;
-  }
-  .bullet-icon-3 {
-    background: url(../assets/icon/world.svg) no-repeat;
-  }
-  .bullet-icon-4 {
-    background: url(../assets/icon/heart.svg) no-repeat;
-  }
   ion-slides {
-    height: 20vh;
+    //height: 20vh;
     overflow: hidden;
   }
   ion-navbar {
-    height: 80px;
+    height: 95px;
   }
   .header-button-area {
     height: 80px;
+  }
+  ion-slide {
+    $item-ios-body-text-font-size: 5px;
+    $item-md-body-text-font-size:5px;
+    div {
+      button {
+        padding-left: 0px !important;
+        ion-icon{
+          margin-right: 6px !important;
+        }
+        ion-label{
+          margin-top: 0px !important;
+          margin-bottom: 0px !important;
+        }
+      }
+    }
   } //头部按钮
   $color: #2194E0;
   @keyframes sheen {
@@ -91,7 +43,7 @@ page-home {
       transform: skewY(-45deg) translateX(12.5em);
       transition: all 0.5s ease-in-out;
     }
-  }
+  } //角标
   #notification-button {
     position: relative;
     width: 42px;
@@ -102,18 +54,20 @@ page-home {
   .notifications-badge {
     background-color: red;
     position: absolute;
-    top: 8px;
-    right: 0px;
+    top: -10px;
+    right: -10px;
     border-radius: 100%;
   }
   .wrapper {
     display: block;
+    text-align: center;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
   }
   .button {
+    background-size: 100%;
     background-repeat: no-repeat;
     height: 50px;
     width: 50px;
