@@ -1,4 +1,4 @@
-import { Splash } from './../pages/splash/splash';
+import { SplashPage } from './../pages/splash/splash';
 import { ExpandableHeader } from './../components/expandable-header/expandable-header';
 import { AnimationService, AnimatesDirective } from 'css-animator';
 import { BrowserModule } from '@angular/platform-browser';
@@ -18,7 +18,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     HomePage,
     ListPage,
     ExpandableHeader,
-    Splash,
+    SplashPage,
     AnimatesDirective
   ],
   imports: [
@@ -29,6 +29,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
   entryComponents: [
     MyApp,
     HomePage,
+    SplashPage,
     ListPage
   ],
   providers: [
