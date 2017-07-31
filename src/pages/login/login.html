@@ -23,9 +23,9 @@
         </ion-card-content>
       </ion-card>
       <button ion-button margin color="danger">登录</button>
-      <ion-card *ngIf="formErrors?.invalid" color="danger" class="animation-alert">
+      <ion-card *ngIf="formErrors?.error" color="danger" class="animation-alert">
         <ion-card-content>
-          {{formErrors?.invalid}}
+          {{formErrors?.error}}
         </ion-card-content>
       </ion-card>
       <!--<p (click)="openResetPassword()"><strong>Forgot your password?</strong></p>-->

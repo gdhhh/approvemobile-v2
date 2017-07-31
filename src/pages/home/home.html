@@ -14,19 +14,19 @@
           <div class="wrapper" animates #animation="animates">
             <a href="#" class="button" style="background-image:url('assets/buttons/KK.ico')" (click)="animation.start({type: 'wobble', dulation:'1000'})"></a>
             <ion-badge class="notifications-badge" color="danger">5</ion-badge>
-            <label>KK</label>
+            <label>KK1</label>
           </div>
         </ion-col>
         <ion-col>
           <div class="wrapper">
-            <a href="#" class="button" style="background-image:url('assets/buttons/nc.png')"></a>
+            <a (click)="clickButton()" class="button" style="background-image:url('assets/buttons/nc.png')"></a>
             <ion-badge class="notifications-badge" color="danger">5</ion-badge>
             <label>NC审批</label>
           </div>
         </ion-col>
         <ion-col>
           <div class="wrapper">
-            <a href="#" class="button" style="background-image:url('assets/buttons/oa.png')"></a>
+            <a (click)="navToPage(1)" class="button" style="background-image:url('assets/buttons/oa.png')"></a>
             <ion-badge class="notifications-badge" color="danger">5</ion-badge>
             <label>OA审批</label>
           </div>
@@ -44,7 +44,7 @@
         <ion-icon name="logo-twitch" color="danger" style="font-size:50px"></ion-icon>
       </div>
 
-      <span>集团公告</span>
+      <span>集团公告1</span>
     </ion-col>
     <ion-col col-10>
       <ion-slides autoplay="2500" loop="true" pager direction="vertical" autoplayDisableOnInteraction="false">
@@ -141,4 +141,5 @@
       <p>薛亚飞向您推荐文档：HR-013-R三级体系全流程考核管理办法</p>
     </ion-item>
   </ion-card>
+
 </ion-content>
