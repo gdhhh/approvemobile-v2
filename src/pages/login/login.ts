@@ -1,8 +1,14 @@
-import {HomePage} from '../home/home';
+import { LoginServiceProvider } from './../../providers/login-service/login-service';
+import { UserInfo } from './../../providers/constant/constant';
+import { HomePage } from '../home/home';
 import { forbiddenNameValidator } from './../../shared/forbidden-string.directive';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Component } from '@angular/core';
 import { IonicPage, NavController } from 'ionic-angular';
+
+import xml2js from 'xml2js';
+
+import 'rxjs/add/operator/map';
 
 @IonicPage()
 @Component({
@@ -37,13 +43,18 @@ export class LoginPage {
     'invalid': {
       'invalid': '您的账号或密码有误，请检查!',
       'noright': '您的设备没有权限登录，请拨打分机 5300 IT热线申请开通权限。',
-      'notallowed': '你的账号密码为空，或者存在特殊字符，请检查!'
+      'notallowed': '您的账号密码为空，或者存在特殊字符，请检查!',
+      'unknowerror': '此错误一般由于网络中断导致，请检查数据网络或wifi网络是否通畅，如果此问题仍存在，请联系管理员。'
     }
   };
 
   public loginForm: any;
 
-  constructor(public navCtrl: NavController, public formBuilder: FormBuilder) {
+  constructor(
+    public navCtrl: NavController,
+    public formBuilder: FormBuilder,
+    private loginService: LoginServiceProvider
+  ) {
     this.loginForm = formBuilder.group({
       username: ['', [Validators.required, forbiddenNameValidator(/ /i)]], //禁止空格字符
       password: ['', Validators.compose([Validators.minLength(3), Validators.maxLength(15),
@@ -56,31 +67,47 @@ export class LoginPage {
   }
 
   ionViewDidLoad() {
-    console.log('Hello LoginBackgroundSlider Page');
+
   }
 
   openResetPassword() {
   }
 
   doLogin() {
+    this.formErrors["error"] = undefined;
     if (!this.loginForm.valid) {
-      console.log("Invalid or empty data1");
-      this.formErrors["invalid"] = this.validationMessages["invalid"]["invalid"];
+      //检查账号密码是否有效。
+      this.formErrors["error"] = this.validationMessages["invalid"]["invalid"];
     } else {
-      let authenticated = true;
-      let noright = true;
+      UserInfo.prototype.userid = this.loginForm.value.username;
+      UserInfo.prototype.password = this.loginForm.value.password;
+      UserInfo.prototype.loginType = "manual";
+      UserInfo.prototype.projectId = "0000000001";
 
-      if (authenticated) {
-        let userName = this.loginForm.value.username;
-        let userPassword = this.loginForm.value.password;
-        console.log('user data', userName, userPassword);     
-        this.navCtrl.setRoot(HomePage); //跳转到首页
-      } else if( noright){
-         this.formErrors["noright"] = this.validationMessages["invalid"]["noright"];
-      }
-
-
+      this.loginService.doLogin(UserInfo.prototype).then(res => {
+        let loginResult;
+        xml2js.parseString(res.text(), function (err, result) {
+          loginResult = result.response
+        })
+        if (loginResult.SysMSG[0].tips[0] == "loginFail") {
+          //账号或密码错误，请核实后重新登录。
+          this.formErrors["error"] = this.validationMessages["invalid"]["invalid"];
+        } else if (loginResult.SysMSG[0].tips[0] == "DeviceAccessNotAllow") {
+          //您的设备没有授权登录此系统，请联系管理员开通权限。
+          this.formErrors["error"] = this.validationMessages["invalid"]["noright"];
+        } else if (loginResult.SysMSG[0].tips[0] == "loginOK") {
+          //登录成功，跳转到主页
+          this.navCtrl.setRoot(HomePage); //跳转到首页
+        }else{
+          this.formErrors["error"] = this.validationMessages["invalid"]["unknowerror"];
+        }
+        console.log(loginResult.SysMSG[0].tips[0])
+      }).catch(this.errorHandler);
     }
+  }
+
+  errorHandler(error: any){
+    console.log(error)
   }
 
   onValueChanged(data?: any) {

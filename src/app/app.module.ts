@@ -1,3 +1,5 @@
+import {HttpModule} from '@angular/http';
+import { OaPage } from './../pages/oa/oa';
 import { SplashPage } from './../pages/splash/splash';
 import { ExpandableHeader } from './../components/expandable-header/expandable-header';
 import { AnimationService, AnimatesDirective } from 'css-animator';
@@ -11,18 +13,26 @@ import { ListPage } from '../pages/list/list';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
+import { InAppBrowser } from '@ionic-native/in-app-browser';
+import { Device } from '@ionic-native/device';
+
+import { LoginServiceProvider } from './../providers/login-service/login-service';
+
+
 
 @NgModule({
   declarations: [
     MyApp,
     HomePage,
     ListPage,
+    OaPage,
     ExpandableHeader,
     SplashPage,
     AnimatesDirective
   ],
   imports: [
     BrowserModule,
+    HttpModule,
     IonicModule.forRoot(MyApp),
   ],
   bootstrap: [IonicApp],
@@ -30,13 +40,17 @@ import { SplashScreen } from '@ionic-native/splash-screen';
     MyApp,
     HomePage,
     SplashPage,
+    OaPage,
     ListPage
   ],
   providers: [
     StatusBar,
+    Device,
     SplashScreen,
+    InAppBrowser,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-    AnimationService
+    AnimationService,
+    LoginServiceProvider
   ]
 })
 export class AppModule {}
