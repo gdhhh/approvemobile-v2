@@ -4,7 +4,6 @@ import { URLSearchParams, Headers, Http } from '@angular/http';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
 
-import xml2js from 'xml2js';
 
 /*
 登录服务

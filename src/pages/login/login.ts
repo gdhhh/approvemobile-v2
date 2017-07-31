@@ -6,6 +6,8 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { Component } from '@angular/core';
 import { IonicPage, NavController } from 'ionic-angular';
 
+import { Toast } from '@ionic-native/toast';
+
 import xml2js from 'xml2js';
 
 import 'rxjs/add/operator/map';
@@ -53,6 +55,7 @@ export class LoginPage {
   constructor(
     public navCtrl: NavController,
     public formBuilder: FormBuilder,
+    private toast: Toast,
     private loginService: LoginServiceProvider
   ) {
     this.loginForm = formBuilder.group({
@@ -98,7 +101,7 @@ export class LoginPage {
         } else if (loginResult.SysMSG[0].tips[0] == "loginOK") {
           //登录成功，跳转到主页
           this.navCtrl.setRoot(HomePage); //跳转到首页
-        }else{
+        } else {
           this.formErrors["error"] = this.validationMessages["invalid"]["unknowerror"];
         }
         console.log(loginResult.SysMSG[0].tips[0])
@@ -106,8 +109,20 @@ export class LoginPage {
     }
   }
 
-  errorHandler(error: any){
-    console.log(error)
+  errorHandler(error: any) {
+    if (error.status == "0") {
+      this.toast.show(`网络连接存在问题，请检查网络！`, '5000', 'center').subscribe(toast => {
+        console.log(toast);
+      });
+    } else if (error.status.indexOf("4") == 0) {
+      this.toast.show(`客户端加载故障，错误代码：` + error.status, '5000', 'center').subscribe(toast => {
+        console.log(toast);
+      });
+    } else if (error.status.indexOf("5") == 0) {
+      this.toast.show(`服务器故障，错误代码：` + error.status, '5000', 'center').subscribe(toast => {
+        console.log(toast);
+      });
+    }
   }
 
   onValueChanged(data?: any) {
