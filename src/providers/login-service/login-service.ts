@@ -12,7 +12,7 @@ import 'rxjs/add/operator/toPromise';
 export class LoginServiceProvider {
   private headers: Headers;
   private serveradd = GlobalVar.server_address;
-  private urlActionUserLogin = this.serveradd + "/ActionUserLogin"
+  private urlActionUserLogin = this.serveradd + "ActionUserLogin"
 
 
   constructor(public http: Http) {

@@ -4,9 +4,10 @@ import { HomePage } from '../home/home';
 import { forbiddenNameValidator } from './../../shared/forbidden-string.directive';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Component } from '@angular/core';
-import { IonicPage, NavController } from 'ionic-angular';
+import { IonicPage, NavController, LoadingController } from 'ionic-angular';
 
-import { Toast } from '@ionic-native/toast';
+// import { Toast } from '@ionic-native/toast';
+// import { ToastController } from 'ionic-angular';
 
 import xml2js from 'xml2js';
 
@@ -55,7 +56,7 @@ export class LoginPage {
   constructor(
     public navCtrl: NavController,
     public formBuilder: FormBuilder,
-    private toast: Toast,
+    public loadingCtrl: LoadingController,
     private loginService: LoginServiceProvider
   ) {
     this.loginForm = formBuilder.group({
@@ -77,6 +78,7 @@ export class LoginPage {
   }
 
   doLogin() {
+    this.presentLoading();
     this.formErrors["error"] = undefined;
     if (!this.loginForm.valid) {
       //检查账号密码是否有效。
@@ -109,19 +111,14 @@ export class LoginPage {
     }
   }
 
+
   errorHandler(error: any) {
     if (error.status == "0") {
-      this.toast.show(`网络连接存在问题，请检查网络！`, '5000', 'center').subscribe(toast => {
-        console.log(toast);
-      });
+      alert("网络连接存在问题，请检查网络！");
     } else if (error.status.indexOf("4") == 0) {
-      this.toast.show(`客户端加载故障，错误代码：` + error.status, '5000', 'center').subscribe(toast => {
-        console.log(toast);
-      });
+      alert(`客户端加载故障，错误代码：` + error.status);
     } else if (error.status.indexOf("5") == 0) {
-      this.toast.show(`服务器故障，错误代码：` + error.status, '5000', 'center').subscribe(toast => {
-        console.log(toast);
-      });
+      alert(`服务器故障，错误代码：` + error.status);
     }
   }
 
@@ -141,6 +138,19 @@ export class LoginPage {
         }
       }
     }
+  }
+
+  presentLoading() {
+    let loading = this.loadingCtrl.create({
+      spinner: 'hide',
+      content: `
+      <div class="custom-spinner-container">
+        <div class="custom-spinner-box"></div>
+      </div>`,
+      dismissOnPageChange: true,
+      duration: 5000
+    });
+    loading.present();
   }
 
 }

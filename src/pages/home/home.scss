@@ -1,9 +1,9 @@
 page-home {
   ion-slides,
-  .swiper-container {
-    height: 30vh;
-    width: auto;
-  }
+  // .swiper-container {
+  //   height: 30vh;
+  //   width: auto;
+  // }
   .swiper-slide {
     background-size: cover !important;
     background-position: center !important;
@@ -20,14 +20,14 @@ page-home {
   }
   ion-slide {
     $item-ios-body-text-font-size: 5px;
-    $item-md-body-text-font-size:5px;
+    $item-md-body-text-font-size: 5px;
     div {
       button {
         padding-left: 0px !important;
-        ion-icon{
+        ion-icon {
           margin-right: 6px !important;
         }
-        ion-label{
+        ion-label {
           margin-top: 0px !important;
           margin-bottom: 0px !important;
         }
@@ -96,6 +96,48 @@ page-home {
     color: #fff;
     border-bottom: 4px solid darken($color, 10%);
     transform: skewX(-45deg) translateX(13.5em);
+  }
+
+  .notification{
+    height:120px;
+  }
+  .scroll-animate-container {
+    overflow: hidden;
+  }
+  .scroll-animate-container ion-list {
+    height: 100px;
+    position: relative;
+    animation: scoll 15s linear 0s infinite;
+  }
+  .scroll-animate-container ion-list:hover {
+    animation-play-state: paused;
+    -webkit-animation-play-state:paused; 
+  }
+  .scroll-animate-container ion-list ion-item {
+    padding: 0px;
+    margin: 0px;
+    min-height: 40px;
+    max-height: 40px;
+  }
+  // .scroll-animate-container ion-slide {
+  //   max-height: 120px;
+  //   min-height: 120px;
+  // }
+  .scroll-animate-container ion-list ion-item .item-inner {
+    min-height: 40px;
+    max-height: 40px;
+  }
+  .scroll-animate-container ion-list ion-item .input-wrapper{
+    min-height: 40px;
+    max-height: 40px;
+  }
+  .scroll-animate-container ion-list ion-item ion-icon {
+    padding: 0px !important;
+    margin: 0px !important;
+  }
+  .scroll-animate-container ion-list ion-label {
+    padding: 0px;
+    margin: 0px;
   }
 }
 

@@ -1,3 +1,5 @@
+import { InfoPage } from './../pages/info/info';
+import { TabsPage } from './../pages/tabs/tabs';
 import {HttpModule} from '@angular/http';
 import { OaPage } from './../pages/oa/oa';
 import { SplashPage } from './../pages/splash/splash';
@@ -17,6 +19,7 @@ import { InAppBrowser } from '@ionic-native/in-app-browser';
 import { Device } from '@ionic-native/device';
 import { Toast } from '@ionic-native/toast';
 
+
 import { LoginServiceProvider } from './../providers/login-service/login-service';
 
 
@@ -29,6 +32,8 @@ import { LoginServiceProvider } from './../providers/login-service/login-service
     OaPage,
     ExpandableHeader,
     SplashPage,
+    TabsPage,
+    InfoPage,
     AnimatesDirective
   ],
   imports: [
@@ -42,6 +47,8 @@ import { LoginServiceProvider } from './../providers/login-service/login-service
     HomePage,
     SplashPage,
     OaPage,
+    TabsPage,
+    InfoPage,
     ListPage
   ],
   providers: [

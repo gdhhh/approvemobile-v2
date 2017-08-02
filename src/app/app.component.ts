@@ -1,3 +1,5 @@
+import { TabsPage } from './../pages/tabs/tabs';
+import { InfoPage } from './../pages/info/info';
 import { md5 } from './../utils/md5';
 import { UserInfo } from './../providers/constant/constant';
 import { LoginPage } from './../pages/login/login';
@@ -7,6 +9,7 @@ import { ModalController, Nav, Platform } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { Device } from '@ionic-native/device';
+import { InAppBrowser } from '@ionic-native/in-app-browser';
 
 import { HomePage } from '../pages/home/home';
 import { ListPage } from '../pages/list/list';
@@ -20,8 +23,8 @@ declare var window: any;
 export class MyApp {
   @ViewChild(Nav) nav: Nav;
 
-  rootPage: any = 'LoginPage';
-  //rootPage: any = HomePage;
+  rootPage: any = TabsPage;
+
 
   pages: Array<{ title: string, component: any }>;
 
@@ -84,6 +87,7 @@ export class MyApp {
         UserInfo.prototype.IP = "0.0.0.0"
       }
 
+
       //获取IP地址，优先级wifi>carrier 先获取WIFI地址, 没连接WIFI再获取carrier
       function onGetWifiIpSuccess(ip) { UserInfo.prototype.IP = ip; }
       function onGetWifiIpError(err) { console.log(err); }
@@ -99,6 +103,14 @@ export class MyApp {
     this.nav.setRoot(page.component);
   }
 
+  // openKK(){
+  //   console.log("KK")
+  //   const browser = this.iab.create('weixin://', '_system');
+
+  //   	// var ref = cordova.InAppBrowser.open('weixin://', '_system');
+	// 		// // some time later...
+	// 		// ref.show();
+  // }
   logOut() {
     this.nav.setRoot(LoginPage);
   }

@@ -1,7 +1,7 @@
 <ion-header>
 
   <expandable-header [scrollArea]="mycontent" headerHeight="150">
-    <ion-slides autoplay="2500" loop="true" effect="fade" autoplayDisableOnInteraction="false">
+    <ion-slides #slider autoplay="2500" loop="true" effect="fade" (ionSlideAutoplayStop)="autoPlay()">
       <ion-slide *ngFor="let slide of slides;let i = index" [ngStyle]="{'background' : 'url(' + slide.imageUrl + ')'}">
       </ion-slide>
     </ion-slides>
@@ -14,7 +14,7 @@
           <div class="wrapper" animates #animation="animates">
             <a href="#" class="button" style="background-image:url('assets/buttons/KK.ico')" (click)="animation.start({type: 'wobble', dulation:'1000'})"></a>
             <ion-badge class="notifications-badge" color="danger">5</ion-badge>
-            <label>KK1</label>
+            <label>KK</label>
           </div>
         </ion-col>
         <ion-col>
@@ -37,19 +37,20 @@
 </ion-header>
 
 <ion-content fullscreen #mycontent>
-  <button (click)="animation.start({type: 'bounce'})"></button>
-  <ion-row>
+  <ion-row class="notification">
     <ion-col col-2 align-self-center style="text-align:center">
       <div>
         <ion-icon name="logo-twitch" color="danger" style="font-size:50px"></ion-icon>
       </div>
 
-      <span>集团公告1</span>
+      <span>集团</span><br>
+      <span>公告</span>
+
     </ion-col>
-    <ion-col col-10>
-      <ion-slides autoplay="2500" loop="true" pager direction="vertical" autoplayDisableOnInteraction="false">
+    <ion-col col-10 class="scroll-animate-container">
+      <ion-slides autoplay="4000" loop="true" pager autoHeight="true">
         <ion-slide>
-          <ion-list>
+          <ion-list no-lines>
             <ion-item>
               <ion-icon name="md-flame" item-start color="danger"></ion-icon>
               <p>092号--关于加强室外工程施工及质量监督要求</p>
@@ -65,7 +66,7 @@
           </ion-list>
         </ion-slide>
         <ion-slide>
-          <ion-list>
+          <ion-list no-lines>
             <ion-item>
               <ion-icon name="md-flame" item-start color="danger"></ion-icon>
               <p>092号--关于加强室外工程施工及质量监督要求</p>
@@ -80,11 +81,76 @@
             </ion-item>
           </ion-list>
         </ion-slide>
+        <!-- <ion-slide>
+          <ion-list no-lines>
+            <ion-item>
+              <ion-icon name="md-flame" item-start color="danger"></ion-icon>
+              <p>092号--关于加强室外工程施工及质量监督要求</p>
+            </ion-item>
+            <ion-item>
+              <ion-icon name="md-flame" item-start color="danger"></ion-icon>
+              <p>071号--关于规范开荒清洁工作的通知</p>
+            </ion-item>
+            <ion-item>
+              <ion-icon name="md-flame" item-start color="danger"></ion-icon>
+              <p>094号--关于机电工程质量验收的通知</p>
+            </ion-item>
+          </ion-list>
+        </ion-slide> -->
       </ion-slides>
 
+      <!-- <ion-list no-lines>
+        <ion-item >
+          <ion-icon name="md-flame" item-start color="danger"></ion-icon>
+          <p>092号--关于加强室外工程施工及质量监督要求</p>
+        </ion-item>
+        <ion-item>
+          <ion-icon name="md-flame" item-start color="danger"></ion-icon>
+          <p>071号--关于规范开荒清洁工作的通知</p>
+        </ion-item>
+        <ion-item>
+          <ion-icon name="md-flame" item-start color="danger"></ion-icon>
+          <p>094号--关于机电工程质量验收的通知</p>
+        </ion-item>
+        <ion-item>
+          <ion-icon name="md-flame" item-start color="danger"></ion-icon>
+          <p>092号--关于加强室外工程施工及质量监督要求</p>
+        </ion-item>
+        <ion-item>
+          <ion-icon name="md-flame" item-start color="danger"></ion-icon>
+          <p>071号--关于规范开荒清洁工作的通知</p>
+        </ion-item>
+        <ion-item>
+          <ion-icon name="md-flame" item-start color="danger"></ion-icon>
+          <p>094号--关于机电工程质量验收的通知</p>
+        </ion-item>
+         <ion-item >
+          <ion-icon name="md-flame" item-start color="danger"></ion-icon>
+          <p>092号--关于加强室外工程施工及质量监督要求</p>
+        </ion-item>
+        <ion-item>
+          <ion-icon name="md-flame" item-start color="danger"></ion-icon>
+          <p>071号--关于规范开荒清洁工作的通知</p>
+        </ion-item>
+        <ion-item>
+          <ion-icon name="md-flame" item-start color="danger"></ion-icon>
+          <p>094号--关于机电工程质量验收的通知</p>
+        </ion-item>
+        <ion-item>
+          <ion-icon name="md-flame" item-start color="danger"></ion-icon>
+          <p>092号--关于加强室外工程施工及质量监督要求</p>
+        </ion-item>
+        <ion-item>
+          <ion-icon name="md-flame" item-start color="danger"></ion-icon>
+          <p>071号--关于规范开荒清洁工作的通知</p>
+        </ion-item>
+        <ion-item>
+          <ion-icon name="md-flame" item-start color="danger"></ion-icon>
+          <p>094号--关于机电工程质量验收的通知</p>
+        </ion-item>
+      </ion-list> -->
     </ion-col>
   </ion-row>
-
   <ion-card #myElement>
     <ion-item (click)="itemClick()">
       <ion-avatar item-left>
