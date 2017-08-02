@@ -17,6 +17,7 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { InAppBrowser } from '@ionic-native/in-app-browser';
 import { Device } from '@ionic-native/device';
+
 import { Toast } from '@ionic-native/toast';
 
 
