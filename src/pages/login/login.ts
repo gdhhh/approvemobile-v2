@@ -1,3 +1,4 @@
+import { TabsPage } from './../tabs/tabs';
 import { LoginServiceProvider } from './../../providers/login-service/login-service';
 import { UserInfo } from './../../providers/constant/constant';
 import { HomePage } from '../home/home';
@@ -102,7 +103,7 @@ export class LoginPage {
           this.formErrors["error"] = this.validationMessages["invalid"]["noright"];
         } else if (loginResult.SysMSG[0].tips[0] == "loginOK") {
           //登录成功，跳转到主页
-          this.navCtrl.setRoot(HomePage); //跳转到首页
+          this.navCtrl.setRoot(TabsPage); //跳转到首页
         } else {
           this.formErrors["error"] = this.validationMessages["invalid"]["unknowerror"];
         }

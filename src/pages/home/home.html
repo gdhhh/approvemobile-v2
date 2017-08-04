@@ -11,24 +11,24 @@
     <ion-grid>
       <ion-row class="header-button-area">
         <ion-col>
-          <div class="wrapper" animates #animation="animates">
-            <a href="#" class="button" style="background-image:url('assets/buttons/KK.ico')" (click)="animation.start({type: 'wobble', dulation:'1000'})"></a>
+          <div class="wrapper">
+            <a (click)="navToPage(1)" class="button" style="background-image:url('assets/buttons/nc.png')"></a>
             <ion-badge class="notifications-badge" color="danger">5</ion-badge>
-            <label>KK</label>
+            <label>NC待办</label>
           </div>
         </ion-col>
         <ion-col>
           <div class="wrapper">
-            <a (click)="clickButton()" class="button" style="background-image:url('assets/buttons/nc.png')"></a>
+            <a (click)="navToOA()" class="button" style="background-image:url('assets/buttons/oa.png')"></a>
             <ion-badge class="notifications-badge" color="danger">5</ion-badge>
-            <label>NC审批</label>
+            <label>OA待办</label>
           </div>
         </ion-col>
         <ion-col>
           <div class="wrapper">
-            <a (click)="navToPage(1)" class="button" style="background-image:url('assets/buttons/oa.png')"></a>
+            <a (click)="navToBPM()" class="button" style="background-image:url('assets/buttons/bpm.png')"></a>
             <ion-badge class="notifications-badge" color="danger">5</ion-badge>
-            <label>OA审批</label>
+            <label>业务审批</label>
           </div>
         </ion-col>
       </ion-row>
@@ -38,65 +38,41 @@
 
 <ion-content fullscreen #mycontent>
   <ion-row class="notification">
-    <ion-col col-2 align-self-center style="text-align:center">
-      <div>
+    <ion-col col-1 align-self-center style="text-align:center" class="notice-title">
+      <!-- <div>
         <ion-icon name="logo-twitch" color="danger" style="font-size:50px"></ion-icon>
-      </div>
+      </div> -->
 
       <span>集团</span><br>
       <span>公告</span>
 
     </ion-col>
-    <ion-col col-10 class="scroll-animate-container">
-      <ion-slides autoplay="4000" loop="true" pager autoHeight="true">
+    <ion-col col-11 class="scroll-animate-container">
+      <ion-slides autoplay="4000" loop="true" pager autoHeight="true" #noticSlider>
         <ion-slide>
           <ion-list no-lines>
-            <ion-item>
-              <ion-icon name="md-flame" item-start color="danger"></ion-icon>
-              <p>092号--关于加强室外工程施工及质量监督要求</p>
-            </ion-item>
-            <ion-item>
-              <ion-icon name="md-flame" item-start color="danger"></ion-icon>
-              <p>071号--关于规范开荒清洁工作的通知</p>
-            </ion-item>
-            <ion-item>
-              <ion-icon name="md-flame" item-start color="danger"></ion-icon>
-              <p>094号--关于机电工程质量验收的通知</p>
+            <ion-item *ngFor="let item of noticeSlide1; let i = index" (click)="openNotice(item.fdid)">
+              <ion-icon name="md-flame" item-start color="danger" *ngIf="item.isTop=='1'"></ion-icon>
+              <p><label *ngIf="item.isTop=='0'">{{i+1}}.</label>{{item.subject | subject}}</p>
             </ion-item>
           </ion-list>
         </ion-slide>
         <ion-slide>
           <ion-list no-lines>
-            <ion-item>
-              <ion-icon name="md-flame" item-start color="danger"></ion-icon>
-              <p>092号--关于加强室外工程施工及质量监督要求</p>
-            </ion-item>
-            <ion-item>
-              <ion-icon name="md-flame" item-start color="danger"></ion-icon>
-              <p>071号--关于规范开荒清洁工作的通知</p>
-            </ion-item>
-            <ion-item>
-              <ion-icon name="md-flame" item-start color="danger"></ion-icon>
-              <p>094号--关于机电工程质量验收的通知</p>
+            <ion-item *ngFor="let item of noticeSlide2; let i = index" (click)="openNotice(item.fdid)">
+              <ion-icon name="md-flame" item-start color="danger" *ngIf="item.isTop=='1'"></ion-icon>
+              <p><label>{{i+4}}.</label>{{item.subject | subject}}</p>
             </ion-item>
           </ion-list>
         </ion-slide>
-        <!-- <ion-slide>
+        <ion-slide>
           <ion-list no-lines>
-            <ion-item>
-              <ion-icon name="md-flame" item-start color="danger"></ion-icon>
-              <p>092号--关于加强室外工程施工及质量监督要求</p>
-            </ion-item>
-            <ion-item>
-              <ion-icon name="md-flame" item-start color="danger"></ion-icon>
-              <p>071号--关于规范开荒清洁工作的通知</p>
-            </ion-item>
-            <ion-item>
-              <ion-icon name="md-flame" item-start color="danger"></ion-icon>
-              <p>094号--关于机电工程质量验收的通知</p>
+            <ion-item *ngFor="let item of noticeSlide3; let i = index" >
+              <ion-icon name="md-flame" item-start color="danger" *ngIf="item.isTop=='1'"></ion-icon>
+              <p><label>{{i+7}}.</label>{{item.subject | subject}}</p>
             </ion-item>
           </ion-list>
-        </ion-slide> -->
+        </ion-slide>
       </ion-slides>
 
       <!-- <ion-list no-lines>

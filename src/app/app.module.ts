@@ -1,3 +1,4 @@
+import { LoginPage } from './../pages/login/login';
 import { InfoPage } from './../pages/info/info';
 import { TabsPage } from './../pages/tabs/tabs';
 import {HttpModule} from '@angular/http';
@@ -22,6 +23,8 @@ import { Toast } from '@ionic-native/toast';
 
 
 import { LoginServiceProvider } from './../providers/login-service/login-service';
+import { HomeServiceProvider } from '../providers/home-service/home-service';
+import { SubjectPipe } from '../pipes/subject/subject';
 
 
 
@@ -35,7 +38,9 @@ import { LoginServiceProvider } from './../providers/login-service/login-service
     SplashPage,
     TabsPage,
     InfoPage,
-    AnimatesDirective
+    LoginPage,
+    AnimatesDirective,
+    SubjectPipe
   ],
   imports: [
     BrowserModule,
@@ -50,6 +55,7 @@ import { LoginServiceProvider } from './../providers/login-service/login-service
     OaPage,
     TabsPage,
     InfoPage,
+    LoginPage,
     ListPage
   ],
   providers: [
@@ -60,7 +66,8 @@ import { LoginServiceProvider } from './../providers/login-service/login-service
     InAppBrowser,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     AnimationService,
-    LoginServiceProvider
+    LoginServiceProvider,
+    HomeServiceProvider
   ]
 })
 export class AppModule {}
