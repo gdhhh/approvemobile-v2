@@ -1,0 +1,56 @@
+<!--
+  Generated template for the NcPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar color="primary">
+    <ion-title>我的NC任务</ion-title>
+  </ion-navbar>
+  <ion-toolbar>
+    <ion-segment [(ngModel)]="approve">
+      <ion-segment-button value="todo">
+        未处理
+      </ion-segment-button>
+      <ion-segment-button value="done">
+        已处理
+      </ion-segment-button>
+    </ion-segment>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="searchBtnClick()">
+        <ion-icon name="search"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-toolbar *ngIf="isShowSearch">
+    <ion-searchbar placeholder="请输入关键字搜索..."  #search
+    [showCancelButton]="true" 
+    (ionCancel)="getSearchItems(searchbar.value)"
+    cancelButtonText = "搜索"
+    (keyup.enter)="getSearchItems(searchbar.value)"></ion-searchbar>
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content padding>
+  <div [ngSwitch]="approve">
+    <ion-list *ngSwitchCase="'todo'">
+      <ion-item detail-push *ngFor="let item of approveItemsTodo" (click)="presentModal(item.itemId,item.itemBillType)">
+        <h4 class="item-title">{{item.itemTitle}}</h4>
+        <p><span>{{item.subTitles[0].subTitle[0].title}}</span><span style="float:right">{{item.subTitles[0].subTitle[2].title}}</span></p>
+      </ion-item>
+    </ion-list>
+    <ion-list *ngSwitchCase="'done'">
+      <ion-item detail-push *ngFor="let item of approveItemsDone" (click)="presentModal(item.itemId,item.itemBillType)">
+        <h4 class="item-title">{{item.itemTitle}}</h4>
+        <p><span>{{item.subTitles[0].subTitle[0].title}}</span><span style="float:right">{{item.subTitles[0].subTitle[2].title}}</span></p>
+      </ion-item>
+    </ion-list>
+  </div>
+
+  <ion-infinite-scroll (ionInfinite)="doInfinite($event)">
+   <ion-infinite-scroll-content></ion-infinite-scroll-content>
+ </ion-infinite-scroll>
+</ion-content>

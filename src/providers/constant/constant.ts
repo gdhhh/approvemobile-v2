@@ -5,11 +5,16 @@ import 'rxjs/add/operator/map';
 */
 
 export const GlobalVar = Object.freeze({
-  server_address:"http://mip.nimble.cn:8080/"
-  //server_address:"http://172.22.31.36:8080/"
+  //server_address:"http://mip.nimble.cn:8080/",
+  server_address:"http://mp.nimble.cn:88/portal/",
+  //server_address:"http://172.22.31.36:8080/",
+  oa_server_address:"http://mjoa.nimble.cn/",
+  bpm_server_address:"http://bpm.nimble.cn:8080/"
 })
 
 export class UserInfo{
+    public id: string;
+    public name: string;
     public userid : string;
     public password : string;
     public token : string;
@@ -23,5 +28,19 @@ export class UserInfo{
 
     constructor(){
       this.projectId = "0000000001";
+    }
+
+    cleanUser(){
+      this.id = "";
+      this.name= "";
+      this.userid = "";
+      this.password = "";
+      this.token = "";
+      this.devicename = "";
+      this.MAC = "";
+      this.IMEI = "";
+      this.IP = "";
+      this.systemid = "";
+      this.loginType = "";
     }
 }

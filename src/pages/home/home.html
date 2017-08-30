@@ -1,47 +1,31 @@
 <ion-header>
-
-  <expandable-header [scrollArea]="mycontent" headerHeight="150">
+  <div #expandheader class="expandable-header-show" style="height:150px">
     <ion-slides #slider autoplay="2500" loop="true" effect="fade" (ionSlideAutoplayStop)="autoPlay()">
       <ion-slide *ngFor="let slide of slides;let i = index" [ngStyle]="{'background' : 'url(' + slide.imageUrl + ')'}">
       </ion-slide>
     </ion-slides>
-  </expandable-header>
-
+  </div>
   <ion-navbar>
     <ion-grid>
       <ion-row class="header-button-area">
-        <ion-col>
-          <div class="wrapper">
-            <a (click)="navToPage(1)" class="button" style="background-image:url('assets/buttons/nc.png')"></a>
-            <ion-badge class="notifications-badge" color="danger">5</ion-badge>
-            <label>NC待办</label>
-          </div>
-        </ion-col>
-        <ion-col>
-          <div class="wrapper">
-            <a (click)="navToOA()" class="button" style="background-image:url('assets/buttons/oa.png')"></a>
-            <ion-badge class="notifications-badge" color="danger">5</ion-badge>
-            <label>OA待办</label>
-          </div>
-        </ion-col>
-        <ion-col>
-          <div class="wrapper">
-            <a (click)="navToBPM()" class="button" style="background-image:url('assets/buttons/bpm.png')"></a>
-            <ion-badge class="notifications-badge" color="danger">5</ion-badge>
-            <label>业务审批</label>
-          </div>
-        </ion-col>
+        <ng-container *ngFor="let ico of icons; let i = index;">
+          <ion-col *ngIf="i<4">
+            <div class="wrapper">
+              <a *ngIf="ico?.imageSrc" (click)="navTo(ico?.actionClick,ico?.actionUrl,ico?.lable)" class="button" [ngStyle]="{ 'background-image': 'url(' + ico?.imageSrc + ')'}"></a>
+              <ion-badge class="notifications-badge" color="danger" *ngIf="ico?.tips&&ico?.tips!=' '">{{ico?.tips}}</ion-badge>
+              <label class="icon-label">{{ico?.lable}}</label>
+            </div>
+          </ion-col>
+        </ng-container>
       </ion-row>
     </ion-grid>
   </ion-navbar>
+
 </ion-header>
 
 <ion-content fullscreen #mycontent>
-  <ion-row class="notification">
+  <ion-row class="notification" *ngIf="noticeSlide1">
     <ion-col col-1 align-self-center style="text-align:center" class="notice-title">
-      <!-- <div>
-        <ion-icon name="logo-twitch" color="danger" style="font-size:50px"></ion-icon>
-      </div> -->
 
       <span>集团</span><br>
       <span>公告</span>
@@ -67,121 +51,39 @@
         </ion-slide>
         <ion-slide>
           <ion-list no-lines>
-            <ion-item *ngFor="let item of noticeSlide3; let i = index" >
+            <ion-item *ngFor="let item of noticeSlide3; let i = index">
               <ion-icon name="md-flame" item-start color="danger" *ngIf="item.isTop=='1'"></ion-icon>
               <p><label>{{i+7}}.</label>{{item.subject | subject}}</p>
             </ion-item>
           </ion-list>
         </ion-slide>
       </ion-slides>
-
-      <!-- <ion-list no-lines>
-        <ion-item >
-          <ion-icon name="md-flame" item-start color="danger"></ion-icon>
-          <p>092号--关于加强室外工程施工及质量监督要求</p>
-        </ion-item>
-        <ion-item>
-          <ion-icon name="md-flame" item-start color="danger"></ion-icon>
-          <p>071号--关于规范开荒清洁工作的通知</p>
-        </ion-item>
-        <ion-item>
-          <ion-icon name="md-flame" item-start color="danger"></ion-icon>
-          <p>094号--关于机电工程质量验收的通知</p>
-        </ion-item>
-        <ion-item>
-          <ion-icon name="md-flame" item-start color="danger"></ion-icon>
-          <p>092号--关于加强室外工程施工及质量监督要求</p>
-        </ion-item>
-        <ion-item>
-          <ion-icon name="md-flame" item-start color="danger"></ion-icon>
-          <p>071号--关于规范开荒清洁工作的通知</p>
-        </ion-item>
-        <ion-item>
-          <ion-icon name="md-flame" item-start color="danger"></ion-icon>
-          <p>094号--关于机电工程质量验收的通知</p>
-        </ion-item>
-         <ion-item >
-          <ion-icon name="md-flame" item-start color="danger"></ion-icon>
-          <p>092号--关于加强室外工程施工及质量监督要求</p>
-        </ion-item>
-        <ion-item>
-          <ion-icon name="md-flame" item-start color="danger"></ion-icon>
-          <p>071号--关于规范开荒清洁工作的通知</p>
-        </ion-item>
-        <ion-item>
-          <ion-icon name="md-flame" item-start color="danger"></ion-icon>
-          <p>094号--关于机电工程质量验收的通知</p>
-        </ion-item>
-        <ion-item>
-          <ion-icon name="md-flame" item-start color="danger"></ion-icon>
-          <p>092号--关于加强室外工程施工及质量监督要求</p>
-        </ion-item>
-        <ion-item>
-          <ion-icon name="md-flame" item-start color="danger"></ion-icon>
-          <p>071号--关于规范开荒清洁工作的通知</p>
-        </ion-item>
-        <ion-item>
-          <ion-icon name="md-flame" item-start color="danger"></ion-icon>
-          <p>094号--关于机电工程质量验收的通知</p>
-        </ion-item>
-      </ion-list> -->
     </ion-col>
   </ion-row>
-  <ion-card #myElement>
-    <ion-item (click)="itemClick()">
-      <ion-avatar item-left>
-        <img src="assets/buttons/oa.png">
-      </ion-avatar>
-      <h2>OA审批</h2>
-      <p>薛亚飞向您推荐文档：HR-013-R三级体系全流程考核管理办法</p>
-    </ion-item>
-  </ion-card>
-  <ion-card>
-    <ion-item>
-      <ion-avatar item-left>
-        <img src="assets/buttons/nc.png">
-      </ion-avatar>
-      <h2>NC审批</h2>
-      <p></p>
-    </ion-item>
-  </ion-card>
-  <ion-card>
-    <ion-item>
-      <ion-avatar item-left>
-        <img src="assets/buttons/oa.png">
-      </ion-avatar>
-      <h2>OA审批</h2>
-      <p>薛亚飞向您推荐文档：HR-013-R三级体系全流程考核管理办法</p>
-    </ion-item>
-  </ion-card>
-  <ion-card>
-    <ion-item>
-      <ion-avatar item-left>
-        <img src="assets/buttons/oa.png">
-      </ion-avatar>
-      <h2>OA审批</h2>
-      <ion-card-content>
-        <p>薛亚飞向您推荐文档：HR-013-R三级体系全流程考核管理办法</p>
-      </ion-card-content>
-    </ion-item>
-  </ion-card>
-  <ion-card>
-    <ion-item>
-      <ion-avatar item-left>
-        <img src="assets/buttons/nc.png">
-      </ion-avatar>
-      <h2>NC审批</h2>
-      <p></p>
-    </ion-item>
-  </ion-card>
-  <ion-card>
-    <ion-item>
-      <ion-avatar item-left>
-        <img src="assets/buttons/oa.png">
-      </ion-avatar>
-      <h2>OA审批</h2>
-      <p>薛亚飞向您推荐文档：HR-013-R三级体系全流程考核管理办法</p>
-    </ion-item>
+  <ion-card class="list-card">
+    <ion-item-group>
+      <ion-item-divider color="primary" (click)="showMainItemList()">
+        <ion-icon name="ios-list-box-outline" item-start></ion-icon>
+        <h2>待办快捷列表（各系统前20条待办）</h2>
+      </ion-item-divider>
+      <ion-list [ngClass]="{'show':isShowMainItemList,'hide':!isShowMainItemList}">
+        <ion-item *ngIf="!shortcutList">
+          <h3>没有需要处理的待办信息</h3>
+        </ion-item>
+        <ng-container  *ngIf="shortcutList">
+          <ion-item *ngFor="let item of shortcutList" (click)="openMainTodo(item)">
+            <ion-avatar item-start>
+              <img src={{item?.imageSrc}}>
+            </ion-avatar>
+            <h3 style="white-space: normal">{{item?.itemName}}</h3>
+            <p>创建人：
+              <ion-note>{{item?.docCreator}}</ion-note>
+              <ion-note style="float:right">{{item?.itemCreateTime | DateToLocaleDateString}}</ion-note>
+            </p>
+          </ion-item>
+        </ng-container>
+      </ion-list>
+    </ion-item-group>
   </ion-card>
 
 </ion-content>

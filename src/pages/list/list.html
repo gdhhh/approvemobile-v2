@@ -9,18 +9,18 @@
 
 <ion-content>
   <ion-grid>
-    <ion-row>
-      <ion-col col-4>
-        <div class="slice"> <span> </span><img src="assets/buttons/nc.png"></div>
-      </ion-col>
-      <ion-col col-4>
-        <div class="slice"> <span> </span><img src="assets/buttons/nc.png"></div>
-      </ion-col>
-      <ion-col col-4>
-        <div class="slice"> <span> </span><img src="assets/buttons/nc.png"></div>
-      </ion-col>
-    </ion-row>
-    <ion-row>
+    <ng-container>
+      <ion-row>
+        <ion-col col-4 *ngFor="let icon of icons; let i= index" (click)="navTo(icon?.actionClick,icon?.actionUrl,icon?.lable)">
+          <div class="slice">
+            <span> </span>
+            <img src={{icon.imageSrc}}>
+            <div class="btn-text">{{icon.lable}}</div>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ng-container>
+    <!-- <ion-row>
       <ion-col col-4>
         <div class="slice"> <span> </span><img src="assets/buttons/oa.png"></div>
       </ion-col>
@@ -41,7 +41,7 @@
       <ion-col col-4>
         <div class="slice"></div>
       </ion-col>
-    </ion-row>
+    </ion-row> -->
   </ion-grid>
 
 

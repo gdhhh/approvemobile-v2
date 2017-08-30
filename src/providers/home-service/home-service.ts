@@ -30,3 +30,7 @@ export class HomeServiceProvider {
   }
 
 }
+
+export class ExpandableHeaderPorperty{
+  public newHeaderHeight:any;
+}

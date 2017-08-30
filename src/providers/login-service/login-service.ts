@@ -27,15 +27,6 @@ export class LoginServiceProvider {
       .toPromise().then(res => {
         return res;
     })
-
-    //   .map(response  => {
-    //        xml2js.parseString( response.text(), function (err, result) {
-    //         console.dir(result); // Prints JSON object!
-    //         console.log(result.response)
-    //      })
-    //   }).subscribe(data => { 
-    //       console.log(data);              
-    //  });
   }
 
 

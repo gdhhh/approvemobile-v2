@@ -1,24 +1,49 @@
-import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import {LoginPage} from '../login/login';
+import { UserInfo } from './../../providers/constant/constant';
+import { ToastService } from './../../providers/toast-service/toast-service';
+import { Component, ViewChild } from '@angular/core';
+import { Nav, IonicPage, NavController, NavParams, App } from 'ionic-angular';
 
-/**
- * Generated class for the InfoPage page.
- *
- * See http://ionicframework.com/docs/components/#navigation for more info
- * on Ionic pages and navigation.
- */
-@IonicPage()
 @Component({
   selector: 'page-info',
   templateUrl: 'info.html',
 })
 export class InfoPage {
+  @ViewChild(Nav) nav: Nav;
+  userInfo;
+  
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  following = false;
+  user = {
+    name: 'Paula Bolliger',
+    profileImage: 'assets/img/avatar/girl-avatar.png',
+    coverImage: 'assets/img/background/background-5.jpg',
+    occupation: 'Designer',
+    location: 'Seattle, WA',
+    description: 'A wise man once said: The more you do something, the better you will become at it.',
+    followers: 456,
+    following: 1052,
+    posts: 35
   }
 
+  constructor(
+    public navCtrl: NavController, 
+    public app:App,
+    public toastCtrl: ToastService) { }
+
   ionViewDidLoad() {
-    console.log('ionViewDidLoad InfoPage');
+    console.log('Hello ProfileFour Page');
+    console.log(UserInfo.prototype)
+    this.userInfo = UserInfo.prototype;
+  }
+
+  ionViewDidEnter(){
+    //console.log(UserInfo.prototype)
+  }
+
+  logOut() {
+    //UserInfo.prototype.cleanUser();
+    this.app.getRootNav().setRoot(LoginPage);
   }
 
 }

@@ -8,7 +8,6 @@ import {ViewController, IonicPage } from 'ionic-angular';
  * See http://ionicframework.com/docs/components/#navigation for more info
  * on Ionic pages and navigation.
  */
-@IonicPage()
 @Component({
   selector: 'page-splash',
   templateUrl: 'splash.html',

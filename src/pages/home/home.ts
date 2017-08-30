@@ -1,11 +1,15 @@
+import {NcBillsDetailPage} from '../nc-bills-detail/nc-bills-detail';
+import { NoRightPage } from './../no-right/no-right';
+import { NcBillsDetailServiceProvider } from './../../providers/nc-bills-detail-service/nc-bills-detail-service';
+import { NcPage } from './../nc/nc';
 import { HomeServiceProvider } from './../../providers/home-service/home-service';
-import { GlobalVar } from './../../providers/constant/constant';
+import { GlobalVar, UserInfo } from './../../providers/constant/constant';
 import { OaPage } from './../oa/oa';
-import { Component, ViewChild } from '@angular/core';
-import { NavController, Slides } from 'ionic-angular';
+import { Component, ViewChild, Renderer, ElementRef } from '@angular/core';
+import { NavController, Slides, LoadingController, ToastController, ModalController } from 'ionic-angular';
 import { InAppBrowser } from "@ionic-native/in-app-browser";
 
-
+import xml2js from 'xml2js';
 
 
 @Component({
@@ -17,10 +21,25 @@ export class HomePage {
   @ViewChild('slider') slider: Slides;
   @ViewChild('noticSlider') noticSlider: Slides;
   @ViewChild('myElement') myElem;
+  @ViewChild('mycontent') scrollArea: any;
+  @ViewChild('expandheader') expandheader: any;
 
   noticeSlide1;
   noticeSlide2;
   noticeSlide3;
+
+  icons;
+  oaTodoList;
+  bpmTodoList;
+  shortcutList;
+  isShowMainItemList;
+  isShowBpmItemList;
+
+  isInitBpm = false;
+
+  headerHeight = 150;
+  newHeaderHeight: any;
+
 
   private serveradd = GlobalVar.server_address;
   slides = [
@@ -41,12 +60,19 @@ export class HomePage {
   constructor(
     public navCtrl: NavController,
     private homeservice: HomeServiceProvider,
-    private iab: InAppBrowser
+    private approveService: NcBillsDetailServiceProvider,
+    public loadingCtrl: LoadingController,
+    public toastCtrl: ToastController,
+    public renderer: Renderer,
+    public element: ElementRef,
+    private iab: InAppBrowser,
+    public modalCtrl: ModalController
   ) { }
 
   ionViewDidLoad() {
     this.homeservice.getTopNotice().then(res => {
       if (res) {
+        console.log(res)
         let list1 = new Array();
         let list2 = new Array();
         let list3 = new Array();
@@ -60,35 +86,154 @@ export class HomePage {
         this.noticeSlide3 = list3;
       }
     })
+    this.scrollArea.ionScroll.subscribe((event) => {
+      this.resizeHeader(event)
+    });
+    this.scrollArea.ionScrollEnd.subscribe((event) => {
+      this.scrollEndResizeHeader(event)
+    });
+
+  }
+  ionViewDidEnter() {
+    this.getMainTodo();
+    this.isShowMainItemList = false;
+    setTimeout(() => {
+      this.scrollArea.resize();
+      this.isShowMainItemList = true;
+    }, 1000)
+  }
+  ionViewWillEnter() {
+    console.log(this.scrollArea.scrollHeight)
   }
 
   //用户滑动图片后 图片继续自动播放
   autoPlay() {
     this.slider.startAutoplay();
   }
-
+  //打开主页列表
+  openMainTodo(item){
+    switch (item.actionClick) {
+      case 'initApprove':
+        this.presentNcModal(item.itemId,item.billType);
+        break;
+      case 'initH5ApproveSystem':
+        if (item.lable == "ＯＡ待办") {
+          this.openOaTodo(item.url);
+        } else if (item.lable == "业务审批") {
+          this.openBpmTodo(item.itemId);
+        }
+        break;
+      default:
+        this.navCtrl.push(NoRightPage);
+    };
+  }
+  //打开OA公告
   openNotice(fdid) {
     this.noticSlider.stopAutoplay();
-    const browser = this.iab.create(this.serveradd + 'LandRayOA?username=tangwl&type=1&fdid='+fdid, '_blank', 'location=no');
-    console.log(browser)
+    const browser = this.iab.create(this.serveradd + 'LandRayOA?username=' + UserInfo.prototype.userid + '&type=1&fdid=' + fdid, '_blank', 'location=no');
   }
 
-  navToOA() {
-    const browser = this.iab.create(this.serveradd + 'LandRayOA?username=tangwl&type=0', '_blank', 'location=no');
-    console.log(browser)
+  //打开NC单据明细
+  presentNcModal(itemId, billType) {
+    let modal = this.modalCtrl.create(NcBillsDetailPage, { itemId: itemId, billType: billType });
+    console.log(itemId)
+    modal.present();
   }
-  navToBPM() {
-    const browser = this.iab.create('http://www.baidu.com', '_blank', 'location=no');
-    console.log(browser)
+  //打开oa待办
+  openOaTodo(url) {
+    const browser = this.iab.create(GlobalVar.oa_server_address + url, '_blank', 'location=no');
+  }
+  //打开BPM待办
+  openBpmTodo(id) {
+    const browser = this.iab.create(GlobalVar.bpm_server_address + 'jwf/mobile/bpm/task.html?taskId=' + id, '_blank', 'location=no');
   }
 
   itemClick() {
     console.log("itemclick")
   }
 
-  navToPage(pageId) {
-    this.navCtrl.push(OaPage);
+  //打开业务系统
+  navTo(action, url, label) {
+    switch (action) {
+      case 'initApprove':
+        this.navCtrl.push(NcPage);
+        break;
+      case 'initH5ApproveSystem':
+        if (label == "ＯＡ待办") {
+          const browser = this.iab.create(url + '&type=main', '_blank', 'location=no');
+        } else if (label == "公告新闻") {
+          const browser = this.iab.create(url + '&type=newslist', '_blank', 'location=no');
+        } else if (label == "业务审批") {
+          const browser = this.iab.create(url, '_blank', 'location=no');
+        }
+        break;
+      default:
+        this.navCtrl.push(NoRightPage);
+    };
   }
 
+  //加载首页待办列表
+  getMainTodo() {
+    let loading = this.loadingCtrl.create({
+      content: '数据加载中，请稍候...'
+    });
+    loading.present();
+    let params = new URLSearchParams();
+    this.approveService.doGetMainTodoList(params).then(res => {
+      let result = res.json() as any;
+      if (result.icons && result.icons.length > 0) {
+        this.icons = result.icons;
+      }
+      if (result.dataList && result.dataList.length > 0) {
+        this.shortcutList = result.dataList;
+      }
+      setTimeout(() => { loading.dismiss(); }, 500)
+    }).catch(err => {
+      alert("getBpmTodo()@home.ts =>" + err);
+      setTimeout(() => { loading.dismiss(); }, 500)
+    });
+  }
 
+  //展开\折叠待办列表
+  showMainItemList() {
+    this.isShowMainItemList == true ? this.isShowMainItemList = false : this.isShowMainItemList = true;
+  }
+
+  resizeHeader(ev) {
+    ev.domWrite(() => {
+      let headerElement = this.expandheader.nativeElement;
+      let totalHeight = headerElement.offsetTop + headerElement.clientHeight;
+      headerElement.style.transition = ""
+      this.newHeaderHeight = this.headerHeight - ev.scrollTop;
+      if (this.newHeaderHeight < 0) {
+        this.newHeaderHeight = 0;
+      }
+
+      this.renderer.setElementStyle(this.expandheader.nativeElement, 'height', this.newHeaderHeight + 'px');
+
+      //console.log("height="+this.newHeaderHeight)
+    });
+  }
+  scrollEndResizeHeader(ev) {
+    ev.domWrite(() => {
+      console.log("old newHeaderHeight:" + this.newHeaderHeight)
+      let headerElement = this.expandheader.nativeElement;
+      this.newHeaderHeight = this.headerHeight - ev.scrollTop;
+      console.log("目前高度：" + headerElement.clientHeight + "，默认高度：" + this.headerHeight + ",newNewHeaderHeight:" + this.newHeaderHeight)
+      if (headerElement.clientHeight > this.headerHeight) {
+        headerElement.style.transition = "all 1s ease-in-out"
+        this.renderer.setElementStyle(this.expandheader.nativeElement, 'height', this.headerHeight + 'px');
+      } else if (this.newHeaderHeight >= 150 && headerElement.clientHeight < 50) {
+        headerElement.style.transition = "all 1s ease-in-out"
+        this.renderer.setElementStyle(this.expandheader.nativeElement, 'height', this.headerHeight + 'px');
+      } else {
+        if (this.newHeaderHeight < 0) {
+          this.newHeaderHeight = 0;
+        }
+        this.renderer.setElementStyle(this.expandheader.nativeElement, 'height', this.newHeaderHeight + 'px');
+      }
+
+    })
+  }
 }
+

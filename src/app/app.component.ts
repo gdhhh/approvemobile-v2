@@ -1,3 +1,4 @@
+import { NcPage } from './../pages/nc/nc';
 import { TabsPage } from './../pages/tabs/tabs';
 import { InfoPage } from './../pages/info/info';
 import { md5 } from './../utils/md5';
@@ -24,7 +25,7 @@ export class MyApp {
   @ViewChild(Nav) nav: Nav;
 
   rootPage: any = LoginPage;
-
+  //rootPage: any = NcPage;
 
   pages: Array<{ title: string, component: any }>;
 
@@ -86,7 +87,6 @@ export class MyApp {
         //IP WIFI+Carrier
         UserInfo.prototype.IP = "0.0.0.0"
       }
-
 
       //获取IP地址，优先级wifi>carrier 先获取WIFI地址, 没连接WIFI再获取carrier
       function onGetWifiIpSuccess(ip) { UserInfo.prototype.IP = ip; }

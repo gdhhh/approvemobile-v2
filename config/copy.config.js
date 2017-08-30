@@ -3,6 +3,10 @@ module.exports = {
         src: ['{{SRC}}/assets/**/*'],
         dest: '{{WWW}}/assets'
     },
+    copyImages: {
+        src: ['{{SRC}}/images/**/*'],
+        dest: '{{WWW}}/images'
+    },
     copyIndexContent: {
         src: ['{{SRC}}/index.html', '{{SRC}}/manifest.json', '{{SRC}}/service-worker.js'],
         dest: '{{WWW}}'

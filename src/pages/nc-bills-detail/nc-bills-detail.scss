@@ -1,0 +1,85 @@
+.note-title {
+  width: 20%;
+  text-align: right;
+}
+ion-modal.inset-modal {
+  // transparent black background overlay
+  background-color: rgba(0, 0, 0, .5) !important;
+  transition: opacity .25s ease-in-out;
+  padding: 30vh 10vw;
+}
+
+.expandable-link {
+    color:#488aff;
+  -webkit-transition: all 0.4s ease;
+  -o-transition: all 0.4s ease;
+  transition: all 0.4s ease;
+}
+
+ion-item-divider{
+    font-size: 1.2rem !important;
+}
+ion-item-divider ion-icon{
+    font-size: 1.4rem ;
+}
+
+.expandable-item {
+  padding: 10px;
+  border-width: 2px;
+  border-style: dashed;
+  border-radius: 20px;
+  //background-color: #f4f4f4;
+}
+
+.expandable-item ion-item {
+//   background-color: #f4f4f4;
+  -webkit-transition: all 0.4s ease;
+  -o-transition: all 0.4s ease;
+  transition: all 0.4s ease;
+}
+
+.expandable-item.list.list-ios {
+  animation: pullUp 1s linear 0s 1 normal forwards
+}
+
+.note-approved{
+    color:#32db64;
+}
+.note-red{
+    color:#f53d3d;
+}
+.note-green{
+    color:#32db64;
+}
+.footer-btn{
+    float:right;
+}
+
+//自动换行
+.expandable-item ion-item ion-label{
+    white-space: normal;
+}
+
+@keyframes pullUp {
+  0% {
+    transform: scaleY(0.1);
+  }
+  40% {
+    transform: scaleY(1.02);
+  }
+  60% {
+    transform: scaleY(0.98);
+  }
+  80% {
+    transform: scaleY(1.01);
+  }
+  100% {
+    transform: scaleY(0.98);
+  }
+  80% {
+    transform: scaleY(1.01);
+  }
+  100% {
+    transform: scaleY(1);
+  }
+}

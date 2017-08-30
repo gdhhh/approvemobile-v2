@@ -1,0 +1,94 @@
+<!--
+  Generated template for the NcBillsDetailPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>
+      {{billTitle}}
+    </ion-title>
+    <ion-buttons start>
+      <button ion-button (click)="dismiss()">
+        <span ion-text showWhen="ios">返回</span>
+        <ion-icon name="md-close" showWhen="android, windows">返回</ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content padding>
+  <ion-list-header>
+    单据信息
+  </ion-list-header>
+  <ion-list *ngIf="itemDetail">
+    <ng-container *ngFor="let row of itemDetail.billData[0]?.row">
+      <ion-item *ngIf="row?.cell">
+        <div *ngIf="row?.cell">{{row?.cell[0]?.cellContent}}</div>
+        <ion-note class="note-title" *ngIf="row?.cell" item-start>{{row?.cell[0]?.cellTitle}}</ion-note>
+      </ion-item>
+      <ion-item *ngIf="row?.group" class="expandable-link" (click)="expandTab('history')">
+        <div>
+          <ion-icon [name]="isHistoryExpand?'ios-arrow-dropdown':'ios-arrow-dropright-circle'" item-start></ion-icon>{{row?.rowTitle}}</div>
+      </ion-item>
+      <ng-container *ngIf='row?.group'>
+        <ion-list [hidden]="!isHistoryExpand" class="expandable-item">
+          <ion-item-group>
+            <ion-item-divider color="light">
+              <ion-icon name='ios-person-outline' item-start></ion-icon>发起人</ion-item-divider>
+            <ion-item>{{row?.group[0]?.item[0]?.subTitles[0]?.subTitle[1].title}}
+              <ion-note item-end>{{row?.group[0]?.item[0]?.subTitles[0]?.subTitle[2].title}}</ion-note>
+            </ion-item>
+          </ion-item-group>
+          <ion-item-group>
+            <ion-item-divider color="light">
+              <ion-icon name='ios-people-outline' item-start></ion-icon>审批人</ion-item-divider>
+            <ng-container *ngFor="let history of row?.group[0]?.item; let i=index">
+              <ion-item *ngIf="i>1&&
+              history?.subTitles[0].subTitle[1].title">
+                <h4 [ngClass]="{'note-red':history.itemTitle[0]=='驳回到制单人' || history.itemTitle[0]=='驳回'|| history.itemTitle[0]=='不同意',
+            'note-green':history.itemTitle[0] == '批准'|| history.itemTitle[0]=='同意'
+            }">{{history.itemTitle[0]}}</h4>
+                {{history.subTitles[0].subTitle[1].title}}
+                <ion-note [ngClass]="{'note-approved':history.subTitles[0].subTitle[0].title == '已审批'}">{{history.subTitles[0].subTitle[0].title}}</ion-note>
+                <ion-note item-end>{{history.subTitles[0].subTitle[2].title}}</ion-note>
+              </ion-item>
+            </ng-container>
+          </ion-item-group>
+        </ion-list>
+      </ng-container>
+      <ion-item *ngIf="row?.tab" class="expandable-link" (click)="expandTab('detail')">
+        <div>
+          <ion-icon [name]="isDetailExpand?'ios-arrow-dropdown':'ios-arrow-dropright-circle'" item-start></ion-icon>{{row?.rowTitle}}</div>
+      </ion-item>
+      <ng-container *ngIf='row?.tab'>
+        <ion-list [hidden]="!isDetailExpand" class="expandable-item">
+          <ion-item-group *ngFor="let detail of billDetailInfo">
+            <ion-item-divider color="light">
+              <ion-icon name='ios-list' item-start></ion-icon>{{detail?.cell[0].cellTitle}}</ion-item-divider>
+            <ion-item>
+              <ion-note item-start>{{detail.line1.cell[0].cellTitle[0]}}</ion-note>
+              {{detail.line1.cell[0].cellContent[0]}}
+            </ion-item>
+            <ion-item>
+              <ion-note item-start>{{detail.line2.cell[0].cellTitle[0]}}</ion-note>
+              {{detail.line2.cell[0].cellContent[0]}}
+            </ion-item>
+          </ion-item-group>
+        </ion-list>
+      </ng-container>
+    </ng-container>
+  </ion-list>
+</ion-content>
+<ion-footer>
+  <ion-toolbar>
+      <button ion-button small color="danger" class="footer-btn" (click)="openApproveModal(3)">
+        驳回
+      </button>
+      <button ion-button small color="secondary" class="footer-btn" (click)="openApproveModal(1)">
+        同意
+      </button>
+  </ion-toolbar>
+</ion-footer>

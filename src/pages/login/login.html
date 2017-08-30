@@ -1,9 +1,11 @@
-<ion-content>
+<div class="fix-content">
   <ion-slides pager="false" autoplay="2000" loop="true" speed="1500" effect="fade">
     <ion-slide class="slide-background swiper-no-swiping" *ngFor="let background of backgrounds" [ngStyle]="{'background-image': 'url(' + background +')'}">
     </ion-slide>
   </ion-slides>
-  <div class="login-container" >
+</div>
+<ion-content>
+  <div class="login-container">
     <img class="logo" src="assets/img/logo/logo-nimble.png" />
     <form (submit)="doLogin()" [formGroup]="loginForm">
       <ion-item>
@@ -15,7 +17,7 @@
         </ion-card-content>
       </ion-card>
       <ion-item>
-        <ion-input type="password" formControlName="password" placeholder="请输入密码..." ></ion-input>
+        <ion-input type="password" formControlName="password" placeholder="请输入密码..."></ion-input>
       </ion-item>
       <ion-card *ngIf="formErrors?.password" color="danger" class="animation-alert">
         <ion-card-content>

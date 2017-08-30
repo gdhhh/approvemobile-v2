@@ -1,3 +1,4 @@
+import {Tab} from 'ionic-angular';
 import { InfoPage } from './../info/info';
 import { ListPage } from './../list/list';
 import {HomePage} from '../home/home';
@@ -13,19 +14,20 @@ export class TabsPage {
 
   tabHome = HomePage;
   tabList = ListPage;
-  tabKkSearch = this.openKK();
+  tabKkSearch;
   tabInfo = InfoPage;
 
   constructor(private iab: InAppBrowser) {
 
   }
-  
+  tabSelected(tab: Tab) {
+    console.log(tab.index)
+    if(tab.index==2){
+      this.openKK();
+    }
+  }
   openKK(){
     console.log("Open KK")
     const browser = this.iab.create('KK://contact', '_system');
-
-    	// var ref = cordova.InAppBrowser.open('weixin://', '_system');
-			// // some time later...
-			// ref.show();
   }
 }

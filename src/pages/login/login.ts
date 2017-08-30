@@ -14,7 +14,6 @@ import xml2js from 'xml2js';
 
 import 'rxjs/add/operator/map';
 
-@IonicPage()
 @Component({
   selector: 'page-login',
   templateUrl: 'login.html'
@@ -61,8 +60,8 @@ export class LoginPage {
     private loginService: LoginServiceProvider
   ) {
     this.loginForm = formBuilder.group({
-      username: ['', [Validators.required, forbiddenNameValidator(/ /i)]], //禁止空格字符
-      password: ['', Validators.compose([Validators.minLength(3), Validators.maxLength(15),
+      username: ['', [Validators.required]], //禁止空格字符
+      password: ['', Validators.compose([Validators.maxLength(15),
       Validators.required])]
     });
     this.loginForm.valueChanges
@@ -78,13 +77,21 @@ export class LoginPage {
   openResetPassword() {
   }
 
-  doLogin() {
-    this.presentLoading();
+  doLogin() { 
     this.formErrors["error"] = undefined;
     if (!this.loginForm.valid) {
       //检查账号密码是否有效。
       this.formErrors["error"] = this.validationMessages["invalid"]["invalid"];
     } else {
+      let loading = this.loadingCtrl.create({
+        content: '登录中，请稍候..'
+      });
+      loading.present();
+      if(this.loginForm.value.username){
+        let name = this.loginForm.value.username;
+        name = name.toLowerCase();
+        this.loginForm.value.username = name.replace(/\s+/g,"");
+      }
       UserInfo.prototype.userid = this.loginForm.value.username;
       UserInfo.prototype.password = this.loginForm.value.password;
       UserInfo.prototype.loginType = "manual";
@@ -103,23 +110,31 @@ export class LoginPage {
           this.formErrors["error"] = this.validationMessages["invalid"]["noright"];
         } else if (loginResult.SysMSG[0].tips[0] == "loginOK") {
           //登录成功，跳转到主页
+          UserInfo.prototype.token = loginResult.SysMSG[0].token;
+          UserInfo.prototype.id = loginResult.datas[0].userId;
+          UserInfo.prototype.name = loginResult.datas[0].name;
           this.navCtrl.setRoot(TabsPage); //跳转到首页
         } else {
           this.formErrors["error"] = this.validationMessages["invalid"]["unknowerror"];
         }
-        console.log(loginResult.SysMSG[0].tips[0])
-      }).catch(this.errorHandler);
+        loading.dismiss();
+      }).catch(err=>{
+        loading.dismiss();
+        this.errorHandler(err);
+      });
     }
   }
 
 
   errorHandler(error: any) {
     if (error.status == "0") {
-      alert("网络连接存在问题，请检查网络！");
-    } else if (error.status.indexOf("4") == 0) {
+      alert("无法连接服务器，请检查网络连接！");
+    } else if (error.status !=undefined && error.status.indexOf("4") == 0) {
       alert(`客户端加载故障，错误代码：` + error.status);
-    } else if (error.status.indexOf("5") == 0) {
+    } else if (error.status !=undefined && error.status.indexOf("5") == 0) {
       alert(`服务器故障，错误代码：` + error.status);
+    }else{
+      alert("错误信息："+ error.message +"</br>" + "错误区块："+ error.stack)
     }
   }
 
@@ -142,16 +157,8 @@ export class LoginPage {
   }
 
   presentLoading() {
-    let loading = this.loadingCtrl.create({
-      spinner: 'hide',
-      content: `
-      <div class="custom-spinner-container">
-        <div class="custom-spinner-box"></div>
-      </div>`,
-      dismissOnPageChange: true,
-      duration: 5000
-    });
-    loading.present();
+    
+    
   }
 
 }
