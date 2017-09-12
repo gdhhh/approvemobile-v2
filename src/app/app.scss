@@ -20,3 +20,21 @@
     top: 0;
     left: 0;
 }
+
+ion-icon {
+    &[class*="portal-"] {
+        // Instead of using the font-based icons
+        // We're applying SVG masks
+        mask-size: contain;
+        mask-position: 50% 50%;
+        mask-repeat: no-repeat;
+        background: currentColor;
+        width: 1em;
+        height: 1em;
+    }
+    // custom icons
+    &[class*="portal-shield"] {
+        mask-image: url(../assets/icon/shield.svg);
+    }
+
+}

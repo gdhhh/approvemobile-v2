@@ -122,7 +122,11 @@ page-home {
     margin: 0px;
     min-height: 30px;
     max-height: 30px;
-  } // .scroll-animate-container ion-slide {
+  } 
+  .scroll-animate-container ion-list ion-item:hover{
+    background-color: #488;
+  }
+  // .scroll-animate-container ion-slide {
   //   max-height: 120px;
   //   min-height: 120px;
   // }
@@ -255,4 +259,7 @@ page-home {
   }
 }
 
+body.browser-insertCSS{
+  margin-right:100px;
+}
   

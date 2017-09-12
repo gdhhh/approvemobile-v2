@@ -11,7 +11,7 @@
   <ion-grid>
     <ng-container>
       <ion-row>
-        <ion-col col-4 *ngFor="let icon of icons; let i= index" (click)="navTo(icon?.actionClick,icon?.actionUrl,icon?.lable)">
+        <ion-col col-4 *ngFor="let icon of icons; let i= index" (click)="navTo(icon?.actionClick,icon?.url,icon?.lable)">
           <div class="slice">
             <span> </span>
             <img src={{icon.imageSrc}}>

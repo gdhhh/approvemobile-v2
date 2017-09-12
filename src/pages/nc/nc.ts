@@ -1,3 +1,4 @@
+import { LoadingService } from './../../providers/util/loading-service';
 import { NcBillsDetailServiceProvider } from './../../providers/nc-bills-detail-service/nc-bills-detail-service';
 import { NcBillsDetailPage } from './../nc-bills-detail/nc-bills-detail';
 import { Component, ViewChild } from '@angular/core';
@@ -28,6 +29,7 @@ export class NcPage {
     public billsdetailservice: NcBillsDetailServiceProvider,
     public loadingCtrl: LoadingController,
     public toastCtrl: ToastController,
+    public loadingService: LoadingService,
     public modalCtrl: ModalController
   ) {
   }
@@ -42,11 +44,13 @@ export class NcPage {
   }
 
   //打开单据明细
-  presentModal(itemId, billType) {
-    let modal = this.modalCtrl.create(NcBillsDetailPage, { itemId: itemId, billType: billType });
+  presentModal(itemId, billType, billState) {
+    let modal = this.modalCtrl.create(NcBillsDetailPage, { itemId: itemId, billType: billType ,billState:billState});
     modal.onDidDismiss(data=>{
-      this.getApprovesListTodo(1, "", "");
-      this.getApprovesListDone(1, "", "");
+      if(data){
+        this.getApprovesListTodo(1, "", "");
+        this.getApprovesListDone(1, "", "");
+      }
     });
     modal.present();
   }
@@ -103,10 +107,8 @@ export class NcPage {
 
   //加载待办单据
   getApprovesListTodo(page, pageCount, key) {
-    let loading = this.loadingCtrl.create({
-      content: '单据加载中，请稍候...'
-    });
-    loading.present();
+    this.loadingService.create('单据加载中，请稍候...',true,3000);
+
     let params = new URLSearchParams();
     params.append("action", "1");
     params.append("billState", "1");
@@ -135,23 +137,17 @@ export class NcPage {
       } else {
         console.log(result.sysMSG[0].tips[0])
       }
-      setTimeout(() => {
-        loading.dismiss();
-      }, 500)
+      this.loadingService.dismiss();
     }).catch(err => {
-      setTimeout(() => {
-        loading.dismiss();
-      }, 500)
+      this.loadingService.dismiss();
       alert("抱歉，您遇到一个错误，请截图后联系管理员！错误信息：getApprovesListTodo()@nc.ts =>" + err);
     });
   }
 
   //加载已处理单据
   getApprovesListDone(page, pageCount, key) {
-    let loading = this.loadingCtrl.create({
-      content: '单据加载中，请稍候...'
-    });
-    loading.present();
+    //this.loadingService.create('单据加载中，请稍候...',true,3000);
+    
     let params = new URLSearchParams();
     params.append("action", "1");
     params.append("billState", "2");
@@ -180,9 +176,9 @@ export class NcPage {
       } else {
         console.log(result.sysMSG[0].tips[0])
       }
-      loading.dismiss();
+     //this.loadingService.dismiss()
     }).catch(err => {
-      loading.dismiss();
+     //this.loadingService.dismiss()
       alert("抱歉，您遇到一个错误，请截图后联系管理员！错误信息：getApprovesListDone()@nc.ts =>" + err);
     });
   }

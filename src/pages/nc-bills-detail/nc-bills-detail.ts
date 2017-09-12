@@ -1,3 +1,4 @@
+import {LoginPage} from '../login/login';
 
 import { NcBillsDetailServiceProvider } from './../../providers/nc-bills-detail-service/nc-bills-detail-service';
 import { UserInfo } from './../../providers/constant/constant';
@@ -20,6 +21,7 @@ export class NcBillsDetailPage {
   billDetailInfo;
   billId;
   systemId;
+  billState;
   isHistoryExpand = false;
   isDetailExpand = false;
 
@@ -29,6 +31,7 @@ export class NcBillsDetailPage {
     public viewCtrl: ViewController,
     public loadingCtrl: LoadingController,
     public modalCtrl: ModalController,
+    public nav: NavController,
     public toastCtrl: ToastController,
     public billsdetailservice: NcBillsDetailServiceProvider
   ) {
@@ -36,6 +39,7 @@ export class NcBillsDetailPage {
 
   ionViewDidLoad() {
     this.getApprovesItemDetail()
+    this.billState = this.navParams.get('billState');
   }
 
   dismiss() {
@@ -77,7 +81,13 @@ export class NcBillsDetailPage {
         }
         console.log(result)
       } else {
-        console.log(result)
+        let toastfailed = this.toastCtrl.create({
+          message: "审批秘钥超时失效，为了信息安全，请重新登录！",
+          position: 'top'
+        });
+        toastfailed.present();
+        setTimeout(() => { toastfailed.dismissAll(); }, 6000)
+        setTimeout(() => { this.nav.setRoot(LoginPage);}, 500)
       }
       loading.dismiss();
     });
@@ -113,6 +123,12 @@ export class NcBillsDetailPage {
 
   openApproveModal(approveState) {
     let approveModal = this.modalCtrl.create(ApproveModalPage, { approveState: approveState, billId: this.billId, systemId: this.systemId }, { cssClass: 'inset-modal'});
+    approveModal.onDidDismiss(data =>{
+      let isRefresh = true;
+      if(data == " 审批成功！"|| data == " 驳回成功！"){
+        this.viewCtrl.dismiss(isRefresh);
+      }
+    })
     approveModal.present();
 }
 

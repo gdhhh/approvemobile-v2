@@ -1,0 +1,58 @@
+<!--
+  Generated template for the SecurityPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header >
+
+  <ion-navbar color="primary">
+    <ion-title>安全链接配置</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+
+    <ion-list>
+        
+          <ion-item>
+            <ion-label stacked>外网地址：</ion-label>
+            <ion-input type="text" [(ngModel)]="internet"></ion-input>
+          </ion-item>
+        
+          <ion-item>
+            <ion-label stacked>内网地址：</ion-label>
+            <ion-input type="text" [(ngModel)]="intranet"></ion-input>
+          </ion-item>
+        
+          <ion-item>
+            <ion-label stacked>用户名：</ion-label>
+            <ion-input type="text" [(ngModel)]="username"></ion-input>
+          </ion-item>
+        
+          <ion-item>
+            <ion-label stacked>密码：</ion-label>
+            <ion-input type="password" [(ngModel)]="password"></ion-input>
+          </ion-item>
+        
+        </ion-list>
+
+  <div style="text-align:center;">
+      <button ion-button icon-left color="secondary" (click)="saveSecurityInfo()">
+          <ion-icon name="ios-paper-outline"></ion-icon>
+          保存
+      </button>
+      <button ion-button icon-left  outline (click)="closeSecurity()">
+          <ion-icon name="ios-close-circle-outline"></ion-icon>
+            关闭
+       </button>
+  </div>
+ 
+  <p>说明：</p>
+  <p>1. 移动门户属于集团机密应用，必须通过安全隧道链接才能访问。</p>
+  <p>2. 安全链接建立成功后可通过移动网络（2G/3G/4G）登录移动门户系统。</p>
+  <p>3. 安全链接未建立成功的情况下只能通过公司内部WIFI网络才能访问。</p>
+  <p>4. 如果使用过程中遇到问题，请拨打IT服务热线分机号 5300 报告您的情况，我们会尽快安排专业人员为您处理问题</p>
+</ion-content>

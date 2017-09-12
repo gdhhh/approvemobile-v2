@@ -37,13 +37,13 @@
 <ion-content padding>
   <div [ngSwitch]="approve">
     <ion-list *ngSwitchCase="'todo'">
-      <ion-item detail-push *ngFor="let item of approveItemsTodo" (click)="presentModal(item.itemId,item.itemBillType)">
+      <ion-item detail-push *ngFor="let item of approveItemsTodo" (click)="presentModal(item.itemId,item.itemBillType,1)">
         <h4 class="item-title">{{item.itemTitle}}</h4>
         <p><span>{{item.subTitles[0].subTitle[0].title}}</span><span style="float:right">{{item.subTitles[0].subTitle[2].title}}</span></p>
       </ion-item>
     </ion-list>
     <ion-list *ngSwitchCase="'done'">
-      <ion-item detail-push *ngFor="let item of approveItemsDone" (click)="presentModal(item.itemId,item.itemBillType)">
+      <ion-item detail-push *ngFor="let item of approveItemsDone" (click)="presentModal(item.itemId,item.itemBillType,2)">
         <h4 class="item-title">{{item.itemTitle}}</h4>
         <p><span>{{item.subTitles[0].subTitle[0].title}}</span><span style="float:right">{{item.subTitles[0].subTitle[2].title}}</span></p>
       </ion-item>

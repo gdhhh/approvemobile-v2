@@ -11,7 +11,7 @@
         <ng-container *ngFor="let ico of icons; let i = index;">
           <ion-col *ngIf="i<4">
             <div class="wrapper">
-              <a *ngIf="ico?.imageSrc" (click)="navTo(ico?.actionClick,ico?.actionUrl,ico?.lable)" class="button" [ngStyle]="{ 'background-image': 'url(' + ico?.imageSrc + ')'}"></a>
+              <a *ngIf="ico?.imageSrc" (click)="navTo(ico?.actionClick,ico?.url,ico?.lable)" class="button" [ngStyle]="{ 'background-image': 'url(' + ico?.imageSrc + ')'}"></a>
               <ion-badge class="notifications-badge" color="danger" *ngIf="ico?.tips&&ico?.tips!=' '">{{ico?.tips}}</ion-badge>
               <label class="icon-label">{{ico?.lable}}</label>
             </div>
@@ -26,13 +26,13 @@
 <ion-content fullscreen #mycontent>
   <ion-row class="notification" *ngIf="noticeSlide1">
     <ion-col col-1 align-self-center style="text-align:center" class="notice-title">
-
-      <span>集团</span><br>
-      <span>公告</span>
-
+      <span><img src="assets/img/word/ji.png"></span><br>
+      <span><img src="assets/img/word/tuan.png"></span><br>
+      <span><img src="assets/img/word/gong.png"></span><br>
+      <span><img src="assets/img/word/gao.png"></span><br>
     </ion-col>
     <ion-col col-11 class="scroll-animate-container">
-      <ion-slides autoplay="4000" loop="true" pager autoHeight="true" #noticSlider>
+      <ion-slides autoplay="4000" pager autoHeight="true" #noticSlider>
         <ion-slide>
           <ion-list no-lines>
             <ion-item *ngFor="let item of noticeSlide1; let i = index" (click)="openNotice(item.fdid)">
@@ -51,7 +51,7 @@
         </ion-slide>
         <ion-slide>
           <ion-list no-lines>
-            <ion-item *ngFor="let item of noticeSlide3; let i = index">
+            <ion-item *ngFor="let item of noticeSlide3; let i = index"  (click)="openNotice(item.fdid)">
               <ion-icon name="md-flame" item-start color="danger" *ngIf="item.isTop=='1'"></ion-icon>
               <p><label>{{i+7}}.</label>{{item.subject | subject}}</p>
             </ion-item>

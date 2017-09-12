@@ -1,3 +1,4 @@
+import { UserInfo } from './../../../providers/constant/constant';
 import {LoginPage} from '../../login/login';
 import { NcBillsDetailServiceProvider } from './../../../providers/nc-bills-detail-service/nc-bills-detail-service';
 import { URLSearchParams } from '@angular/http';
@@ -14,6 +15,7 @@ export class ApproveModalPage {
   memo;
   approveState;
   toastMsg;
+  rejectType = "1";
 
   constructor(public navCtrl: NavController,
     public viewCtrl: ViewController,
@@ -48,6 +50,7 @@ export class ApproveModalPage {
       params.append("action", "3");
       params.append("OSystemId",this.navParams.get("systemId"))
       params.append("billId",this.navParams.get('billId'));
+      params.append("rejectType", this.rejectType);
       this.approveService.doApprove(params).then(res => {
         let result;
         xml2js.parseString(res.text(), function (err, oresult) {
@@ -55,12 +58,16 @@ export class ApproveModalPage {
           //console.log(result);
         })
         if(result.sysMSG[0].tips && result.sysMSG[0].tips[0]=="loginOK"){
+          UserInfo.prototype.token = result.sysMSG[0].token;
           let toastok = this.toastCtrl.create({
-            message: result.datas ? result.datas[0] : "",
+            message: result.datas ? result.datas[0] : "审批失败，未知原因。",
             position: 'top'
           });
           toastok.present();
           setTimeout(() => { toastok.dismissAll(); }, 3000)
+          if(result.datas && result.datas[0] == " 审批成功！" || result.datas[0] == " 驳回成功！" ){
+            this.viewCtrl.dismiss(result.datas);
+          }
         }else{
           let toastfailed = this.toastCtrl.create({
             message: "审批秘钥超时失效，为了信息安全，请重新登录！",

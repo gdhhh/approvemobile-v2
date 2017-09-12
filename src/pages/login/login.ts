@@ -1,3 +1,6 @@
+import { LoadingService } from './../../providers/util/loading-service';
+import { ToastService } from './../../providers/util/toast-service';
+import { SecurityPage } from './../security/security';
 import { TabsPage } from './../tabs/tabs';
 import { LoginServiceProvider } from './../../providers/login-service/login-service';
 import { UserInfo } from './../../providers/constant/constant';
@@ -5,7 +8,7 @@ import { HomePage } from '../home/home';
 import { forbiddenNameValidator } from './../../shared/forbidden-string.directive';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Component } from '@angular/core';
-import { IonicPage, NavController, LoadingController } from 'ionic-angular';
+import { IonicPage, NavController, LoadingController, ModalController, Platform } from 'ionic-angular';
 
 // import { Toast } from '@ionic-native/toast';
 // import { ToastController } from 'ionic-angular';
@@ -13,11 +16,13 @@ import { IonicPage, NavController, LoadingController } from 'ionic-angular';
 import xml2js from 'xml2js';
 
 import 'rxjs/add/operator/map';
-
+declare var cordova: any;
 @Component({
   selector: 'page-login',
   templateUrl: 'login.html'
 })
+
+
 export class LoginPage {
 
   backgrounds = [
@@ -57,6 +62,9 @@ export class LoginPage {
     public navCtrl: NavController,
     public formBuilder: FormBuilder,
     public loadingCtrl: LoadingController,
+    public modalCtrl: ModalController,
+    public platform: Platform,
+    public toastCtrl: ToastService,
     private loginService: LoginServiceProvider
   ) {
     this.loginForm = formBuilder.group({
@@ -71,7 +79,17 @@ export class LoginPage {
   }
 
   ionViewDidLoad() {
-
+    if(
+      localStorage.getItem("intranet") &&
+      localStorage.getItem("internet") &&
+      localStorage.getItem("username") &&
+      localStorage.getItem("password")
+    ){
+      this.doConnectSecurity();
+    }else{
+      this.openSecurity();
+      this.toastCtrl.create("您的安全设置不正确,请重新检查。");
+    }
   }
 
   openResetPassword() {
@@ -156,9 +174,39 @@ export class LoginPage {
     }
   }
 
-  presentLoading() {
-    
-    
+  doConnectSecurity(){
+    let internet = localStorage.getItem("internet");
+    let intranet = localStorage.getItem("intranet");
+    let username = localStorage.getItem("username");
+    let password = localStorage.getItem("password");
+    if(internet && intranet && username && password){
+
+      this.platform.ready().then(() => {
+        let loading = this.loadingCtrl.create({
+          content: '正在验证APP安全通道状态，请稍候..'
+        });
+        loading.present();
+        let that = this
+        function success(result){
+          loading.dismiss();
+          that.toastCtrl.create(result,false,3000,'top');
+       }
+       function error(result){
+         loading.dismiss();
+          this.toastCtrl.create("错误，login.ts - method doConnectSecurity"+result);
+       }
+        cordova.exec(success, error, "AnyofficeTool","auth", [internet,intranet,username,password]);
+      })
+      
+    }
+  }
+
+  openSecurity(){
+    let securityModal = this.modalCtrl.create(SecurityPage, {} , {});
+    // securityModal.onDidDismiss(data =>{
+    //   this.doConnectSecurity();
+    // })
+    securityModal.present();
   }
 
 }

@@ -1,4 +1,6 @@
-import { ToastService } from './../providers/toast-service/toast-service';
+import { SecurityPage } from './../pages/security/security';
+import { ToastService } from './../providers/util/toast-service';
+import { LoadingService } from './../providers/util/loading-service';
 import { DateToLocaleDateStringPipe } from './../pipes/DatetoLocaleDateString/DatetoLocaleDateString';
 import {ForbiddenValidatorDirective} from '../shared/forbidden-string.directive';
 import { NoRightPage } from './../pages/no-right/no-right';
@@ -52,6 +54,7 @@ import { NcBillsDetailServiceProvider } from '../providers/nc-bills-detail-servi
     ForbiddenValidatorDirective,
     SubjectPipe,
     ApproveModalPage,
+    SecurityPage,
     DateToLocaleDateStringPipe
   ],
   imports: [
@@ -73,6 +76,7 @@ import { NcBillsDetailServiceProvider } from '../providers/nc-bills-detail-servi
     NcPage,
     NoRightPage,
     ApproveModalPage,
+    SecurityPage,
     NcBillsDetailPage,
     ListPage
   ],
@@ -86,6 +90,7 @@ import { NcBillsDetailServiceProvider } from '../providers/nc-bills-detail-servi
     LoginServiceProvider,
     HomeServiceProvider,
     NcBillsDetailServiceProvider,
+    LoadingService,
     ToastService
   ]
 })

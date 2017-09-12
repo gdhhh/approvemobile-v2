@@ -130,22 +130,23 @@ export class HomePage {
   //打开OA公告
   openNotice(fdid) {
     this.noticSlider.stopAutoplay();
-    const browser = this.iab.create(this.serveradd + 'LandRayOA?username=' + UserInfo.prototype.userid + '&type=1&fdid=' + fdid, '_blank', 'location=no');
+    const browser = this.iab.create(this.serveradd + 'LandRayOA?username=' + UserInfo.prototype.userid + '&type=1&fdid=' + fdid, '_blank', 'location=no,closebuttoncaption=返回门户首页,toolbarposition=top');
+    browser.insertCSS({ code: "body{margin-right: 100px;" })
   }
 
   //打开NC单据明细
   presentNcModal(itemId, billType) {
-    let modal = this.modalCtrl.create(NcBillsDetailPage, { itemId: itemId, billType: billType });
+    let modal = this.modalCtrl.create(NcBillsDetailPage, { itemId: itemId, billType: billType ,billState:1});
     console.log(itemId)
     modal.present();
   }
   //打开oa待办
   openOaTodo(url) {
-    const browser = this.iab.create(GlobalVar.oa_server_address + url, '_blank', 'location=no');
+    const browser = this.iab.create(GlobalVar.oa_server_address + url, '_blank', 'location=no,closebuttoncaption=返回门户首页,toolbarposition=top');
   }
   //打开BPM待办
   openBpmTodo(id) {
-    const browser = this.iab.create(GlobalVar.bpm_server_address + 'jwf/mobile/bpm/task.html?taskId=' + id, '_blank', 'location=no');
+    const browser = this.iab.create(GlobalVar.bpm_server_address + 'jwf/mobile/bpm/task.html?taskId=' + id, '_blank', 'location=no,closebuttoncaption=返回门户首页,toolbarposition=top');
   }
 
   itemClick() {
@@ -154,17 +155,28 @@ export class HomePage {
 
   //打开业务系统
   navTo(action, url, label) {
+    debugger;
     switch (action) {
       case 'initApprove':
         this.navCtrl.push(NcPage);
         break;
       case 'initH5ApproveSystem':
         if (label == "ＯＡ待办") {
-          const browser = this.iab.create(url + '&type=main', '_blank', 'location=no');
+          const browser = this.iab.create(url + '&type=main', '_blank', 'location=no,closebuttoncaption=返回门户首页,toolbarposition=top');
+          browser.on('exit').subscribe(()=>{
+            this.getMainTodo();
+          })
         } else if (label == "公告新闻") {
-          const browser = this.iab.create(url + '&type=newslist', '_blank', 'location=no');
+          const browser = this.iab.create(url + '&type=newslist', '_blank', 'location=no,closebuttoncaption=返回门户首页,toolbarposition=top');
+          browser.insertCSS({ code: "body{margin-right: 100px;" })
+          browser.on('exit').subscribe(()=>{
+            this.getMainTodo();
+          })
         } else if (label == "业务审批") {
-          const browser = this.iab.create(url, '_blank', 'location=no');
+          const browser = this.iab.create(url, '_blank', 'location=no,closebuttoncaption=返回门户首页,toolbarposition=top');
+          browser.on('exit').subscribe(()=>{
+            this.getMainTodo();
+          })
         }
         break;
       default:
@@ -183,6 +195,14 @@ export class HomePage {
       let result = res.json() as any;
       if (result.icons && result.icons.length > 0) {
         this.icons = result.icons;
+        if(this.icons){
+          for(var i in this.icons){
+            if(!this.isInitBpm && this.icons[i].lable =="业务审批"){
+              const browser = this.iab.create(this.icons[i].url, '_blank', 'hidden=yes');
+              this.isInitBpm =true;
+            }
+          }
+        }
       }
       if (result.dataList && result.dataList.length > 0) {
         this.shortcutList = result.dataList;
@@ -234,6 +254,10 @@ export class HomePage {
       }
 
     })
+  }
+
+  slideChanged(index){
+      this.noticSlider.slideTo(1); 
   }
 }
 

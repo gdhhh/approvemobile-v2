@@ -59,9 +59,9 @@ export class MyApp {
         //设备名
         UserInfo.prototype.devicename = window.device.name;
         //IMEI 苹果拒绝获取IMEI 使用UUID代替
-        UserInfo.prototype.IMEI = this.device.uuid;
+        UserInfo.prototype.IMEI = this.device.serial;
         //MAC md5 => UUID
-        UserInfo.prototype.MAC = md5(this.device.uuid);
+        UserInfo.prototype.MAC = this.device.uuid;
         //IP WIFI+Carrier
         networkinterface.getWiFiIPAddress(onGetWifiIpSuccess, onGetWifiIpError);
         networkinterface.getCarrierIPAddress(onGetCarrierIpSuccess, onGetCarrierIpError)

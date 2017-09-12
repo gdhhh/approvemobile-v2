@@ -1,6 +1,5 @@
 import {LoginPage} from '../login/login';
 import { UserInfo } from './../../providers/constant/constant';
-import { ToastService } from './../../providers/toast-service/toast-service';
 import { Component, ViewChild } from '@angular/core';
 import { Nav, IonicPage, NavController, NavParams, App } from 'ionic-angular';
 
@@ -28,8 +27,7 @@ export class InfoPage {
 
   constructor(
     public navCtrl: NavController, 
-    public app:App,
-    public toastCtrl: ToastService) { }
+    public app:App) { }
 
   ionViewDidLoad() {
     console.log('Hello ProfileFour Page');

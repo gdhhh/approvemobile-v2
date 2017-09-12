@@ -9,7 +9,9 @@ export const GlobalVar = Object.freeze({
   server_address:"http://mp.nimble.cn:88/portal/",
   //server_address:"http://172.22.31.36:8080/",
   oa_server_address:"http://mjoa.nimble.cn/",
-  bpm_server_address:"http://bpm.nimble.cn:8080/"
+  bpm_server_address:"http://bpm.nimble.cn:8080/",
+  security_internet: "113.98.115.149",
+  security_intranet: "172.16.0.175"
 })
 
 export class UserInfo{

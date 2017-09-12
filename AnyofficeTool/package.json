@@ -1,0 +1,19 @@
+{
+  "name": "AnyofficeTool",
+  "version": "1.0.0",
+  "description": "",
+  "cordova": {
+    "id": "cn.nimble.anyofficetool",
+    "platforms": [
+      "android",
+      "ios"
+    ]
+  },
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova-android",
+    "cordova-ios"
+  ],
+  "author": "",
+  "license": "ISC"
+}

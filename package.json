@@ -27,7 +27,9 @@
         "@ionic-native/status-bar": "3.12.1",
         "@ionic-native/toast": "^4.1.0",
         "@ionic/storage": "2.0.1",
+        "AnyofficeTool": "file:AnyofficeTool",
         "animate.css": "^3.5.2",
+        "com.lampa.startapp": "^0.1.4",
         "cordova": "^7.0.1",
         "cordova-android": "^6.2.3",
         "cordova-ios": "^4.4.0",
@@ -46,8 +48,10 @@
         "ios-sim": "^6.0.0",
         "rxjs": "5.4.0",
         "sw-toolbox": "3.6.0",
+        "undefined": "^0.1.0",
         "xml2js": "^0.4.17",
-        "zone.js": "0.8.12"
+        "zone.js": "0.8.12",
+        "cn.nimble.anyofficetool": "AnyofficeTool"
     },
     "devDependencies": {
         "@ionic/app-scripts": "2.0.0",
@@ -68,7 +72,9 @@
             "cordova-plugin-inappbrowser": {},
             "cordova-plugin-networkinterface": {},
             "cordova-plugin-device-name": {},
-            "cordova-plugin-x-toast": {}
+            "cordova-plugin-x-toast": {},
+            "com.lampa.startapp": {},
+            "cn.nimble.anyofficetool": {}
         },
         "platforms": [
             "android",

@@ -82,7 +82,7 @@
     </ng-container>
   </ion-list>
 </ion-content>
-<ion-footer>
+<ion-footer *ngIf="billState == 1">
   <ion-toolbar>
       <button ion-button small color="danger" class="footer-btn" (click)="openApproveModal(3)">
         驳回
