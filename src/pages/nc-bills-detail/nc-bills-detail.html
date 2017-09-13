@@ -29,11 +29,11 @@
         <div *ngIf="row?.cell">{{row?.cell[0]?.cellContent}}</div>
         <ion-note class="note-title" *ngIf="row?.cell" item-start>{{row?.cell[0]?.cellTitle}}</ion-note>
       </ion-item>
-      <ion-item *ngIf="row?.group" class="expandable-link" (click)="expandTab('history')">
+      <ion-item *ngIf='row?.group && row?.rowTitle =="审批历史"' class="expandable-link" (click)="expandTab('history')">
         <div>
           <ion-icon [name]="isHistoryExpand?'ios-arrow-dropdown':'ios-arrow-dropright-circle'" item-start></ion-icon>{{row?.rowTitle}}</div>
       </ion-item>
-      <ng-container *ngIf='row?.group'>
+      <ng-container *ngIf='row?.group && row?.rowTitle =="审批历史"'>
         <ion-list [hidden]="!isHistoryExpand" class="expandable-item">
           <ion-item-group>
             <ion-item-divider color="light">
@@ -54,6 +54,24 @@
                 {{history.subTitles[0].subTitle[1].title}}
                 <ion-note [ngClass]="{'note-approved':history.subTitles[0].subTitle[0].title == '已审批'}">{{history.subTitles[0].subTitle[0].title}}</ion-note>
                 <ion-note item-end>{{history.subTitles[0].subTitle[2].title}}</ion-note>
+              </ion-item>
+            </ng-container>
+          </ion-item-group>
+        </ion-list>
+      </ng-container>
+      <ion-item *ngIf='row?.group && row?.rowTitle =="附件"' class="expandable-link" (click)="expandTab('attache')">
+        <div>
+          <ion-icon [name]="isAttacheExpand?'ios-arrow-dropdown':'ios-arrow-dropright-circle'" item-start></ion-icon>{{row?.rowTitle}}</div>
+      </ion-item>
+      <ng-container *ngIf='row?.group && row?.rowTitle =="附件"'>
+        <ion-list [hidden]="!isAttacheExpand" class="expandable-item">
+          <ion-item-group>
+            <ng-container *ngFor="let history of row?.group[0]?.item; let i=index">
+              <ion-item *ngIf="i>1&&
+              history?.subTitles[0].subTitle[1].title">
+                <h4>{{history.itemTitle[0]}}</h4>
+                <p>{{history.subTitles[0].subTitle[0].title}}</p>
+                <p>{{history.subTitles[0].subTitle[2].title}}</p>
               </ion-item>
             </ng-container>
           </ion-item-group>

@@ -24,6 +24,7 @@ export class NcBillsDetailPage {
   billState;
   isHistoryExpand = false;
   isDetailExpand = false;
+  isAttacheExpand = false;
 
   constructor(
     public navCtrl: NavController,
@@ -118,6 +119,8 @@ export class NcBillsDetailPage {
       this.isHistoryExpand == true ? this.isHistoryExpand = false : this.isHistoryExpand = true;
     } else if (tab == 'detail') {
       this.isDetailExpand == true ? this.isDetailExpand = false : this.isDetailExpand = true;
+    } else if (tab == 'attache') {
+      this.isAttacheExpand == true ? this.isAttacheExpand = false : this.isAttacheExpand = true;
     }
   }
 

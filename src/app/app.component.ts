@@ -64,7 +64,9 @@ export class MyApp {
         UserInfo.prototype.MAC = this.device.uuid;
         //IP WIFI+Carrier
         networkinterface.getWiFiIPAddress(onGetWifiIpSuccess, onGetWifiIpError);
-        networkinterface.getCarrierIPAddress(onGetCarrierIpSuccess, onGetCarrierIpError)
+        networkinterface.getCarrierIPAddress(onGetCarrierIpSuccess, onGetCarrierIpError);
+        //appversion
+        UserInfo.prototype.appVersion = this.device.appVersion;
       } else if (this.device.platform == "Android") {
         //安卓设备
         //设备名
