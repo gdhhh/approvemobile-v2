@@ -6,6 +6,7 @@ import { Component } from '@angular/core';
 import { ToastController, IonicPage, NavController, NavParams, ViewController, LoadingController } from 'ionic-angular';
 import xml2js from 'xml2js';
 
+
 @Component({
   selector: 'page-approve-modal',
   templateUrl: 'approve-modal.html',

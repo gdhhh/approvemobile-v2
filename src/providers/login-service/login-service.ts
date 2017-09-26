@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { URLSearchParams, Headers, Http } from '@angular/http';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
+import 'rxjs/add/operator/timeout';
 
 
 /*
@@ -23,7 +24,8 @@ export class LoginServiceProvider {
   doLogin(params) {
     let body = new URLSearchParams();
     body.append("body", JSON.stringify(params))
-    return this.http.post(this.urlActionUserLogin, body.toString(), { headers: this.headers })
+   // alert("url:"+this.urlActionUserLogin +"&&&&param:"+body);
+    return this.http.post(this.urlActionUserLogin, body.toString(), { headers: this.headers }).timeout(10000)
       .toPromise().then(res => {
         return res;
     })

@@ -1,11 +1,19 @@
+import { ToastService } from './../../providers/util/toast-service';
+import { LoadingService } from './../../providers/util/loading-service';
+import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer';
+import { File } from '@ionic-native/file';
 import {LoginPage} from '../login/login';
 
 import { NcBillsDetailServiceProvider } from './../../providers/nc-bills-detail-service/nc-bills-detail-service';
-import { UserInfo } from './../../providers/constant/constant';
+import { UserInfo, GlobalVar } from './../../providers/constant/constant';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ViewController, LoadingController, ModalController, ToastController } from 'ionic-angular';
 import xml2js from 'xml2js';
 import { ApproveModalPage } from "./approve-modal/approve-modal";
+import { FileOpener } from '@ionic-native/file-opener'
+import { Device } from "@ionic-native/device";
+
+import {URLSearchParams} from '@angular/http';
 
 /**
 NC审批单据详情页面
@@ -23,17 +31,23 @@ export class NcBillsDetailPage {
   systemId;
   billState;
   isHistoryExpand = false;
-  isDetailExpand = false;
-  isAttacheExpand = false;
+  isDetailExpand = true;
+  isAttacheExpand = true ;
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     public viewCtrl: ViewController,
     public loadingCtrl: LoadingController,
+    public loadingService: LoadingService,
     public modalCtrl: ModalController,
     public nav: NavController,
     public toastCtrl: ToastController,
+    public taostService: ToastService,
+    public fileOpener: FileOpener,
+    public transfer: FileTransfer,
+    public file:File,
+    public device: Device,
     public billsdetailservice: NcBillsDetailServiceProvider
   ) {
   }
@@ -134,5 +148,80 @@ export class NcBillsDetailPage {
     })
     approveModal.present();
 }
+//测试用 打开文档
+
+openfiles(filename,fileId){
+    this.loadingService.create("正在为您打开附件，请稍候...",false,true);
+    const fileTransfer: FileTransferObject = this.transfer.create();
+    debugger;
+    let contentName;
+    let contentType;
+    if(filename){
+      let lowerFileName = filename[0].toLowerCase();
+      if(lowerFileName.indexOf(".pdf")>0){
+        contentName = "file.pdf";
+        contentType = "application/pdf";
+      }else if(lowerFileName.indexOf(".docx")>0){
+        contentName = "file.docx";
+        contentType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+      }else if(lowerFileName.indexOf(".xlsx")>0){
+        contentName = "file.xlsx";
+        contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+      }else if(lowerFileName.indexOf(".pptx")>0){
+        contentName = "file.pptx";
+        contentType = "application/vnd.openxmlformats-officedocument.presentationml.presentation";
+      }else if(lowerFileName.indexOf(".doc")>0){
+        contentName = "file.doc";
+        contentType = "application/msword";
+      }else if(lowerFileName.indexOf(".xls")>0){
+        contentName = "file.xls";
+        contentType = "application/vnd.ms-excel";
+      }else if(lowerFileName.indexOf(".ppt")>0){
+        contentName = "file.ppt";
+        contentType = "application/vnd.ms-powerpoint";
+      }else if(lowerFileName.indexOf(".jpg")>0){
+        contentName = "file.jpg";
+        contentType = "image/jpeg";
+      }else if(lowerFileName.indexOf(".png")>0){
+        contentName = "file.png";
+        contentType = "image/png";
+      }
+    }
+    let param = new URLSearchParams();
+    param.append("fileName",filename);
+    param.append("fileId",fileId);
+    param.append("contentName",contentName);
+    this.billsdetailservice.doGetFile(param).then(res=>{
+      if(res.result ==true){
+        //let url = GlobalVar.server_address + "attachment/"+ fileId +filename;
+        let url = GlobalVar.server_address + "attachment/"+ fileId + contentName;
+        let savePath = '';
+        if(this.device.platform == 'iOS'){
+          savePath = this.file.cacheDirectory;
+        }else if (this.device.platform =='Android'){
+          savePath = this.file.externalDataDirectory;
+        }
+        fileTransfer.download(url,savePath+contentName).then((entry) =>{
+            console.log(entry.toURL());
+            this.fileOpener.open( entry.toURL(),contentType)
+            .then(()=> {
+              setTimeout(()=>{
+                this.loadingService.dismiss();
+              },1500)   
+            })
+            .catch(e=>console.log("error："+e));
+          }, (error) => {
+            console.log(error);
+            this.loadingService.dismiss();
+          }
+        ).catch();
+      }else{
+        this.loadingService.dismiss();
+        this.taostService.create("抱歉，移动门户暂时无法为您打开此附件，请在登录PC门户查看。");
+      }
+    });
+
+    
+  }
 
 }

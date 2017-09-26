@@ -5,6 +5,9 @@ import { Component, ViewChild } from '@angular/core';
 import { IonicPage, NavController, NavParams, ModalController, LoadingController, ToastController } from 'ionic-angular';
 import { UserInfo } from "../../providers/constant/constant";
 import xml2js from 'xml2js';
+
+import {URLSearchParams} from '@angular/http';
+
 /**
 NC审批列表页面
  */

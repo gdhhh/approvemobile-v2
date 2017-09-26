@@ -10,6 +10,7 @@ import { ModalController, Nav, Platform } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { Device } from '@ionic-native/device';
+import { AppVersion } from '@ionic-native/app-version';
 import { InAppBrowser } from '@ionic-native/in-app-browser';
 
 import { HomePage } from '../pages/home/home';
@@ -34,6 +35,7 @@ export class MyApp {
     public statusBar: StatusBar,
     public splashScreen: SplashScreen,
     private device: Device,
+    public appVersion: AppVersion,
     public modalCtrl: ModalController
   ) {
     this.initializeApp();
@@ -51,9 +53,12 @@ export class MyApp {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
       this.statusBar.styleDefault();
+      this.splashScreen.hide();
       // splash
       //let splash = this.modalCtrl.create(SplashPage);
       // splash.present()
+      debugger;
+      console.log(this.device.platform)
       if (this.device.platform == "iOS") {
         //苹果设备
         //设备名
@@ -66,7 +71,9 @@ export class MyApp {
         networkinterface.getWiFiIPAddress(onGetWifiIpSuccess, onGetWifiIpError);
         networkinterface.getCarrierIPAddress(onGetCarrierIpSuccess, onGetCarrierIpError);
         //appversion
-        UserInfo.prototype.appVersion = this.device.appVersion;
+        this.appVersion.getVersionNumber().then(appver=>{
+          UserInfo.prototype.appVersion = appver;
+        });
       } else if (this.device.platform == "Android") {
         //安卓设备
         //设备名

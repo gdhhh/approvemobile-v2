@@ -1,3 +1,4 @@
+import { AppVersion } from '@ionic-native/app-version';
 import { SecurityPage } from './../pages/security/security';
 import { ToastService } from './../providers/util/toast-service';
 import { LoadingService } from './../providers/util/loading-service';
@@ -34,6 +35,11 @@ import { LoginServiceProvider } from './../providers/login-service/login-service
 import { HomeServiceProvider } from '../providers/home-service/home-service';
 import { SubjectPipe } from '../pipes/subject/subject';
 import { NcBillsDetailServiceProvider } from '../providers/nc-bills-detail-service/nc-bills-detail-service';
+
+import { FileOpener } from '@ionic-native/file-opener';
+import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-native/file-transfer';
+import { File } from '@ionic-native/file';
+
 
 
 
@@ -91,7 +97,12 @@ import { NcBillsDetailServiceProvider } from '../providers/nc-bills-detail-servi
     HomeServiceProvider,
     NcBillsDetailServiceProvider,
     LoadingService,
-    ToastService
+    ToastService,
+    FileOpener,
+    AppVersion,
+    FileTransfer, 
+    FileTransferObject,
+    File
   ]
 })
 export class AppModule {}

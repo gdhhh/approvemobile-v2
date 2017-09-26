@@ -6,6 +6,8 @@ import {NcBillsDetailServiceProvider} from '../../providers/nc-bills-detail-serv
 import { Component } from '@angular/core';
 import { NavController, NavParams, LoadingController } from 'ionic-angular';
 
+import {URLSearchParams} from '@angular/http';
+
 @Component({
   selector: 'page-list',
   templateUrl: 'list.html'
@@ -64,5 +66,16 @@ export class ListPage {
       default:
         this.navCtrl.push(NoRightPage);
     };
+  }
+
+  testinAppbrowser(){
+    const browser = this.iab.create("http://www.baidu.com", '_blank', 'location=no');
+  }
+  testinAppbrowserSetTimeOut(){
+    const browser = 
+    setTimeout(()=>{
+      this.iab.create("http://www.baidu.com", '_blank', 'location=no');
+    },1000);
+   
   }
 }

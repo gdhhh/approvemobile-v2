@@ -3,6 +3,8 @@ import { UserInfo } from './../../providers/constant/constant';
 import { Component, ViewChild } from '@angular/core';
 import { Nav, IonicPage, NavController, NavParams, App } from 'ionic-angular';
 
+import {URLSearchParams} from '@angular/http';
+
 @Component({
   selector: 'page-info',
   templateUrl: 'info.html',
@@ -42,6 +44,7 @@ export class InfoPage {
   logOut() {
     //UserInfo.prototype.cleanUser();
     this.app.getRootNav().setRoot(LoginPage);
+    localStorage.removeItem("password");
   }
 
 }

@@ -1,3 +1,4 @@
+import { Device } from '@ionic-native/device';
 import { LoadingService } from './../../providers/util/loading-service';
 import { ToastService } from './../../providers/util/toast-service';
 import { SecurityPage } from './../security/security';
@@ -14,6 +15,7 @@ import { IonicPage, NavController, LoadingController, ModalController, Platform 
 // import { ToastController } from 'ionic-angular';
 
 import xml2js from 'xml2js';
+import {URLSearchParams} from '@angular/http';
 
 import 'rxjs/add/operator/map';
 declare var cordova: any;
@@ -56,6 +58,11 @@ export class LoginPage {
     }
   };
 
+  isShowVPNSetting = false;
+  loginUserName;
+  loginPassword;
+  date:Date;
+
   public loginForm: any;
 
   constructor(
@@ -65,6 +72,7 @@ export class LoginPage {
     public modalCtrl: ModalController,
     public platform: Platform,
     public toastCtrl: ToastService,
+    public device: Device,
     private loginService: LoginServiceProvider
   ) {
     this.loginForm = formBuilder.group({
@@ -79,16 +87,40 @@ export class LoginPage {
   }
 
   ionViewDidLoad() {
-    if(
-      localStorage.getItem("intranet") &&
-      localStorage.getItem("internet") &&
-      localStorage.getItem("username") &&
-      localStorage.getItem("password")
-    ){
-      this.doConnectSecurity();
+       //集成华为安全
+        // if(this.devce.platform =="iOS"){
+          // if(localStorage.getItem("loginName")){
+          //   this.loginForm.value.username = localStorage.getItem("loginName");
+          // }
+          // this.isShowVPNSetting = true;
+          // if(
+          //   localStorage.getItem("intranet") &&
+          //   localStorage.getItem("internet") &&
+          //   localStorage.getItem("username") &&
+          //   localStorage.getItem("password")
+          // ){
+          //   this.doConnectSecurity();
+          // }else{
+          //   this.openSecurity();
+          //   this.toastCtrl.create("您的安全设置不正确,请重新检查。");
+          // }
+        // }
+  }
+  ionViewDidEnter(){
+    if(localStorage.getItem("username")){
+      this.loginUserName = localStorage.getItem("username");
+    }
+    let d =Date as any;
+    let lastTime = localStorage.getItem("time") as any;
+    if(localStorage.getItem("username")&&localStorage.getItem("password")&&localStorage.getItem("time") && d.parse(new Date()) - lastTime < 1800000){
+        this.loginPassword = localStorage.getItem("password");
+        this.loginUserName = localStorage.getItem("username");
+        setTimeout(()=>{
+          this.doLogin();
+        },1000)
+        
     }else{
-      this.openSecurity();
-      this.toastCtrl.create("您的安全设置不正确,请重新检查。");
+      localStorage.removeItem("password")
     }
   }
 
@@ -115,31 +147,40 @@ export class LoginPage {
       UserInfo.prototype.loginType = "manual";
       UserInfo.prototype.projectId = "0000000001";
 
-      this.loginService.doLogin(UserInfo.prototype).then(res => {
-        let loginResult;
-        xml2js.parseString(res.text(), function (err, result) {
-          loginResult = result.response
-        })
-        if (loginResult.SysMSG[0].tips[0] == "loginFail") {
-          //账号或密码错误，请核实后重新登录。
-          this.formErrors["error"] = this.validationMessages["invalid"]["invalid"];
-        } else if (loginResult.SysMSG[0].tips[0] == "DeviceAccessNotAllow") {
-          //您的设备没有授权登录此系统，请联系管理员开通权限。
-          this.formErrors["error"] = this.validationMessages["invalid"]["noright"];
-        } else if (loginResult.SysMSG[0].tips[0] == "loginOK") {
-          //登录成功，跳转到主页
-          UserInfo.prototype.token = loginResult.SysMSG[0].token;
-          UserInfo.prototype.id = loginResult.datas[0].userId;
-          UserInfo.prototype.name = loginResult.datas[0].name;
-          this.navCtrl.setRoot(TabsPage); //跳转到首页
-        } else {
-          this.formErrors["error"] = this.validationMessages["invalid"]["unknowerror"];
-        }
-        loading.dismiss();
-      }).catch(err=>{
-        loading.dismiss();
-        this.errorHandler(err);
-      });
+      setTimeout(()=>{
+        this.loginService.doLogin(UserInfo.prototype).then(res => {
+          let loginResult;
+          xml2js.parseString(res.text(), function (err, result) {
+            loginResult = result.response
+          })
+          if (loginResult.SysMSG[0].tips[0] == "loginFail") {
+            //账号或密码错误，请核实后重新登录。
+            this.formErrors["error"] = this.validationMessages["invalid"]["invalid"];
+          } else if (loginResult.SysMSG[0].tips[0] == "DeviceAccessNotAllow") {
+            //您的设备没有授权登录此系统，请联系管理员开通权限。
+            this.formErrors["error"] = this.validationMessages["invalid"]["noright"];
+          } else if (loginResult.SysMSG[0].tips[0] == "loginOK") {
+            //登录成功，跳转到主页
+            UserInfo.prototype.token = loginResult.SysMSG[0].token;
+            UserInfo.prototype.id = loginResult.datas[0].userId;
+            UserInfo.prototype.name = loginResult.datas[0].name;
+            localStorage.setItem("loginName",UserInfo.prototype.name);
+            localStorage.setItem("username",UserInfo.prototype.userid);
+            localStorage.setItem("password",UserInfo.prototype.password);
+            this.date = new Date(Date.now());
+            let d =Date as any;
+            localStorage.setItem("time",d.parse(this.date));
+            this.navCtrl.setRoot(TabsPage); //跳转到首页
+          } else {
+            this.formErrors["error"] = this.validationMessages["invalid"]["unknowerror"];
+          }
+          loading.dismiss();
+        }).catch(err=>{
+          loading.dismiss();
+          this.errorHandler(err);
+        });
+      },1000);
+      
     }
   }
 
@@ -151,7 +192,10 @@ export class LoginPage {
       alert(`客户端加载故障，错误代码：` + error.status);
     } else if (error.status !=undefined && error.status.indexOf("5") == 0) {
       alert(`服务器故障，错误代码：` + error.status);
-    }else{
+    } else if( error.message == "Timeout has occurred"){
+      alert(`请求超时,请稍后重试！` );
+    }
+    else{
       alert("错误信息："+ error.message +"</br>" + "错误区块："+ error.stack)
     }
   }
@@ -201,12 +245,45 @@ export class LoginPage {
     }
   }
 
-  openSecurity(){
-    let securityModal = this.modalCtrl.create(SecurityPage, {} , {});
-    // securityModal.onDidDismiss(data =>{
-    //   this.doConnectSecurity();
-    // })
-    securityModal.present();
-  }
+  // openSecurity(){
+  //   let securityModal = this.modalCtrl.create(SecurityPage, {} , {});
+  //   // securityModal.onDidDismiss(data =>{
+  //   //   this.doConnectSecurity();
+  //   // })
+  //   securityModal.present();
+  // }
 
+  //打开安全应用
+  openSecurity(){
+    if (this.device.platform == "iOS") {
+      debugger;
+      var sApp = (window as any).startApp.set("anyoffice://");
+      sApp.check(function (values) { /* success */
+        sApp.start(function () { /* success */
+          console.log("anyoffice lanuch OK");
+        }, function (error) { /* fail */
+          alert("打开anyoffice失败" + error);
+        });
+      }, function (error) { /* fail */
+        var r = confirm("检测到您手机未安装anyoffice安全应用，是否要下载？");
+        if (r == true) {
+          (window as any).open("https://fir.im/mjaqaz")
+        }
+      });
+    } else if (this.device.platform == "Android") {
+      let appId = "com.huawei.svn.hiwork";
+      let appStarter = (window as any).startApp.set({ "package": appId });
+      appStarter.start(function (msg) {
+         console.log('starting kk app: ' + msg);
+      }, function (err) {
+        console.log('anyoffice app not installed', err);
+        var r = confirm("检测到您手机未安装anyoffice安全应用，是否要下载？");
+        if (r == true) {
+          (window as any).open("https://fir.im/mjaqaz")
+        }
+      });
+    } else {
+      alert("不能打开KK")
+    }
+  }
 }

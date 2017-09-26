@@ -66,12 +66,11 @@
       <ng-container *ngIf='row?.group && row?.rowTitle =="附件"'>
         <ion-list [hidden]="!isAttacheExpand" class="expandable-item">
           <ion-item-group>
-            <ng-container *ngFor="let history of row?.group[0]?.item; let i=index">
-              <ion-item *ngIf="i>1&&
-              history?.subTitles[0].subTitle[1].title">
-                <h4>{{history.itemTitle[0]}}</h4>
-                <p>{{history.subTitles[0].subTitle[0].title}}</p>
-                <p>{{history.subTitles[0].subTitle[2].title}}</p>
+            <ng-container *ngFor="let attachment of row?.group[0]?.item; let i=index">
+              <ion-item (click)="openfiles(attachment?.itemTitle, attachment?.itemId)">
+                <h4>{{attachment.itemTitle[0]}}</h4>
+                <p>{{attachment.subTitles[0].subTitle[0].title}}</p>
+                <p>{{attachment.subTitles[0].subTitle[2].title}}</p>
               </ion-item>
             </ng-container>
           </ion-item-group>

@@ -9,7 +9,7 @@
     <img class="logo" src="assets/img/logo/logo-nimble.png" />
     <form (submit)="doLogin()" [formGroup]="loginForm">
       <ion-item>
-        <ion-input type="text" formControlName="username" placeholder="请输入OA账号"></ion-input>
+        <ion-input type="text" formControlName="username" placeholder="请输入OA账号" [ngModel]="loginUserName"></ion-input>
       </ion-item>
       <ion-card *ngIf="formErrors?.username" color="danger" class="animation-alert">
         <ion-card-content>
@@ -17,14 +17,14 @@
         </ion-card-content>
       </ion-card>
       <ion-item>
-        <ion-input type="password" formControlName="password" placeholder="请输入密码..."></ion-input>
+        <ion-input type="password" formControlName="password" placeholder="请输入密码..." [ngModel]="loginPassword"></ion-input>
       </ion-item>
       <ion-card *ngIf="formErrors?.password" color="danger" class="animation-alert">
         <ion-card-content>
           {{formErrors?.password}}
         </ion-card-content>
       </ion-card>
-      <button ion-button margin color="danger">登录</button>
+      <button ion-button block color="danger" class="login-button">登录</button>
       <ion-card *ngIf="formErrors?.error" color="danger" class="animation-alert">
         <ion-card-content>
           {{formErrors?.error}}
@@ -32,9 +32,13 @@
       </ion-card>
       <!--<p (click)="openResetPassword()"><strong>Forgot your password?</strong></p>-->
     </form>
-    <button ion-button icon-left (click)="openSecurity()">
+    <!-- <button ion-button block outline icon-left (click)="openSecurity()" class="login-button" *ngIf="isShowVPNSetting">
         <ion-icon name="portal-shield"></ion-icon>
         信息安全隧道设置
+      </button> -->
+      <button ion-button outline icon-left (click)="openSecurity()" class="login-button">
+        <ion-icon name="portal-shield"></ion-icon>
+        Anyoffice 安全应用
       </button>
   </div>
 </ion-content>

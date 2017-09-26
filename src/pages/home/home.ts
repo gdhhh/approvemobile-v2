@@ -1,4 +1,8 @@
-import {NcBillsDetailPage} from '../nc-bills-detail/nc-bills-detail';
+import { ToastService } from './../../providers/util/toast-service';
+import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer';
+import { Device } from '@ionic-native/device';
+import { URLSearchParams, Http, Headers } from '@angular/http';
+import { NcBillsDetailPage } from '../nc-bills-detail/nc-bills-detail';
 import { NoRightPage } from './../no-right/no-right';
 import { NcBillsDetailServiceProvider } from './../../providers/nc-bills-detail-service/nc-bills-detail-service';
 import { NcPage } from './../nc/nc';
@@ -8,8 +12,12 @@ import { OaPage } from './../oa/oa';
 import { Component, ViewChild, Renderer, ElementRef } from '@angular/core';
 import { NavController, Slides, LoadingController, ToastController, ModalController } from 'ionic-angular';
 import { InAppBrowser } from "@ionic-native/in-app-browser";
+import { File } from '@ionic-native/file';
+import { FileOpener } from '@ionic-native/file-opener';
 
 import xml2js from 'xml2js';
+
+import 'rxjs/add/operator/map';
 
 
 @Component({
@@ -44,15 +52,15 @@ export class HomePage {
   private serveradd = GlobalVar.server_address;
   slides = [
     {
-      imageUrl: "assets/img/banner/pic1.jpg",
+      imageUrl: this.serveradd + "images/banner/pic1.jpg",
       private: false
     },
     {
-      imageUrl: "assets/img/banner/pic2.jpg",
+      imageUrl: this.serveradd + "images/banner/pic2.jpg",
       private: false
     },
     {
-      imageUrl: "assets/img/banner/pic3.jpg",
+      imageUrl: this.serveradd + "images/banner/pic3.jpg",
       private: true
     }
   ]
@@ -62,10 +70,15 @@ export class HomePage {
     private homeservice: HomeServiceProvider,
     private approveService: NcBillsDetailServiceProvider,
     public loadingCtrl: LoadingController,
-    public toastCtrl: ToastController,
+    public toastCtrl: ToastService,
     public renderer: Renderer,
     public element: ElementRef,
     private iab: InAppBrowser,
+    private device: Device,
+    private transfer: FileTransfer,
+    private file: File,
+    private fileOpener: FileOpener,
+    public http: Http,
     public modalCtrl: ModalController
   ) { }
 
@@ -111,10 +124,10 @@ export class HomePage {
     this.slider.startAutoplay();
   }
   //打开主页列表
-  openMainTodo(item){
+  openMainTodo(item) {
     switch (item.actionClick) {
       case 'initApprove':
-        this.presentNcModal(item.itemId,item.billType);
+        this.presentNcModal(item.itemId, item.billType);
         break;
       case 'initH5ApproveSystem':
         if (item.lable == "ＯＡ待办") {
@@ -130,19 +143,29 @@ export class HomePage {
   //打开OA公告
   openNotice(fdid) {
     this.noticSlider.stopAutoplay();
-    const browser = this.iab.create(this.serveradd + 'LandRayOA?username=' + UserInfo.prototype.userid + '&type=1&fdid=' + fdid, '_blank', 'location=no,closebuttoncaption=返回门户首页,toolbarposition=top');
+    const browser = this.iab.create(this.serveradd + 'LandRayOA?username=' + UserInfo.prototype.userid + '&type=1&fdid=' + fdid, '_blank', 'location=yes,closebuttoncaption=返回门户首页,toolbarposition=top');
     browser.insertCSS({ code: "body{margin-right: 100px;" })
+    debugger;
   }
 
   //打开NC单据明细
   presentNcModal(itemId, billType) {
-    let modal = this.modalCtrl.create(NcBillsDetailPage, { itemId: itemId, billType: billType ,billState:1});
+    let modal = this.modalCtrl.create(NcBillsDetailPage, { itemId: itemId, billType: billType, billState: 1 });
     console.log(itemId)
     modal.present();
   }
   //打开oa待办
   openOaTodo(url) {
-    const browser = this.iab.create(GlobalVar.oa_server_address + url, '_blank', 'location=no,closebuttoncaption=返回门户首页,toolbarposition=top');
+    debugger;
+    if (this.device.platform == "Android") {
+      const browser = this.iab.create(GlobalVar.oa_server_address + url, '_blank', 'location=yes,closebuttoncaption=返回门户首页,toolbarposition=top');
+      browser.on('loadstart').subscribe((event) => {
+        console.log(event);
+      })
+    } else {
+      const browser = this.iab.create(GlobalVar.oa_server_address + url, '_blank', 'location=no,closebuttoncaption=返回门户首页,toolbarposition=top');
+
+    }
   }
   //打开BPM待办
   openBpmTodo(id) {
@@ -156,25 +179,83 @@ export class HomePage {
   //打开业务系统
   navTo(action, url, label) {
     debugger;
+    window['plugins'].toast.showLongCenter("加载系统数据中，请稍候..."); 
+    
     switch (action) {
       case 'initApprove':
         this.navCtrl.push(NcPage);
+        setTimeout(() => { this.toastCtrl.dismiss(); }, 2000);
         break;
       case 'initH5ApproveSystem':
         if (label == "ＯＡ待办") {
-          const browser = this.iab.create(url + '&type=main', '_blank', 'location=no,closebuttoncaption=返回门户首页,toolbarposition=top');
-          browser.on('exit').subscribe(()=>{
-            this.getMainTodo();
-          })
+          if (this.device.platform == "Android") {
+            const browser = this.iab.create(url + '&type=main', '_blank', 'location=no,closebuttoncaption=返回门户首页,toolbarposition=top');
+            browser.on('exit').subscribe(() => {
+              this.getMainTodo();
+            })
+            browser.on('loadstart').subscribe((event) => {
+              window['plugins'].toast.showLongCenter("加载系统数据中，请稍候...",3000);                
+              
+              let newUrl = event.url;
+              const fileTransfer: FileTransferObject = this.transfer.create();
+              if (newUrl && newUrl.indexOf("readDownload") > 0) {
+                window['plugins'].toast.showLongCenter("加载附件中，请稍候...",4000);                
+                this.http.get(newUrl).toPromise().then(response => {
+                  let res = response as any;
+                  console.log(response);
+                  console.log(res.headers);
+                  if (res.headers._headers.get("content-disposition")) {
+                    var startIdx = res.headers._headers.get("content-disposition")[0].indexOf('filename=') + 10;
+                    var endIdx = res.headers._headers.get("content-disposition")[0].length - 1;
+                    var splitstring = res.headers._headers.get("content-disposition")[0].split('.');
+                    var extention = splitstring[splitstring.length - 1].replace('"', '');
+                    fileTransfer.download(newUrl, "file:///storage/emulated/0/Download/OAfiles." + extention).then((entry) => {
+                      console.log('download complete: ' + entry.toURL());
+                      this.toastCtrl.dismiss();
+                      setTimeout(()=>{
+                        window['plugins'].toast.showLongCenter("正在打开附件，请稍候...",4000);
+                        //window['cordova'].plugins.FileOpener.openFile(entry.toURL());
+                        //const filebrowser = this.iab.create('https://docs.google.com/gview?embedde‌​d=true&url='+entry.toURL(), '_blank', 'location=yes,closebuttoncaption=返回,toolbarposition=top');
+
+                        this.fileOpener.open(entry.toURL(),res.headers._headers.get("content-type")[0])
+                        .then(()=>{
+                          this.toastCtrl.dismiss();
+                          //this.toastCtrl.create("打开成功",false, 2000 , "center");
+                        })
+                        .catch(e =>{
+                          this.toastCtrl.dismiss();
+                          window['plugins'].toast.showLongCenter("打开失败");
+                        })
+                      },500)
+                      
+                    }, (error) => {
+                      // handle error
+                    });
+
+                  }
+
+                })
+
+
+              }
+            })
+
+          } else {
+            const browser = this.iab.create(url + '&type=main', '_blank', 'location=no,closebuttoncaption=返回门户首页,toolbarposition=top');
+            browser.on('exit').subscribe(() => {
+              this.getMainTodo();
+            })
+          }
+
         } else if (label == "公告新闻") {
           const browser = this.iab.create(url + '&type=newslist', '_blank', 'location=no,closebuttoncaption=返回门户首页,toolbarposition=top');
           browser.insertCSS({ code: "body{margin-right: 100px;" })
-          browser.on('exit').subscribe(()=>{
+          browser.on('exit').subscribe(() => {
             this.getMainTodo();
           })
         } else if (label == "业务审批") {
           const browser = this.iab.create(url, '_blank', 'location=no,closebuttoncaption=返回门户首页,toolbarposition=top');
-          browser.on('exit').subscribe(()=>{
+          browser.on('exit').subscribe(() => {
             this.getMainTodo();
           })
         }
@@ -195,11 +276,11 @@ export class HomePage {
       let result = res.json() as any;
       if (result.icons && result.icons.length > 0) {
         this.icons = result.icons;
-        if(this.icons){
-          for(var i in this.icons){
-            if(!this.isInitBpm && this.icons[i].lable =="业务审批"){
+        if (this.icons) {
+          for (var i in this.icons) {
+            if (!this.isInitBpm && this.icons[i].lable == "业务审批") {
               const browser = this.iab.create(this.icons[i].url, '_blank', 'hidden=yes');
-              this.isInitBpm =true;
+              this.isInitBpm = true;
             }
           }
         }
@@ -256,8 +337,8 @@ export class HomePage {
     })
   }
 
-  slideChanged(index){
-      this.noticSlider.slideTo(1); 
+  slideChanged(index) {
+    this.noticSlider.slideTo(1);
   }
 }
 

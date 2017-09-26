@@ -14,6 +14,7 @@ export class NcBillsDetailServiceProvider {
   private urlActionOaList = this.serveradd + "ActionOaList";
   private urlActionBpmList = this.serveradd + "ActionBpmList";
   private urlActionMainList = this.serveradd + "ActionMainList";
+  private urlActionGetFile = this.serveradd + "ActionGetFile";
 
   constructor(public http: Http) {
     this.headers = new Headers();
@@ -84,6 +85,11 @@ export class NcBillsDetailServiceProvider {
     params.append("userId", userinfo.userid);
     return this.http.post(this.urlActionApproves, params.toString(),{ headers: this.headers }).toPromise().then(res =>{
       return res;
+    })
+  }
+  doGetFile(params){
+    return this.http.post(this.urlActionGetFile, params.toString(),{ headers: this.headers }).toPromise().then(res =>{
+      return res.json();
     })
   }
 }
