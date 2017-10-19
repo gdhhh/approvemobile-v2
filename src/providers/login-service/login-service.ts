@@ -18,7 +18,8 @@ export class LoginServiceProvider {
 
   constructor(public http: Http) {
     this.headers = new Headers();
-    this.headers.append('Content-Type', 'application/x-www-form-urlencoded');
+    this.headers.append('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+    //this.headers.append('charset','UTF-8');
   }
 
   doLogin(params) {

@@ -17,7 +17,7 @@ export class InfoPage {
   following = false;
   user = {
     name: 'Paula Bolliger',
-    profileImage: 'assets/img/avatar/girl-avatar.png',
+    profileImage: 'http://mjkk.nimble.cn:8000/serverj/readUserIcon?user='+UserInfo.prototype.userid,
     coverImage: 'assets/img/background/background-5.jpg',
     occupation: 'Designer',
     location: 'Seattle, WA',

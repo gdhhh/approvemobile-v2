@@ -44,6 +44,7 @@ export class HomePage {
   isShowBpmItemList;
 
   isInitBpm = false;
+  isInitOa = false;
 
   headerHeight = 150;
   newHeaderHeight: any;
@@ -156,11 +157,50 @@ export class HomePage {
   }
   //打开oa待办
   openOaTodo(url) {
-    debugger;
     if (this.device.platform == "Android") {
-      const browser = this.iab.create(GlobalVar.oa_server_address + url, '_blank', 'location=yes,closebuttoncaption=返回门户首页,toolbarposition=top');
+      const browser = this.iab.create(GlobalVar.oa_server_address + url, '_blank', 'location=no,closebuttoncaption=返回门户首页,toolbarposition=top');
       browser.on('loadstart').subscribe((event) => {
-        console.log(event);
+        window['plugins'].toast.showLongCenter("加载系统数据中，请稍候...",3000);                
+        
+        let newUrl = event.url;
+        const fileTransfer: FileTransferObject = this.transfer.create();
+        if (newUrl && newUrl.indexOf("readDownload") > 0) {
+          window['plugins'].toast.showLongCenter("加载附件中，请稍候...",4000);                
+          this.http.get(newUrl).toPromise().then(response => {
+            let res = response as any;
+            console.log(response);
+            console.log(res.headers);
+            if (res.headers._headers.get("content-disposition")) {
+              var startIdx = res.headers._headers.get("content-disposition")[0].indexOf('filename=') + 10;
+              var endIdx = res.headers._headers.get("content-disposition")[0].length - 1;
+              var splitstring = res.headers._headers.get("content-disposition")[0].split('.');
+              var extention = splitstring[splitstring.length - 1].replace('"', '');
+              fileTransfer.download(newUrl, "file:///storage/emulated/0/Download/OAfiles." + extention).then((entry) => {
+                console.log('download complete: ' + entry.toURL());
+                this.toastCtrl.dismiss();
+                setTimeout(()=>{
+                  window['plugins'].toast.showLongCenter("正在打开附件，请稍候...",4000);
+                  //window['cordova'].plugins.FileOpener.openFile(entry.toURL());
+                  //const filebrowser = this.iab.create('https://docs.google.com/gview?embedde‌​d=true&url='+entry.toURL(), '_blank', 'location=yes,closebuttoncaption=返回,toolbarposition=top');
+
+                  this.fileOpener.open(entry.toURL(),res.headers._headers.get("content-type")[0])
+                  .then(()=>{
+                    this.toastCtrl.dismiss();
+                    //this.toastCtrl.create("打开成功",false, 2000 , "center");
+                  })
+                  .catch(e =>{
+                    this.toastCtrl.dismiss();
+                    window['plugins'].toast.showLongCenter("打开失败");
+                  })
+                },500)
+                
+              }, (error) => {
+                // handle error
+              });
+
+            }
+          })
+        }
       })
     } else {
       const browser = this.iab.create(GlobalVar.oa_server_address + url, '_blank', 'location=no,closebuttoncaption=返回门户首页,toolbarposition=top');
@@ -281,6 +321,10 @@ export class HomePage {
             if (!this.isInitBpm && this.icons[i].lable == "业务审批") {
               const browser = this.iab.create(this.icons[i].url, '_blank', 'hidden=yes');
               this.isInitBpm = true;
+            }
+            if (!this.isInitOa && this.icons[i].lable == "ＯＡ待办") {
+              const browser = this.iab.create(this.icons[i].url, '_blank', 'hidden=yes');
+              this.isInitOa = true;
             }
           }
         }

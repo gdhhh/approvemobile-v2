@@ -163,7 +163,7 @@ export class LoginPage {
             //登录成功，跳转到主页
             UserInfo.prototype.token = loginResult.SysMSG[0].token;
             UserInfo.prototype.id = loginResult.datas[0].userId;
-            UserInfo.prototype.name = loginResult.datas[0].name;
+            UserInfo.prototype.name = decodeURIComponent(loginResult.datas[0].name);
             localStorage.setItem("loginName",UserInfo.prototype.name);
             localStorage.setItem("username",UserInfo.prototype.userid);
             localStorage.setItem("password",UserInfo.prototype.password);

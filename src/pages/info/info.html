@@ -10,7 +10,7 @@
       <h3 id="profile-name">{{userInfo?.name}}</h3>
       <p>登录账号： &bull; {{userInfo.userid}}</p>
       <p class="profile-description">{{userInfo?.id}}</p>
-     
+
     </div>
     <hr/>
     <ion-list>
@@ -18,24 +18,24 @@
         设备信息：
       </ion-list-header>
       <ion-item>
-        <ion-label>设备名称</ion-label>
-        <ion-note item-end>{{userInfo.devicename}}</ion-note>
+        <h3>设备名称</h3>
+        <p>{{userInfo.devicename}}</p>
       </ion-item>
       <ion-item>
-        <ion-label>IMEI</ion-label>
-        <ion-note item-end>{{userInfo.IMEI}}</ion-note>
+        <h3>IMEI</h3>
+        <p>{{userInfo.IMEI}}</p>
       </ion-item>
       <ion-item>
-        <ion-label>IP</ion-label>
-        <ion-note item-end>{{userInfo.IP}}</ion-note>
+       <h3>IP</h3>
+        <p>{{userInfo.IP}}</p>
       </ion-item>
       <ion-item>
-        <ion-label>MAC</ion-label>
-        <ion-note item-end>{{userInfo.MAC}}</ion-note>
+       <h3>MAC</h3>
+        <p>{{userInfo.MAC}}</p>
       </ion-item>
       <ion-item>
-        <ion-label>App版本</ion-label>
-        <ion-note item-end>{{userInfo.appVersion}}</ion-note>
+       <h3>App版本</h3>
+        <p>{{userInfo.appVersion}}</p>
       </ion-item>
     </ion-list>
     <ion-list>
