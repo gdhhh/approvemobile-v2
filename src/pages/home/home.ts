@@ -157,14 +157,16 @@ export class HomePage {
   }
   //打开oa待办
   openOaTodo(url) {
+    //alert(url);
     if (this.device.platform == "Android") {
       const browser = this.iab.create(GlobalVar.oa_server_address + url, '_blank', 'location=no,closebuttoncaption=返回门户首页,toolbarposition=top');
+      //const browser = this.iab.create(this.serveradd + 'LandRayOA?username=' + UserInfo.prototype.userid + '&type=2&url='+url, '_blank', 'location=yes,closebuttoncaption=返回门户首页,toolbarposition=top');      
       browser.on('loadstart').subscribe((event) => {
-        window['plugins'].toast.showLongCenter("加载系统数据中，请稍候...",3000);                
-        
+        window['plugins'].toast.showLongCenter("加载系统数据中，请稍候...",3000);                  
         let newUrl = event.url;
         const fileTransfer: FileTransferObject = this.transfer.create();
         if (newUrl && newUrl.indexOf("readDownload") > 0) {
+          debugger;
           window['plugins'].toast.showLongCenter("加载附件中，请稍候...",4000);                
           this.http.get(newUrl).toPromise().then(response => {
             let res = response as any;
@@ -177,7 +179,7 @@ export class HomePage {
               var extention = splitstring[splitstring.length - 1].replace('"', '');
               fileTransfer.download(newUrl, "file:///storage/emulated/0/Download/OAfiles." + extention).then((entry) => {
                 console.log('download complete: ' + entry.toURL());
-                this.toastCtrl.dismiss();
+                //this.toastCtrl.dismiss();
                 setTimeout(()=>{
                   window['plugins'].toast.showLongCenter("正在打开附件，请稍候...",4000);
                   //window['cordova'].plugins.FileOpener.openFile(entry.toURL());
@@ -195,6 +197,7 @@ export class HomePage {
                 },500)
                 
               }, (error) => {
+                console.log(error)
                 // handle error
               });
 
@@ -203,8 +206,9 @@ export class HomePage {
         }
       })
     } else {
-      const browser = this.iab.create(GlobalVar.oa_server_address + url, '_blank', 'location=no,closebuttoncaption=返回门户首页,toolbarposition=top');
-
+     const browser = this.iab.create(GlobalVar.oa_server_address + url, '_blank', 'location=no,closebuttoncaption=返回门户首页,toolbarposition=top');
+      //const browser = this.iab.create(this.serveradd + 'LandRayOA?username=' + UserInfo.prototype.userid + '&type=2&url='+url, '_blank', 'location=yes,closebuttoncaption=返回门户首页,toolbarposition=top');      
+      
     }
   }
   //打开BPM待办
@@ -251,7 +255,7 @@ export class HomePage {
                     var extention = splitstring[splitstring.length - 1].replace('"', '');
                     fileTransfer.download(newUrl, "file:///storage/emulated/0/Download/OAfiles." + extention).then((entry) => {
                       console.log('download complete: ' + entry.toURL());
-                      this.toastCtrl.dismiss();
+                      //this.toastCtrl.dismiss();
                       setTimeout(()=>{
                         window['plugins'].toast.showLongCenter("正在打开附件，请稍候...",4000);
                         //window['cordova'].plugins.FileOpener.openFile(entry.toURL());
@@ -270,6 +274,7 @@ export class HomePage {
                       
                     }, (error) => {
                       // handle error
+                      console.log(error)
                     });
 
                   }
@@ -319,11 +324,15 @@ export class HomePage {
         if (this.icons) {
           for (var i in this.icons) {
             if (!this.isInitBpm && this.icons[i].lable == "业务审批") {
-              const browser = this.iab.create(this.icons[i].url, '_blank', 'hidden=yes');
+              setTimeout(()=>{
+                const browser = this.iab.create(this.icons[i].url, '_blank', 'hidden=yes');                
+              },500)
               this.isInitBpm = true;
             }
             if (!this.isInitOa && this.icons[i].lable == "ＯＡ待办") {
-              const browser = this.iab.create(this.icons[i].url, '_blank', 'hidden=yes');
+              setTimeout(()=>{
+                const browser = this.iab.create(this.icons[i].url, '_blank', 'hidden=yes');                
+              },1000)
               this.isInitOa = true;
             }
           }
