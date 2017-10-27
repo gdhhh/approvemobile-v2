@@ -4,13 +4,55 @@ page-login {
     margin-top: 0 !important;
   }
   .logo {
-    width: 70%;
-    height: auto;
-    padding-top: 5vh;
-    margin-bottom: 5vh;
+    width: 80%;
+    padding-top: 30%;
   }
-  span {
-    color: white;
+  .logo-container{
+    background-color: white;
+    border-radius: 50%;
+    width: 10rem;
+    height: 10rem;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 40px;
+    box-shadow: 0px 3px 0px rgba(31, 37, 51, 0.3);
+  }
+
+  .scroll-content{
+    background-color: #f0f2f5;
+  }
+  .background{
+    background-image: url(/assets/img/background/bg.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 200px;
+    width:100%;
+
+  }
+
+  .eye {
+    width: 27px;
+    height: 27px;
+    display: inline-block;
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    background: url(../../img/login/eyehide.png) no-repeat center;
+    background-size: 60%;
+  }
+  .eyehideimage {
+      background-image: url(assets/icon/eyehide.png);
+  }
+  .eyeshowimage {
+      background-image: url(../img/eyeshow.png);
+  }
+  .item-ios.item-block .item-inner {
+    padding-right: 8px;
+    border: 0.55px solid #fff;
+    border-radius: 12px;
+    padding-left: 10px;
+    padding-right: 10px;
+    background-color: rgba(255,255,255,0.95);
   }
   .slide-background {
     background-size: cover;
@@ -26,20 +68,21 @@ page-login {
     height: 100vh;
   }
   ion-item {
-    color: white !important;
-    padding-left: 10px !important;
+    color: rgb(102,102,102) !important;
+    
+    padding-top:10px !important;
     margin-bottom: 10px;
     background-color: transparent !important;
     font-size: 0.9em;
   }
    ::-webkit-input-placeholder {
-    color: white !important;
+    color: rgb(102,102,102)  !important;
   }
   .login-container {
-    color: white;
+    color: rgb(102,102,102) ;
     position: absolute;
     top: 0;
-    padding: 10vw;
+    padding: 120px 15px 10vw 15px;
     text-align: center;
     width: 100%;
     margin: 0 auto;
@@ -50,6 +93,17 @@ page-login {
   }
   .login-button{
     margin-top:15px;
+    background-color: rgb(122,133,153);
+    border-radius: 12px;
+  }
+  .anyoffice-button{
+    margin-top:15px;
+    background-color: rgb(255,255,255);
+    border-radius: 12px;
+    border-color: rgb(122,133,153);
+    color:rgb(82,89,102);
+    border-style: solid;
+    border-width: 2px;
   }
 }
 

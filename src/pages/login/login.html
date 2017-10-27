@@ -1,43 +1,30 @@
-<div class="fix-content">
-  <ion-slides pager="false" autoplay="2000" loop="true" speed="1500" effect="fade">
-    <ion-slide class="slide-background swiper-no-swiping" *ngFor="let background of backgrounds" [ngStyle]="{'background-image': 'url(' + background +')'}">
-    </ion-slide>
-  </ion-slides>
-</div>
 <ion-content>
+  <div class="background"></div>
   <div class="login-container">
-    <img class="logo" src="assets/img/logo/logo-nimble.png" />
+    <div class="logo-container">
+      <img class="logo" src="assets/img/logo/login-logo.png" />
+    </div>
     <form (submit)="doLogin()" [formGroup]="loginForm">
       <ion-item>
+        <ion-label><img src="assets/icon/account.png" width="20px"></ion-label>
         <ion-input type="text" formControlName="username" placeholder="请输入OA账号" [ngModel]="loginUserName"></ion-input>
       </ion-item>
-      <ion-card *ngIf="formErrors?.username" color="danger" class="animation-alert">
-        <ion-card-content>
-          {{formErrors?.username}}
-        </ion-card-content>
-      </ion-card>
+
       <ion-item>
+          <ion-label><img src="assets/icon/password.png" width="20px"></ion-label>
         <ion-input type="password" formControlName="password" placeholder="请输入密码..." [ngModel]="loginPassword"></ion-input>
+        
       </ion-item>
-      <ion-card *ngIf="formErrors?.password" color="danger" class="animation-alert">
-        <ion-card-content>
-          {{formErrors?.password}}
-        </ion-card-content>
-      </ion-card>
-      <button ion-button block color="danger" class="login-button">登录</button>
+      <button ion-button block class="login-button">登录</button>
       <ion-card *ngIf="formErrors?.error" color="danger" class="animation-alert">
         <ion-card-content>
           {{formErrors?.error}}
         </ion-card-content>
       </ion-card>
-      <!--<p (click)="openResetPassword()"><strong>Forgot your password?</strong></p>-->
     </form>
-    <!-- <button ion-button block outline icon-left (click)="openSecurity()" class="login-button" *ngIf="isShowVPNSetting">
-        <ion-icon name="portal-shield"></ion-icon>
-        信息安全隧道设置
-      </button> -->
-      <button ion-button outline icon-left (click)="openSecurity()" class="login-button">
-        <ion-icon name="portal-shield"></ion-icon>
+
+      <button ion-button block  icon-left (click)="openSecurity()" class="anyoffice-button">
+        <ion-icon><img src="assets/icon/setting.png" width="20px"></ion-icon>
         Anyoffice 安全应用
       </button>
   </div>
