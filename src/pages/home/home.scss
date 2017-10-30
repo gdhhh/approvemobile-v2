@@ -8,14 +8,20 @@ page-home {
     font-size: 10px; //Preferred size here
   }
   ion-slides {
-    //height: 20vh;
+    height: 150px;
     overflow: hidden;
   }
-  ion-navbar {
-    height: 95px;
-  }
+  // ion-navbar {
+  //   height: 95px;
+  // }
   .header-button-area {
     height: 80px;
+  }
+  .navbar{
+    background-color:rgba(255,255,255,0.98);
+  }
+  ion-content{
+    background-color: rgb(235,237,240) !important
   }
   ion-slide {
     $item-ios-body-text-font-size: 5px;
@@ -51,11 +57,14 @@ page-home {
     overflow: visible!important;
   }
   .notifications-badge {
-    background-color: red;
+    background-color: rgb(92,111,153);
     position: absolute;
     top: -10px;
     right: -10px;
-    border-radius: 100%;
+  }
+  ion-avatar img{
+    border-radius: 0% !important;
+    margin-left: 5px;
   }
   .wrapper {
     display: block;
@@ -69,8 +78,8 @@ page-home {
   .button {
     background-size: 100%;
     background-repeat: no-repeat;
-    height: 50px;
-    width: 50px;
+    height: 45px;
+    width: 45px;
     text-align: center;
     text-decoration: none;
     color: $color;
@@ -80,6 +89,9 @@ page-home {
     transition: all 0.2s ease-in-out;
     position: relative;
     overflow: hidden;
+  }
+  .more{
+    background-image: url(/assets/buttons/more.png)
   }
   .button-sheen {
     content: "";
@@ -98,8 +110,13 @@ page-home {
     transform: skewX(-45deg) translateX(13.5em);
   }
   .notification {
-    height: 120px;
+    //height: 120px;
     margin-top:10px;
+    background-color: #fff;
+  }
+  .todolist{
+    margin-top:10px;
+    background-color: #fff;
   }
   .notice-title {
     text-align: center;
@@ -151,6 +168,21 @@ page-home {
     padding: 0px;
     margin: 0px;
   }
+  .title-point{
+    background-color: #a3b1cc;
+    max-width: 6px;
+    border-radius: 4px;
+    height: 100%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .title-text{
+    font-size: 1.4em;
+  }
+}
+
+.system-entrance{
+  background-color: #fff;
 }
 
 .icon-label {

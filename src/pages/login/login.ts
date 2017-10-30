@@ -51,7 +51,7 @@ export class LoginPage {
       'maxlength': '你输入的有点多哦。'
     },
     'invalid': {
-      'invalid': '您的账号或密码有误，请检查!',
+      'invalid': '您的账号或密码有误，请重新输入!',
       'noright': '您的设备没有权限登录，请拨打分机 5300 IT热线申请开通权限。',
       'notallowed': '您的账号密码为空，或者存在特殊字符，请检查!',
       'unknowerror': '此错误一般由于网络中断导致，请检查数据网络或wifi网络是否通畅，如果此问题仍存在，请联系管理员。'
@@ -283,7 +283,7 @@ export class LoginPage {
         }
       });
     } else {
-      alert("不能打开KK")
+      alert("不是移动设备，打开anyoffice失败")
     }
   }
 }

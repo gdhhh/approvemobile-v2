@@ -5,9 +5,9 @@ import 'rxjs/add/operator/map';
 */
 
 export const GlobalVar = Object.freeze({
-  server_address:"http://mip.nimble.cn/portal/",
+  //server_address:"http://mip.nimble.cn/portal/",
   //server_address:"http://mp.nimble.cn:88/portal/",
-  //server_address:"http://172.22.31.36:8080/",
+  server_address:"http://172.22.31.36:8080/",
   oa_server_address:"http://mjoa.nimble.cn/",
   bpm_server_address:"http://bpm.nimble.cn:8080/",
   security_internet: "113.98.115.149",

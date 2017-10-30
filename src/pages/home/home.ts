@@ -37,6 +37,7 @@ export class HomePage {
   noticeSlide3;
 
   icons;
+  iconsLength;
   oaTodoList;
   bpmTodoList;
   shortcutList;
@@ -100,12 +101,13 @@ export class HomePage {
         this.noticeSlide3 = list3;
       }
     })
-    this.scrollArea.ionScroll.subscribe((event) => {
-      this.resizeHeader(event)
-    });
-    this.scrollArea.ionScrollEnd.subscribe((event) => {
-      this.scrollEndResizeHeader(event)
-    });
+    //监听页面滚动事件
+    // this.scrollArea.ionScroll.subscribe((event) => {
+    //   this.resizeHeader(event)
+    // });
+    // this.scrollArea.ionScrollEnd.subscribe((event) => {
+    //   this.scrollEndResizeHeader(event)
+    // });
 
   }
   ionViewDidEnter() {
@@ -223,7 +225,7 @@ export class HomePage {
   //打开业务系统
   navTo(action, url, label) {
     debugger;
-    window['plugins'].toast.showLongCenter("加载系统数据中，请稍候..."); 
+    //window['plugins'].toast.showLongCenter("加载系统数据中，请稍候..."); 
     
     switch (action) {
       case 'initApprove':
@@ -312,15 +314,17 @@ export class HomePage {
 
   //加载首页待办列表
   getMainTodo() {
-    let loading = this.loadingCtrl.create({
-      content: '数据加载中，请稍候...'
-    });
-    loading.present();
+    // let loading = this.loadingCtrl.create({
+    //   content: '数据加载中，请稍候...'
+    // });
+    //loading.present();
     let params = new URLSearchParams();
     this.approveService.doGetMainTodoList(params).then(res => {
       let result = res.json() as any;
       if (result.icons && result.icons.length > 0) {
         this.icons = result.icons;
+        this.iconsLength = this.icons.length;
+        console.log(this.icons);
         if (this.icons) {
           for (var i in this.icons) {
             if (!this.isInitBpm && this.icons[i].lable == "业务审批") {
@@ -340,11 +344,12 @@ export class HomePage {
       }
       if (result.dataList && result.dataList.length > 0) {
         this.shortcutList = result.dataList;
+        console.log(this.shortcutList)
       }
-      setTimeout(() => { loading.dismiss(); }, 500)
+      //setTimeout(() => { loading.dismiss(); }, 500)
     }).catch(err => {
       alert("getBpmTodo()@home.ts =>" + err);
-      setTimeout(() => { loading.dismiss(); }, 500)
+      //setTimeout(() => { loading.dismiss(); }, 500)
     });
   }
 

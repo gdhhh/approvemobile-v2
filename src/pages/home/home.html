@@ -1,4 +1,5 @@
-<ion-header>
+<!-- 动态头部 -->
+<!-- <ion-header>
   <div #expandheader class="expandable-header-show" style="height:150px">
     <ion-slides #slider autoplay="2500" loop="true" effect="fade" (ionSlideAutoplayStop)="autoPlay()">
       <ion-slide *ngFor="let slide of slides;let i = index" [ngStyle]="{'background' : 'url(' + slide.imageUrl + ')'}">
@@ -20,70 +21,142 @@
       </ion-row>
     </ion-grid>
   </ion-navbar>
-
+</ion-header> -->
+<ion-header>
+  <ion-navbar color="white">
+    <ion-title>首页</ion-title>
+  </ion-navbar>
 </ion-header>
 
-<ion-content fullscreen #mycontent>
+<ion-content #mycontent>
+  <!-- 头部banner -->
+  <ion-slides #slider autoplay="2500" loop="true" effect="fade" (ionSlideAutoplayStop)="autoPlay()">
+    <ion-slide *ngFor="let slide of slides;let i = index" [ngStyle]="{'background' : 'url(' + slide.imageUrl + ')'}">
+    </ion-slide>
+  </ion-slides>
+  <!-- 按钮栏 -->
+  <ion-grid class="system-entrance">
+    <ion-row class="header-button-area">
+      <ng-container *ngFor="let ico of icons; let i = index;">
+        <ion-col col-3 *ngIf="i<4">
+          <div class="wrapper">
+            <a *ngIf="ico?.imageSrc" (click)="navTo(ico?.actionClick,ico?.url,ico?.lable)" class="button" [ngStyle]="{ 'background-image': 'url(' + ico?.imageSrc + ')'}"></a>
+            <ion-badge class="notifications-badge" *ngIf="ico?.tips&&ico?.tips!=' '">{{ico?.tips}}</ion-badge>
+            <label class="icon-label">{{ico?.lable}}</label>
+          </div>
+        </ion-col>
+      </ng-container>
+      <ion-col col-3 *ngIf="iconsLength<4">
+          <div class="wrapper">
+            <a class="button more"></a>
+            <label class="icon-label">更多应用</label>
+          </div>
+        </ion-col>
+    </ion-row>
+    <ion-row class="header-button-area" *ngIf="iconsLength>=4">
+      <ng-container *ngFor="let ico of icons; let i = index;">
+        <ion-col col-3 *ngIf="i>=4 && i<=6">
+          <div class="wrapper">
+            <a *ngIf="ico?.imageSrc" (click)="navTo(ico?.actionClick,ico?.url,ico?.lable)" class="button" [ngStyle]="{ 'background-image': 'url(' + ico?.imageSrc + ')'}"></a>
+            <ion-badge class="notifications-badge" *ngIf="ico?.tips&&ico?.tips!=' '">{{ico?.tips}}</ion-badge>
+            <label class="icon-label">{{ico?.lable}}</label>
+          </div>
+        </ion-col>
+      </ng-container>
+      <ion-col col-3 >
+        <div class="wrapper">
+          <a class="button more"></a>
+          <label class="icon-label">更多应用</label>
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
   <ion-row class="notification" *ngIf="noticeSlide1">
-    <ion-col col-1 align-self-center style="text-align:center" class="notice-title">
-      <span><img src="assets/img/word/ji.png"></span><br>
-      <span><img src="assets/img/word/tuan.png"></span><br>
-      <span><img src="assets/img/word/gong.png"></span><br>
-      <span><img src="assets/img/word/gao.png"></span><br>
+    <ion-col>
+      <ion-row>
+        <ion-col col-1>
+          <div class="title-point">　</div>
+        </ion-col>
+        <ion-col col-11>
+          <div class="title-text">集团公告</div>
+        </ion-col>
+
+      </ion-row>
+      <ion-row>
+        <ion-col col-12 class="scroll-animate-container">
+          <ion-slides autoplay="4000" pager autoHeight="true" #noticSlider>
+            <ion-slide>
+              <ion-list no-lines>
+                <ion-item *ngFor="let item of noticeSlide1; let i = index" (click)="openNotice(item.fdid)">
+                  <ion-icon name="md-flame" item-start color="danger" *ngIf="item.isTop=='1'"></ion-icon>
+                  <p>
+                    <label *ngIf="item.isTop=='0'"> ● </label>{{item.subject | subject}}</p>
+                </ion-item>
+              </ion-list>
+            </ion-slide>
+            <ion-slide>
+              <ion-list no-lines>
+                <ion-item *ngFor="let item of noticeSlide2; let i = index" (click)="openNotice(item.fdid)">
+                  <ion-icon name="md-flame" item-start color="danger" *ngIf="item.isTop=='1'"></ion-icon>
+                  <p>
+                    <label> ● </label>{{item.subject | subject}}</p>
+                </ion-item>
+              </ion-list>
+            </ion-slide>
+            <ion-slide>
+              <ion-list no-lines>
+                <ion-item *ngFor="let item of noticeSlide3; let i = index" (click)="openNotice(item.fdid)">
+                  <ion-icon name="md-flame" item-start color="danger" *ngIf="item.isTop=='1'"></ion-icon>
+                  <p>
+                    <label> ● </label>{{item.subject | subject}}</p>
+                </ion-item>
+              </ion-list>
+            </ion-slide>
+          </ion-slides>
+        </ion-col>
+      </ion-row>
     </ion-col>
-    <ion-col col-11 class="scroll-animate-container">
-      <ion-slides autoplay="4000" pager autoHeight="true" #noticSlider>
-        <ion-slide>
-          <ion-list no-lines>
-            <ion-item *ngFor="let item of noticeSlide1; let i = index" (click)="openNotice(item.fdid)">
-              <ion-icon name="md-flame" item-start color="danger" *ngIf="item.isTop=='1'"></ion-icon>
-              <p><label *ngIf="item.isTop=='0'">{{i+1}}.</label>{{item.subject | subject}}</p>
-            </ion-item>
-          </ion-list>
-        </ion-slide>
-        <ion-slide>
-          <ion-list no-lines>
-            <ion-item *ngFor="let item of noticeSlide2; let i = index" (click)="openNotice(item.fdid)">
-              <ion-icon name="md-flame" item-start color="danger" *ngIf="item.isTop=='1'"></ion-icon>
-              <p><label>{{i+4}}.</label>{{item.subject | subject}}</p>
-            </ion-item>
-          </ion-list>
-        </ion-slide>
-        <ion-slide>
-          <ion-list no-lines>
-            <ion-item *ngFor="let item of noticeSlide3; let i = index"  (click)="openNotice(item.fdid)">
-              <ion-icon name="md-flame" item-start color="danger" *ngIf="item.isTop=='1'"></ion-icon>
-              <p><label>{{i+7}}.</label>{{item.subject | subject}}</p>
-            </ion-item>
-          </ion-list>
-        </ion-slide>
-      </ion-slides>
+
+  </ion-row>
+
+
+  <ion-row class="todolist">
+    <ion-col>
+      <ion-row>
+        <ion-col col-1>
+          <div class="title-point">　</div>
+        </ion-col>
+        <ion-col col-11>
+          <div class="title-text">业务待办</div>
+        </ion-col>
+
+      </ion-row>
     </ion-col>
   </ion-row>
-  <ion-card class="list-card">
-    <ion-item-group>
-      <ion-item-divider color="primary" (click)="showMainItemList()">
+  <ion-item-group>
+    <!-- <ion-item-divider color="primary" (click)="showMainItemList()">
         <ion-icon name="ios-list-box-outline" item-start></ion-icon>
         <h2>待办快捷列表（各系统前20条待办）</h2>
-      </ion-item-divider>
-      <ion-list [ngClass]="{'show':isShowMainItemList,'hide':!isShowMainItemList}">
-        <ion-item *ngIf="!shortcutList">
-          <h3>没有需要处理的待办信息</h3>
+      </ion-item-divider> -->
+    <ion-list [ngClass]="{'show':isShowMainItemList,'hide':!isShowMainItemList}">
+      <ion-item *ngIf="!shortcutList">
+        <h3>没有需要处理的待办信息</h3>
+      </ion-item>
+      <ng-container *ngIf="shortcutList">
+        <ion-item *ngFor="let item of shortcutList" (click)="openMainTodo(item)">
+          <ion-avatar item-start>
+            <img src={{item?.imageSrc}}>
+          </ion-avatar>
+          <h3 style="white-space: normal">{{item?.itemName}}</h3>
+          <p>创建人：
+            <ion-note>{{item?.docCreator}}</ion-note>
+            <ion-note style="float:right">{{item?.itemCreateTime | DateToLocaleDateString}}</ion-note>
+          </p>
         </ion-item>
-        <ng-container  *ngIf="shortcutList">
-          <ion-item *ngFor="let item of shortcutList" (click)="openMainTodo(item)">
-            <ion-avatar item-start>
-              <img src={{item?.imageSrc}}>
-            </ion-avatar>
-            <h3 style="white-space: normal">{{item?.itemName}}</h3>
-            <p>创建人：
-              <ion-note>{{item?.docCreator}}</ion-note>
-              <ion-note style="float:right">{{item?.itemCreateTime | DateToLocaleDateString}}</ion-note>
-            </p>
-          </ion-item>
-        </ng-container>
-      </ion-list>
-    </ion-item-group>
-  </ion-card>
+      </ng-container>
+    </ion-list>
+  </ion-item-group>
+
 
 </ion-content>
