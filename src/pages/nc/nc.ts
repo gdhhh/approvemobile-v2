@@ -2,7 +2,7 @@ import { LoadingService } from './../../providers/util/loading-service';
 import { NcBillsDetailServiceProvider } from './../../providers/nc-bills-detail-service/nc-bills-detail-service';
 import { NcBillsDetailPage } from './../nc-bills-detail/nc-bills-detail';
 import { Component, ViewChild } from '@angular/core';
-import { IonicPage, NavController, NavParams, ModalController, LoadingController, ToastController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ModalController, LoadingController, ToastController, Events } from 'ionic-angular';
 import { UserInfo } from "../../providers/constant/constant";
 import xml2js from 'xml2js';
 
@@ -33,8 +33,13 @@ export class NcPage {
     public loadingCtrl: LoadingController,
     public toastCtrl: ToastController,
     public loadingService: LoadingService,
+    public events:Events,
     public modalCtrl: ModalController
   ) {
+    this.events.subscribe('reloadNcList:data',()=>{
+      this.getApprovesListTodo(1, "", "");
+      this.getApprovesListDone(1, "", "");
+    })
   }
 
   ionViewDidLoad() {

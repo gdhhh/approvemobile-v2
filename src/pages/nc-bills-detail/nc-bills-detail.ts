@@ -7,7 +7,7 @@ import {LoginPage} from '../login/login';
 import { NcBillsDetailServiceProvider } from './../../providers/nc-bills-detail-service/nc-bills-detail-service';
 import { UserInfo, GlobalVar } from './../../providers/constant/constant';
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ViewController, LoadingController, ModalController, ToastController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ViewController, LoadingController, ModalController, ToastController, Events } from 'ionic-angular';
 import xml2js from 'xml2js';
 import { ApproveModalPage } from "./approve-modal/approve-modal";
 import { FileOpener } from '@ionic-native/file-opener'
@@ -47,9 +47,13 @@ export class NcBillsDetailPage {
     public fileOpener: FileOpener,
     public transfer: FileTransfer,
     public file:File,
+    public events:Events,
     public device: Device,
     public billsdetailservice: NcBillsDetailServiceProvider
   ) {
+    events.subscribe('dismiss:billDetail',()=>{
+      this.dismiss();
+    })
   }
 
   ionViewDidLoad() {
@@ -59,6 +63,7 @@ export class NcBillsDetailPage {
 
   dismiss() {
     this.viewCtrl.dismiss();
+    
   }
 
   getApprovesItemDetail() {

@@ -15,6 +15,8 @@ import { InAppBrowser } from "@ionic-native/in-app-browser";
 import { File } from '@ionic-native/file';
 import { FileOpener } from '@ionic-native/file-opener';
 
+import { Events } from 'ionic-angular';
+
 import xml2js from 'xml2js';
 
 import 'rxjs/add/operator/map';
@@ -80,8 +82,13 @@ export class HomePage {
     private file: File,
     private fileOpener: FileOpener,
     public http: Http,
+    public events: Events,
     public modalCtrl: ModalController
-  ) { }
+  ) {
+    events.subscribe('reloadHome:data',() =>{
+      this.getMainTodo();
+    })
+   }
 
   ionViewDidLoad() {
     this.homeservice.getTopNotice().then(res => {
@@ -131,10 +138,33 @@ export class HomePage {
         this.presentNcModal(item.itemId, item.billType);
         break;
       case 'initH5ApproveSystem':
+      let loading = this.loadingCtrl.create({
+        content: '加载中，请稍候...',
+        duration: 4000,
+      });
+      loading.present();
         if (item.lable == "ＯＡ待办") {
-          this.openOaTodo(item.url);
+          if (this.icons) {
+            for (var i in this.icons) {
+              if (this.icons[i].lable == "ＯＡ待办") {           
+                  const browserOa = this.iab.create(this.icons[i].url, '_blank', 'hidden=yes,toolbarposition=top');   
+                  browserOa.on('loadstop').subscribe(() => {
+                    this.openOaTodo(item.url);
+                  }) 
+              }
+            }
+          }
         } else if (item.lable == "业务审批") {
-          this.openBpmTodo(item.itemId);
+          if (this.icons) {
+            for (var i in this.icons) {
+              if (this.icons[i].lable == "业务审批") {           
+                  const browserBpm = this.iab.create(this.icons[i].url, '_blank', 'hidden=yes,toolbarposition=top');   
+                  browserBpm.on('loadstop').subscribe(() => {
+                    this.openBpmTodo(item.itemId);
+                  }) 
+              }
+            }
+          }
         }
         break;
       default:
@@ -160,7 +190,9 @@ export class HomePage {
     //alert(url);
     if (this.device.platform == "Android") {
       const browser = this.iab.create(GlobalVar.oa_server_address + url, '_blank', 'location=no,closebuttoncaption=返回门户首页,toolbarposition=top');
-      //const browser = this.iab.create(this.serveradd + 'LandRayOA?username=' + UserInfo.prototype.userid + '&type=2&url='+url, '_blank', 'location=yes,closebuttoncaption=返回门户首页,toolbarposition=top');      
+      browser.on('exit').subscribe((event)=>{
+        this.getMainTodo();
+      })
       browser.on('loadstart').subscribe((event) => {
         window['plugins'].toast.showLongCenter("加载系统数据中，请稍候...",3000);                  
         let newUrl = event.url;
@@ -207,13 +239,18 @@ export class HomePage {
       })
     } else {
      const browser = this.iab.create(GlobalVar.oa_server_address + url, '_blank', 'location=no,closebuttoncaption=返回门户首页,toolbarposition=top');
-      //const browser = this.iab.create(this.serveradd + 'LandRayOA?username=' + UserInfo.prototype.userid + '&type=2&url='+url, '_blank', 'location=yes,closebuttoncaption=返回门户首页,toolbarposition=top');      
-      
+      browser.on('exit').subscribe((event)=>{
+        this.getMainTodo();
+      })
     }
   }
   //打开BPM待办
   openBpmTodo(id) {
+    
     const browser = this.iab.create(GlobalVar.bpm_server_address + 'jwf/mobile/bpm/task.html?taskId=' + id, '_blank', 'location=no,closebuttoncaption=返回门户首页,toolbarposition=top');
+    browser.on('exit').subscribe((event)=>{
+      this.getMainTodo();
+    })
   }
 
   itemClick() {
@@ -222,8 +259,6 @@ export class HomePage {
 
   //打开业务系统
   navTo(action, url, label) {
-    debugger;
-    window['plugins'].toast.showLongCenter("加载系统数据中，请稍候..."); 
     
     switch (action) {
       case 'initApprove':
@@ -312,6 +347,7 @@ export class HomePage {
 
   //加载首页待办列表
   getMainTodo() {
+    console.log('首页重载');
     let loading = this.loadingCtrl.create({
       content: '数据加载中，请稍候...'
     });
@@ -321,22 +357,6 @@ export class HomePage {
       let result = res.json() as any;
       if (result.icons && result.icons.length > 0) {
         this.icons = result.icons;
-        if (this.icons) {
-          for (var i in this.icons) {
-            if (!this.isInitBpm && this.icons[i].lable == "业务审批") {
-              setTimeout(()=>{
-                const browser = this.iab.create(this.icons[i].url, '_blank', 'hidden=yes');                
-              },500)
-              this.isInitBpm = true;
-            }
-            if (!this.isInitOa && this.icons[i].lable == "ＯＡ待办") {
-              setTimeout(()=>{
-                const browser = this.iab.create(this.icons[i].url, '_blank', 'hidden=yes');                
-              },1000)
-              this.isInitOa = true;
-            }
-          }
-        }
       }
       if (result.dataList && result.dataList.length > 0) {
         this.shortcutList = result.dataList;

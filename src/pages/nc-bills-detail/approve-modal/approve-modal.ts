@@ -3,7 +3,7 @@ import {LoginPage} from '../../login/login';
 import { NcBillsDetailServiceProvider } from './../../../providers/nc-bills-detail-service/nc-bills-detail-service';
 import { URLSearchParams } from '@angular/http';
 import { Component } from '@angular/core';
-import { ToastController, IonicPage, NavController, NavParams, ViewController, LoadingController } from 'ionic-angular';
+import { ToastController, IonicPage, NavController, NavParams, ViewController, LoadingController, Events } from 'ionic-angular';
 import xml2js from 'xml2js';
 
 
@@ -24,6 +24,7 @@ export class ApproveModalPage {
     public loadingCtrl: LoadingController,
     public toastCtrl: ToastController,
     public nav: NavController,
+    public events:Events,
     public navParams: NavParams) {
   }
 
@@ -96,6 +97,8 @@ export class ApproveModalPage {
 
   dismiss() {
     this.viewCtrl.dismiss();
+    this.events.publish('reloadHome:data');
+    this.events.publish('dismiss:billDetail');
   }
 
 }
