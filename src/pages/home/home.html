@@ -35,7 +35,7 @@
     </ion-slide>
   </ion-slides>
   <!-- 按钮栏 -->
-  <ion-grid class="system-entrance">
+  <ion-grid class="system-entrance" *ngIf="icons">
     <ion-row class="header-button-area">
       <ng-container *ngFor="let ico of icons; let i = index;">
         <ion-col col-3 *ngIf="i<4">
@@ -47,11 +47,11 @@
         </ion-col>
       </ng-container>
       <ion-col col-3 *ngIf="iconsLength<4">
-          <div class="wrapper">
-            <a class="button more"></a>
-            <label class="icon-label">更多应用</label>
-          </div>
-        </ion-col>
+        <div class="wrapper" (click)="navToMoreApp()">
+          <a class="button more"></a>
+          <label class="icon-label">更多应用</label>
+        </div>
+      </ion-col>
     </ion-row>
     <ion-row class="header-button-area" *ngIf="iconsLength>=4">
       <ng-container *ngFor="let ico of icons; let i = index;">
@@ -63,16 +63,30 @@
           </div>
         </ion-col>
       </ng-container>
-      <ion-col col-3 >
-        <div class="wrapper">
-          <a class="button more"></a>
+      <ion-col col-3>
+        <div class="wrapper" (click)="navToMoreApp()">
+          <a class="button more" ></a>
           <label class="icon-label">更多应用</label>
         </div>
       </ion-col>
     </ion-row>
   </ion-grid>
 
-  <ion-row class="notification" *ngIf="noticeSlide1">
+  <ion-grid class="system-entrance" *ngIf="!icons">
+    <ion-row class="header-button-area">
+      <ion-col>
+        <div class="loading">
+          <div class="loading-bar"></div>
+          <div class="loading-bar"></div>
+          <div class="loading-bar"></div>
+          <div class="loading-bar"></div>
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <button (click)="navToMail()"></button>
+  <ion-row class="notification">
     <ion-col>
       <ion-row>
         <ion-col col-1>
@@ -81,17 +95,34 @@
         <ion-col col-11>
           <div class="title-text">集团公告</div>
         </ion-col>
-
       </ion-row>
-      <ion-row>
+      <!-- loading -->
+      <ion-row class="header-button-area" *ngIf="!noticeSlide1">
+          <ion-col>
+            <div class="loading">
+              <div class="loading-bar"></div>
+              <div class="loading-bar"></div>
+              <div class="loading-bar"></div>
+              <div class="loading-bar"></div>
+            </div>
+          </ion-col>
+        </ion-row>
+
+      <ion-row *ngIf="noticeSlide1">
         <ion-col col-12 class="scroll-animate-container">
           <ion-slides autoplay="4000" pager autoHeight="true" #noticSlider>
             <ion-slide>
               <ion-list no-lines>
                 <ion-item *ngFor="let item of noticeSlide1; let i = index" (click)="openNotice(item.fdid)">
                   <ion-icon name="md-flame" item-start color="danger" *ngIf="item.isTop=='1'"></ion-icon>
-                  <p>
-                    <label *ngIf="item.isTop=='0'"> ● </label>{{item.subject | subject}}</p>
+                  <ion-row>
+                    <ion-col col-10 >
+                        <div class="notice-subject"> ● {{item.subject | subject}}</div>
+                    </ion-col>
+                    <ion-col col-2>
+                        <div class="notice-time">{{item.createTime | noticeCreateTime}}</div>
+                    </ion-col>
+                  </ion-row>
                 </ion-item>
               </ion-list>
             </ion-slide>
@@ -99,8 +130,14 @@
               <ion-list no-lines>
                 <ion-item *ngFor="let item of noticeSlide2; let i = index" (click)="openNotice(item.fdid)">
                   <ion-icon name="md-flame" item-start color="danger" *ngIf="item.isTop=='1'"></ion-icon>
-                  <p>
-                    <label> ● </label>{{item.subject | subject}}</p>
+                  <ion-row>
+                      <ion-col col-10 >
+                          <div class="notice-subject"> ● {{item.subject | subject}}</div>
+                      </ion-col>
+                      <ion-col col-2>
+                          <div  class="notice-time">{{item.createTime | noticeCreateTime}}</div>
+                      </ion-col>
+                    </ion-row>
                 </ion-item>
               </ion-list>
             </ion-slide>
@@ -108,8 +145,14 @@
               <ion-list no-lines>
                 <ion-item *ngFor="let item of noticeSlide3; let i = index" (click)="openNotice(item.fdid)">
                   <ion-icon name="md-flame" item-start color="danger" *ngIf="item.isTop=='1'"></ion-icon>
-                  <p>
-                    <label> ● </label>{{item.subject | subject}}</p>
+                  <ion-row>
+                      <ion-col col-10 >
+                          <div class="notice-subject"> ● {{item.subject | subject}}</div>
+                      </ion-col>
+                      <ion-col col-2>
+                          <div  class="notice-time">{{item.createTime | noticeCreateTime}}</div>
+                      </ion-col>
+                    </ion-row>
                 </ion-item>
               </ion-list>
             </ion-slide>
@@ -117,8 +160,9 @@
         </ion-col>
       </ion-row>
     </ion-col>
-
   </ion-row>
+
+
 
 
   <ion-row class="todolist">
@@ -149,8 +193,8 @@
             <img src={{item?.imageSrc}}>
           </ion-avatar>
           <h3 style="white-space: normal">{{item?.itemName}}</h3>
-          <p>创建人：
-            <ion-note>{{item?.docCreator}}</ion-note>
+          <p>
+            <ion-note>{{item?.creator}}</ion-note>
             <ion-note style="float:right">{{item?.itemCreateTime | DateToLocaleDateString}}</ion-note>
           </p>
         </ion-item>

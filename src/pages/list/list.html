@@ -1,14 +1,14 @@
 <ion-header>
-  <ion-navbar>
+  <ion-navbar color="white">
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>应用盒子</ion-title>
+    <ion-title>应用</ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content>
-  <ion-grid>
+  <!-- <ion-grid>
     <ng-container>
       <ion-row>
         <ion-col col-4 *ngFor="let icon of icons; let i= index" (click)="navTo(icon?.actionClick,icon?.url,icon?.lable)">
@@ -19,31 +19,119 @@
           </div>
         </ion-col>
       </ion-row>
-     
     </ng-container>
-    <!-- <ion-row>
-      <ion-col col-4>
-        <div class="slice"> <span> </span><img src="assets/buttons/oa.png"></div>
-      </ion-col>
-      <ion-col col-4>
-        <div class="slice"> <span> </span><img src="assets/buttons/oa.png"></div>
-      </ion-col>
-      <ion-col col-4>
-        <div class="slice"> <span> </span><img src="assets/buttons/oa.png"></div>
-      </ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col col-4>
-        <div class="slice"></div>
-      </ion-col>
-      <ion-col col-4>
-        <div class="slice"></div>
-      </ion-col>
-      <ion-col col-4>
-        <div class="slice"></div>
-      </ion-col>
-    </ion-row> -->
-  </ion-grid>
+  </ion-grid> -->
+
+    <!-- 首页应用 -->
+    <ion-grid class="system-entrance" >
+        <ion-row>
+            <ion-col col-9>
+              <div class="title-text">首页应用</div>
+            </ion-col>
+            <ion-col col-1>
+                <img src="assets/buttons/modify.png" style="width:20px">
+            </ion-col>
+            <ion-col col-2  (click)="modify()">
+              <div class="title-text">编辑</div>
+            </ion-col>
+          </ion-row>
+          <ng-container *ngIf="icons">
+              <ion-row>
+                <ion-col col-3 *ngFor="let icon of icons; let i= index" (click)="navTo(icon?.actionClick,icon?.url,icon?.lable)">
+                  <div class="slice">
+                    <span> </span>
+                    <img src={{icon.imageSrc}}>
+                    <div class="btn-text">{{icon.lable}}</div>
+                  </div>
+                </ion-col>
+              </ion-row>
+            </ng-container>
+            <ng-container *ngIf="!icons">
+                <ion-row class="loading-container">
+                  <ion-col>
+                    <div class="loading">
+                      <div class="loading-bar"></div>
+                      <div class="loading-bar"></div>
+                      <div class="loading-bar"></div>
+                      <div class="loading-bar"></div>
+                    </div>
+                  </ion-col>
+                </ion-row>
+            </ng-container>
+      </ion-grid>
+
+      <ion-grid class="market">
+      <ion-row >
+          <ion-col>
+            <ion-row>
+              <ion-col col-12>
+                <div class="title-text">应用超市</div>
+              </ion-col>
+            </ion-row>
+          </ion-col>
+      </ion-row>
+      <ng-container *ngIf="allIcons">
+          <ion-row>
+            <ion-col col-3 *ngFor="let icon of allIcons; let i= index" (click)="navTo(icon?.actionClick,icon?.url,icon?.lable)">
+              <div class="slice">
+                <span> </span>
+                <img src={{icon.imageSrc}}>
+                <div class="btn-text">{{icon.lable}}</div>
+              </div>
+            </ion-col>
+          </ion-row>
+        </ng-container>
+        <ng-container *ngIf="!allIcons">
+            <ion-row class="loading-container">
+              <ion-col>
+                <div class="loading">
+                  <div class="loading-bar"></div>
+                  <div class="loading-bar"></div>
+                  <div class="loading-bar"></div>
+                  <div class="loading-bar"></div>
+                </div>
+              </ion-col>
+            </ion-row>
+        </ng-container>
+      </ion-grid>
+
+      <ion-grid class="wechat">
+          <ion-row >
+              <ion-col>
+                <ion-row>
+                  <ion-col col-12>
+                    <div class="title-text">微信公众号</div>
+                  </ion-col>
+                </ion-row>
+              </ion-col>
+          </ion-row>
+          <ng-container>
+              <ion-list>
+                <ion-item>
+                  <ion-thumbnail item-start>
+                    <img src="/assets/img/logo/nimbleclub.jpg">
+                  </ion-thumbnail>
+                  <h2>
+                    敏悦会
+                  </h2>
+                  <p>微信号：nimbleclub</p>
+                  <ion-icon name="arrow-forward" item-end></ion-icon>
+                </ion-item>
+              </ion-list>
+            </ng-container>
+            <!-- <ng-container>
+                <ion-row class="loading-container">
+                  <ion-col>
+                    <div class="loading">
+                      <div class="loading-bar"></div>
+                      <div class="loading-bar"></div>
+                      <div class="loading-bar"></div>
+                      <div class="loading-bar"></div>
+                    </div>
+                  </ion-col>
+                </ion-row>
+            </ng-container> -->
+          </ion-grid>
 
 
 </ion-content>

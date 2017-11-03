@@ -6,25 +6,26 @@
 -->
 <ion-header>
 
-  <ion-navbar color="primary">
-    <ion-title>我的NC任务</ion-title>
-  </ion-navbar>
-  <ion-toolbar>
-    <ion-segment [(ngModel)]="approve">
-      <ion-segment-button value="todo">
-        未处理
-      </ion-segment-button>
-      <ion-segment-button value="done">
-        已处理
-      </ion-segment-button>
-    </ion-segment>
+  <ion-navbar color="light">
+    <ion-title>NC待办</ion-title>
     <ion-buttons end>
       <button ion-button icon-only (click)="searchBtnClick()">
         <ion-icon name="search"></ion-icon>
       </button>
     </ion-buttons>
+  </ion-navbar>
+  <ion-toolbar  mode="md" color="white">
+    <ion-segment  mode="md" [(ngModel)]="approve" class="todo">
+      <ion-segment-button  value="todo">
+        未处理
+      </ion-segment-button>
+      <span class="divider"></span>
+      <ion-segment-button value="done">
+        已处理
+      </ion-segment-button>
+    </ion-segment>
   </ion-toolbar>
-  <ion-toolbar *ngIf="isShowSearch">
+  <ion-toolbar *ngIf="isShowSearch" color="white">
     <ion-searchbar placeholder="请输入关键字搜索..."  #search
     [showCancelButton]="true" 
     (ionCancel)="getSearchItems(searchbar.value)"

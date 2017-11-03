@@ -1,3 +1,4 @@
+import { ListPage } from '../list/list';
 import { ToastService } from './../../providers/util/toast-service';
 import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer';
 import { Device } from '@ionic-native/device';
@@ -14,10 +15,15 @@ import { NavController, Slides, LoadingController, ToastController, ModalControl
 import { InAppBrowser } from "@ionic-native/in-app-browser";
 import { File } from '@ionic-native/file';
 import { FileOpener } from '@ionic-native/file-opener';
+import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
+
+import { Events } from 'ionic-angular'; 
 
 import xml2js from 'xml2js';
 
 import 'rxjs/add/operator/map';
+import { CoremailPage } from '../coremail/coremail';
+
 
 
 @Component({
@@ -81,8 +87,15 @@ export class HomePage {
     private file: File,
     private fileOpener: FileOpener,
     public http: Http,
+    public sqlite: SQLite,
+    public events:Events,
     public modalCtrl: ModalController
-  ) { }
+  ) {
+    events.subscribe('reload:data',()=>{
+      this.getMainTodo();
+    })
+   }
+
 
   ionViewDidLoad() {
     this.homeservice.getTopNotice().then(res => {
@@ -100,14 +113,17 @@ export class HomePage {
         this.noticeSlide2 = list2;
         this.noticeSlide3 = list3;
       }
-    })
-    //监听页面滚动事件
-    // this.scrollArea.ionScroll.subscribe((event) => {
-    //   this.resizeHeader(event)
-    // });
-    // this.scrollArea.ionScrollEnd.subscribe((event) => {
-    //   this.scrollEndResizeHeader(event)
-    // });
+    });
+
+  //创建sqlite数据库读存用户配置数据
+  this.sqlite.create({
+    name: 'data.db',
+    location: 'default'
+  }).then((db: SQLiteObject) => {
+    db.executeSql('create table if not exists UserIcons (actionClick,imageSrc,lable,oSystemUser,tips,url,rightId)',{})
+    .then(() => console.log('执行SQL语句'))
+    .catch(e => console.log(e))
+  }).catch(e=> console.log(e))
 
   }
   ionViewDidEnter() {
@@ -148,7 +164,6 @@ export class HomePage {
     this.noticSlider.stopAutoplay();
     const browser = this.iab.create(this.serveradd + 'LandRayOA?username=' + UserInfo.prototype.userid + '&type=1&fdid=' + fdid, '_blank', 'location=yes,closebuttoncaption=返回门户首页,toolbarposition=top');
     browser.insertCSS({ code: "body{margin-right: 100px;" })
-    debugger;
   }
 
   //打开NC单据明细
@@ -159,17 +174,18 @@ export class HomePage {
   }
   //打开oa待办
   openOaTodo(url) {
-    //alert(url);
     if (this.device.platform == "Android") {
       const browser = this.iab.create(GlobalVar.oa_server_address + url, '_blank', 'location=no,closebuttoncaption=返回门户首页,toolbarposition=top');
-      //const browser = this.iab.create(this.serveradd + 'LandRayOA?username=' + UserInfo.prototype.userid + '&type=2&url='+url, '_blank', 'location=yes,closebuttoncaption=返回门户首页,toolbarposition=top');      
+      browser.on('exit').subscribe(()=>{
+        this.getMainTodo();
+      })
       browser.on('loadstart').subscribe((event) => {
-        window['plugins'].toast.showLongCenter("加载系统数据中，请稍候...",3000);                  
+        window['plugins'].toast.showLongCenter("加载系统数据中，请稍候...", 3000);
         let newUrl = event.url;
         const fileTransfer: FileTransferObject = this.transfer.create();
         if (newUrl && newUrl.indexOf("readDownload") > 0) {
           debugger;
-          window['plugins'].toast.showLongCenter("加载附件中，请稍候...",4000);                
+          window['plugins'].toast.showLongCenter("加载附件中，请稍候...", 4000);
           this.http.get(newUrl).toPromise().then(response => {
             let res = response as any;
             console.log(response);
@@ -181,26 +197,19 @@ export class HomePage {
               var extention = splitstring[splitstring.length - 1].replace('"', '');
               fileTransfer.download(newUrl, "file:///storage/emulated/0/Download/OAfiles." + extention).then((entry) => {
                 console.log('download complete: ' + entry.toURL());
-                //this.toastCtrl.dismiss();
-                setTimeout(()=>{
-                  window['plugins'].toast.showLongCenter("正在打开附件，请稍候...",4000);
-                  //window['cordova'].plugins.FileOpener.openFile(entry.toURL());
-                  //const filebrowser = this.iab.create('https://docs.google.com/gview?embedde‌​d=true&url='+entry.toURL(), '_blank', 'location=yes,closebuttoncaption=返回,toolbarposition=top');
-
-                  this.fileOpener.open(entry.toURL(),res.headers._headers.get("content-type")[0])
-                  .then(()=>{
-                    this.toastCtrl.dismiss();
-                    //this.toastCtrl.create("打开成功",false, 2000 , "center");
-                  })
-                  .catch(e =>{
-                    this.toastCtrl.dismiss();
-                    window['plugins'].toast.showLongCenter("打开失败");
-                  })
-                },500)
-                
+                setTimeout(() => {
+                  window['plugins'].toast.showLongCenter("正在打开附件，请稍候...", 4000);
+                  this.fileOpener.open(entry.toURL(), res.headers._headers.get("content-type")[0])
+                    .then(() => {
+                      this.toastCtrl.dismiss();
+                    })
+                    .catch(e => {
+                      this.toastCtrl.dismiss();
+                      window['plugins'].toast.showLongCenter("打开失败");
+                    })
+                }, 500)
               }, (error) => {
                 console.log(error)
-                // handle error
               });
 
             }
@@ -208,29 +217,25 @@ export class HomePage {
         }
       })
     } else {
-     const browser = this.iab.create(GlobalVar.oa_server_address + url, '_blank', 'location=no,closebuttoncaption=返回门户首页,toolbarposition=top');
-      //const browser = this.iab.create(this.serveradd + 'LandRayOA?username=' + UserInfo.prototype.userid + '&type=2&url='+url, '_blank', 'location=yes,closebuttoncaption=返回门户首页,toolbarposition=top');      
-      
+      const browser = this.iab.create(GlobalVar.oa_server_address + url, '_blank', 'location=no,closebuttoncaption=返回门户首页,toolbarposition=top');
+      browser.on('exit').subscribe(()=>{
+        this.getMainTodo();
+      })
     }
   }
   //打开BPM待办
   openBpmTodo(id) {
     const browser = this.iab.create(GlobalVar.bpm_server_address + 'jwf/mobile/bpm/task.html?taskId=' + id, '_blank', 'location=no,closebuttoncaption=返回门户首页,toolbarposition=top');
-  }
-
-  itemClick() {
-    console.log("itemclick")
+    browser.on('exit').subscribe(()=>{
+      this.getMainTodo();
+    })
   }
 
   //打开业务系统
   navTo(action, url, label) {
-    debugger;
-    //window['plugins'].toast.showLongCenter("加载系统数据中，请稍候..."); 
-    
     switch (action) {
       case 'initApprove':
         this.navCtrl.push(NcPage);
-        setTimeout(() => { this.toastCtrl.dismiss(); }, 2000);
         break;
       case 'initH5ApproveSystem':
         if (label == "ＯＡ待办") {
@@ -240,12 +245,11 @@ export class HomePage {
               this.getMainTodo();
             })
             browser.on('loadstart').subscribe((event) => {
-              window['plugins'].toast.showLongCenter("加载系统数据中，请稍候...",3000);                
-              
+              window['plugins'].toast.showLongCenter("加载系统数据中，请稍候...", 3000);
               let newUrl = event.url;
               const fileTransfer: FileTransferObject = this.transfer.create();
               if (newUrl && newUrl.indexOf("readDownload") > 0) {
-                window['plugins'].toast.showLongCenter("加载附件中，请稍候...",4000);                
+                window['plugins'].toast.showLongCenter("加载附件中，请稍候...", 4000);
                 this.http.get(newUrl).toPromise().then(response => {
                   let res = response as any;
                   console.log(response);
@@ -257,36 +261,26 @@ export class HomePage {
                     var extention = splitstring[splitstring.length - 1].replace('"', '');
                     fileTransfer.download(newUrl, "file:///storage/emulated/0/Download/OAfiles." + extention).then((entry) => {
                       console.log('download complete: ' + entry.toURL());
-                      //this.toastCtrl.dismiss();
-                      setTimeout(()=>{
-                        window['plugins'].toast.showLongCenter("正在打开附件，请稍候...",4000);
-                        //window['cordova'].plugins.FileOpener.openFile(entry.toURL());
-                        //const filebrowser = this.iab.create('https://docs.google.com/gview?embedde‌​d=true&url='+entry.toURL(), '_blank', 'location=yes,closebuttoncaption=返回,toolbarposition=top');
+                      setTimeout(() => {
+                        window['plugins'].toast.showLongCenter("正在打开附件，请稍候...", 4000);
+                        this.fileOpener.open(entry.toURL(), res.headers._headers.get("content-type")[0])
+                          .then(() => {
+                            this.toastCtrl.dismiss();
+                          })
+                          .catch(e => {
+                            this.toastCtrl.dismiss();
+                            window['plugins'].toast.showLongCenter("打开失败");
+                          })
+                      }, 500)
 
-                        this.fileOpener.open(entry.toURL(),res.headers._headers.get("content-type")[0])
-                        .then(()=>{
-                          this.toastCtrl.dismiss();
-                          //this.toastCtrl.create("打开成功",false, 2000 , "center");
-                        })
-                        .catch(e =>{
-                          this.toastCtrl.dismiss();
-                          window['plugins'].toast.showLongCenter("打开失败");
-                        })
-                      },500)
-                      
                     }, (error) => {
                       // handle error
                       console.log(error)
                     });
-
                   }
-
                 })
-
-
               }
             })
-
           } else {
             const browser = this.iab.create(url + '&type=main', '_blank', 'location=no,closebuttoncaption=返回门户首页,toolbarposition=top');
             browser.on('exit').subscribe(() => {
@@ -305,6 +299,11 @@ export class HomePage {
           browser.on('exit').subscribe(() => {
             this.getMainTodo();
           })
+        } else if (label == "企业邮箱") {
+          const browser = this.iab.create(url, '_blank', 'location=no,closebuttoncaption=返回门户首页,toolbarposition=top');
+          browser.on('exit').subscribe(() => {
+            this.getMainTodo();
+          })
         }
         break;
       default:
@@ -312,31 +311,36 @@ export class HomePage {
     };
   }
 
+  //更多应用
+  navToMoreApp() {
+    this.navCtrl.push(ListPage);
+  }
+
   //加载首页待办列表
   getMainTodo() {
-    // let loading = this.loadingCtrl.create({
-    //   content: '数据加载中，请稍候...'
-    // });
-    //loading.present();
     let params = new URLSearchParams();
     this.approveService.doGetMainTodoList(params).then(res => {
       let result = res.json() as any;
       if (result.icons && result.icons.length > 0) {
-        this.icons = result.icons;
+        //先检查是否有自定义按钮
+
+        //没有自定义按钮则使用默认按钮
+          this.icons = result.icons;
+        
         this.iconsLength = this.icons.length;
         console.log(this.icons);
         if (this.icons) {
           for (var i in this.icons) {
             if (!this.isInitBpm && this.icons[i].lable == "业务审批") {
-              setTimeout(()=>{
-                const browser = this.iab.create(this.icons[i].url, '_blank', 'hidden=yes');                
-              },500)
+              setTimeout(() => {
+                const browser = this.iab.create(this.icons[i].url, '_blank', 'hidden=yes');
+              }, 500)
               this.isInitBpm = true;
             }
             if (!this.isInitOa && this.icons[i].lable == "ＯＡ待办") {
-              setTimeout(()=>{
-                const browser = this.iab.create(this.icons[i].url, '_blank', 'hidden=yes');                
-              },1000)
+              setTimeout(() => {
+                const browser = this.iab.create(this.icons[i].url, '_blank', 'hidden=yes');
+              }, 1000)
               this.isInitOa = true;
             }
           }
@@ -346,57 +350,18 @@ export class HomePage {
         this.shortcutList = result.dataList;
         console.log(this.shortcutList)
       }
-      //setTimeout(() => { loading.dismiss(); }, 500)
     }).catch(err => {
-      alert("getBpmTodo()@home.ts =>" + err);
-      //setTimeout(() => { loading.dismiss(); }, 500)
+      alert("getMainTodo()@home.ts =>" + err);
     });
-  }
-
-  //展开\折叠待办列表
-  showMainItemList() {
-    this.isShowMainItemList == true ? this.isShowMainItemList = false : this.isShowMainItemList = true;
-  }
-
-  resizeHeader(ev) {
-    ev.domWrite(() => {
-      let headerElement = this.expandheader.nativeElement;
-      let totalHeight = headerElement.offsetTop + headerElement.clientHeight;
-      headerElement.style.transition = ""
-      this.newHeaderHeight = this.headerHeight - ev.scrollTop;
-      if (this.newHeaderHeight < 0) {
-        this.newHeaderHeight = 0;
-      }
-
-      this.renderer.setElementStyle(this.expandheader.nativeElement, 'height', this.newHeaderHeight + 'px');
-
-      //console.log("height="+this.newHeaderHeight)
-    });
-  }
-  scrollEndResizeHeader(ev) {
-    ev.domWrite(() => {
-      console.log("old newHeaderHeight:" + this.newHeaderHeight)
-      let headerElement = this.expandheader.nativeElement;
-      this.newHeaderHeight = this.headerHeight - ev.scrollTop;
-      console.log("目前高度：" + headerElement.clientHeight + "，默认高度：" + this.headerHeight + ",newNewHeaderHeight:" + this.newHeaderHeight)
-      if (headerElement.clientHeight > this.headerHeight) {
-        headerElement.style.transition = "all 1s ease-in-out"
-        this.renderer.setElementStyle(this.expandheader.nativeElement, 'height', this.headerHeight + 'px');
-      } else if (this.newHeaderHeight >= 150 && headerElement.clientHeight < 50) {
-        headerElement.style.transition = "all 1s ease-in-out"
-        this.renderer.setElementStyle(this.expandheader.nativeElement, 'height', this.headerHeight + 'px');
-      } else {
-        if (this.newHeaderHeight < 0) {
-          this.newHeaderHeight = 0;
-        }
-        this.renderer.setElementStyle(this.expandheader.nativeElement, 'height', this.newHeaderHeight + 'px');
-      }
-
-    })
   }
 
   slideChanged(index) {
     this.noticSlider.slideTo(1);
   }
+  navToMail(){
+   this.navCtrl.push(CoremailPage) 
+  }
 }
+
+
 

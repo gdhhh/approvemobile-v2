@@ -4,6 +4,7 @@ import { NcBillsDetailPage } from './../nc-bills-detail/nc-bills-detail';
 import { Component, ViewChild } from '@angular/core';
 import { IonicPage, NavController, NavParams, ModalController, LoadingController, ToastController } from 'ionic-angular';
 import { UserInfo } from "../../providers/constant/constant";
+import { Events } from "ionic-angular";
 import xml2js from 'xml2js';
 
 import {URLSearchParams} from '@angular/http';
@@ -33,12 +34,14 @@ export class NcPage {
     public loadingCtrl: LoadingController,
     public toastCtrl: ToastController,
     public loadingService: LoadingService,
+    public events:Events,
     public modalCtrl: ModalController
   ) {
+
   }
 
-  ionViewDidLoad() {
-    
+  ionViewDidLeave() {
+    this.events.publish('reload:data')
   }
   ionViewDidEnter(){
     //初始化时，加载待办和已处理单据。

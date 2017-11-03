@@ -1,12 +1,13 @@
-import {NoRightPage} from '../no-right/no-right';
-import {GlobalVar} from '../../providers/constant/constant';
-import {InAppBrowser} from '@ionic-native/in-app-browser';
-import {NcPage} from '../nc/nc';
-import {NcBillsDetailServiceProvider} from '../../providers/nc-bills-detail-service/nc-bills-detail-service';
+import { InAppBrowser } from '@ionic-native/in-app-browser';
+import { NoRightPage } from '../no-right/no-right';
+import { GlobalVar } from '../../providers/constant/constant';
+import { NcPage } from '../nc/nc';
+import { NcBillsDetailServiceProvider } from '../../providers/nc-bills-detail-service/nc-bills-detail-service';
 import { Component } from '@angular/core';
-import { NavController, NavParams, LoadingController } from 'ionic-angular';
+import { NavController, NavParams } from 'ionic-angular';
 
-import {URLSearchParams} from '@angular/http';
+import { URLSearchParams } from '@angular/http';
+import { ListModifyPage } from '../list-modify/list-modify';
 
 @Component({
   selector: 'page-list',
@@ -15,36 +16,35 @@ import {URLSearchParams} from '@angular/http';
 export class ListPage {
   selectedItem: any;
   icons;
+  allIcons;
 
   constructor(
-    public navCtrl: NavController, 
+    public navCtrl: NavController,
     public navParams: NavParams,
     public approveService: NcBillsDetailServiceProvider,
-    private iab: InAppBrowser,
-    public loadingCtrl: LoadingController
+    public iab: InAppBrowser,
   ) {
-  
+
   }
 
   ionViewDidLoad() {
     this.getIcons();
   }
   getIcons() {
-    let loading = this.loadingCtrl.create({
-      content: '数据加载中，请稍候...'
-    });
-    loading.present();
     let params = new URLSearchParams();
     this.approveService.doGetMainTodoList(params).then(res => {
       let result = res.json() as any;
       if (result.icons && result.icons.length > 0) {
-        this.icons = result.icons;
-        console.log(this.icons)
+        if (localStorage.getItem("icons")) {
+          this.icons = localStorage.getItem("icons");
+        } else {
+          localStorage.setItem('icons',result.icons)
+          this.icons = result.icons;
+        }
+        this.allIcons = result.icons;
       }
-      setTimeout(() => { loading.dismiss(); }, 500)
     }).catch(err => {
-      alert("getBpmTodo()@home.ts =>" + err);
-      setTimeout(() => { loading.dismiss(); }, 500)
+      alert("getIcons()@list.ts =>" + err);
     });
   }
 
@@ -68,14 +68,9 @@ export class ListPage {
     };
   }
 
-  testinAppbrowser(){
-    const browser = this.iab.create("http://www.baidu.com", '_blank', 'location=no');
+  modify() {
+    console.log("modify")
+    this.navCtrl.push(ListModifyPage)
   }
-  testinAppbrowserSetTimeOut(){
-    const browser = 
-    setTimeout(()=>{
-      this.iab.create("http://www.baidu.com", '_blank', 'location=no');
-    },1000);
-   
-  }
+
 }

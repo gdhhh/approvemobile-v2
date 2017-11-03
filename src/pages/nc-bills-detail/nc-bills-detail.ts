@@ -13,6 +13,8 @@ import { ApproveModalPage } from "./approve-modal/approve-modal";
 import { FileOpener } from '@ionic-native/file-opener'
 import { Device } from "@ionic-native/device";
 
+import { Events } from "ionic-angular";
+
 import {URLSearchParams} from '@angular/http';
 
 /**
@@ -48,8 +50,12 @@ export class NcBillsDetailPage {
     public transfer: FileTransfer,
     public file:File,
     public device: Device,
+    public events: Events,
     public billsdetailservice: NcBillsDetailServiceProvider
   ) {
+    this.events.subscribe('dismissDetail',()=>{
+      this.dismiss();
+    });
   }
 
   ionViewDidLoad() {
@@ -59,6 +65,7 @@ export class NcBillsDetailPage {
 
   dismiss() {
     this.viewCtrl.dismiss();
+    this.events.publish('reload:data');
   }
 
   getApprovesItemDetail() {

@@ -11,8 +11,9 @@
       </ion-item>
 
       <ion-item>
-          <ion-label><img src="assets/icon/password.png" width="20px"></ion-label>
+        <ion-label><img src="assets/icon/password.png" width="20px"></ion-label>
         <ion-input type="password" formControlName="password" placeholder="请输入密码..." [ngModel]="loginPassword"></ion-input>
+        <ion-icon item-end class="eyes"><div ></div></ion-icon>
       </ion-item>
 
       <div  *ngIf="formErrors?.error" class="error-msg">

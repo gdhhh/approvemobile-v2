@@ -1,20 +1,119 @@
-// .ion-ios-home::before {content:url("../assets/icon/color.svg");}
-// .ion-ios-kk::before {content:url("../assets/icon/kk.png");}
+// ion-icon {
+//     &[class*="portal-"] {
+//         // Instead of using the font-based icons
+//         // We're applying SVG masks
+//         mask-size: contain;
+//         mask-position: 50% 50%;
+//         mask-repeat: no-repeat;
+//         background: currentColor;
+//         width: 1em;
+//         height: 1em;
+//     }
+//     // custom icons
+//     &[class*="portal-app"] {
+//         mask-image: url(../assets/icon/app.svg);
+//     }
 
-ion-icon {
-    &[class*="portal-"] {
-        // Instead of using the font-based icons
-        // We're applying SVG masks
-        mask-size: contain;
-        mask-position: 50% 50%;
-        mask-repeat: no-repeat;
-        background: currentColor;
-        width: 1em;
-        height: 1em;
-    }
-    // custom icons
-    &[class*="portal-nimble"] {
-        mask-image: url(../assets/icon/color.svg);
-    }
+// }
 
+.tabbar, .tabs-ios, .tabs-md , .tabs-wp{
+    .tab-button-icon {
+        color: rgba(0,0,0,0);        
+        background-repeat:no-repeat;
+        background-position:center;
+        height:24px;
+        width:24px;
+        background-size:contain;
+        -webkit-background-size: contain;
+        -moz-background-size: contain;
+        -o-background-size: contain;
+        &:before {
+            display:none;
+        }
+    }
 }
+
+tabs-ios-white .tab-button[aria-selected=true], .tabs-ios-white .tab-button[aria-selected=true] .tab-button-icon {
+    color: rgba(0,0,0,0);
+}
+.tabs-ios .tab-button[aria-selected=true] .tab-button-icon {
+    color: rgba(0,0,0,0);
+}
+
+.tabs-ios {
+  a[aria-selected=false]{
+    .tab-button-icon[ng-reflect-name=portal-nimble], .tab-button-icon[aria-label="portal-nimble"] {
+        background-image: url(../assets/icon/nimble-inactive.png);
+    }
+    .tab-button-icon[ng-reflect-name=portal-app], .tab-button-icon[aria-label=portal-app] {
+        background-image: url(../assets/icon/app-inactive.png);
+    }
+    .tab-button-icon[ng-reflect-name=portal-kk], .tab-button-icon[aria-label=portal-kk] {
+        background-image: url(../assets/icon/kk-inactive.png);
+    }
+    .tab-button-icon[ng-reflect-name=portal-my], .tab-button-icon[aria-label=portal-my] {
+        background-image: url(../assets/icon/my-inactive.png);
+    }
+  }
+ a[aria-selected=true] {
+    .tab-button-icon[ng-reflect-name=portal-nimble], .tab-button-icon[aria-label="portal-nimble"] {
+        background-image: url(../assets/icon/nimble-active.png);
+    }
+    .tab-button-icon[ng-reflect-name=portal-app], .tab-button-icon[aria-label=portal-app] {
+        background-image: url(../assets/icon/app-active.png);
+    }
+    .tab-button-icon[ng-reflect-name=portal-kk], .tab-button-icon[aria-label=portal-kk] {
+        background-image: url(../assets/icon/kk-active.png);
+    }
+    .tab-button-icon[ng-reflect-name=portal-my], .tab-button-icon[aria-label=portal-my] {
+        background-image: url(../assets/icon/my-active.png);
+    }
+  }
+}
+
+.tabs-md {
+  a[aria-selected=false]{
+    .tab-button-icon[ng-reflect-name=portal-nimble], .tab-button-icon[aria-label="portal-nimble"] {
+        background-image: url(../assets/icon/nimble-inactive.png);
+    }
+    .tab-button-icon[ng-reflect-name=portal-app], .tab-button-icon[aria-label=portal-app] {
+        background-image: url(../assets/icon/app-inactive.png);
+    }
+    .tab-button-icon[ng-reflect-name=portal-kk], .tab-button-icon[aria-label=portal-kk] {
+        background-image: url(../assets/icon/kk-inactive.png);
+    }
+    .tab-button-icon[ng-reflect-name=portal-my], .tab-button-icon[aria-label=portal-my] {
+        background-image: url(../assets/icon/my-inactive.png);
+    }
+  }
+
+ a[aria-selected=true] {
+    .tab-button-icon[ng-reflect-name=portal-nimble], .tab-button-icon[aria-label="portal-nimble"] {
+        background-image: url(../assets/icon/nimble-active.png);
+    }
+    .tab-button-icon[ng-reflect-name=portal-app], .tab-button-icon[aria-label=portal-app] {
+        background-image: url(../assets/icon/app-active.png);
+    }
+    .tab-button-icon[ng-reflect-name=portal-kk], .tab-button-icon[aria-label=portal-kk] {
+        background-image: url(../assets/icon/kk-active.png);
+    }
+    .tab-button-icon[ng-reflect-name=portal-my], .tab-button-icon[aria-label=portal-my] {
+        background-image: url(../assets/icon/my-active.png);
+    }
+  }
+}
+
+.app-shadow1 {
+    opacity: 0; 
+    transition: all 1s ease;
+  }
+  
+  .app-shadow2 {
+     opacity: 0; 
+    transition: all 1s ease;
+  }
+  
+  .app-shadow3 {
+     opacity: 0; 
+    transition: all 1s ease;
+  }
