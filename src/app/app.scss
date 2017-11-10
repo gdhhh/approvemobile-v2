@@ -38,3 +38,20 @@ ion-icon {
     }
 
 }
+
+//图片无法在各个page scss中加载，在框架解决此问题前将引用到图片的css放到此位置
+page-login{
+    .background{
+        background-image: url(../assets/img/background/bg.png);
+        background-size: cover;
+        background-repeat: no-repeat;
+        height: 200px;
+        width:100%;
+      }
+}
+
+page-home{
+    .more{
+        background-image: url(../assets/buttons/more.png);
+      }
+}
