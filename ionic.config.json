@@ -1,6 +1,6 @@
 {
   "name": "approvemobile-v2",
-  "app_id": "5d6a81ca",
+  "app_id": "4261b0e4",
   "type": "ionic-angular",
   "integrations": {
     "cordova": {}

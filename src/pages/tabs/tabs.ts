@@ -1,3 +1,4 @@
+import { CoremailPage } from './../coremail/coremail';
 import { Device } from '@ionic-native/device';
 import { Tab } from 'ionic-angular';
 import { InfoPage } from './../info/info';
@@ -5,9 +6,8 @@ import { ListPage } from './../list/list';
 import { HomePage } from '../home/home';
 import { Component } from '@angular/core';
 
-import { InAppBrowser } from '@ionic-native/in-app-browser';
 
-
+declare var cordova : any;
 @Component({
   templateUrl: 'tabs.html'
 })
@@ -17,9 +17,28 @@ export class TabsPage {
   tabList = ListPage;
   tabKkSearch;
   tabInfo = InfoPage;
+  browserOption = {
+    statusbar: {
+        color: '#ffffffff'
+    },
+    toolbar: {
+        height: 44,
+        color: '#f0f0f0ff'
+    },
+    title: {
+        color: '#003264ff',
+        showPageTitle: true
+    },
+    closeButton: {
+      wwwImage: 'assests/icon/x.png',
+      wwwImagePressed: 'assests/icon/x.png',
+      wwwImageDensity: 2,
+      align: 'left',
+    },
+    backButtonCanClose: true
+}
 
   constructor(
-    private iab: InAppBrowser,
     private device: Device
   ) {
 

@@ -26,7 +26,6 @@ import { ListModifyPage } from '../pages/list-modify/list-modify';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
-import { InAppBrowser } from '@ionic-native/in-app-browser';
 import { Device } from '@ionic-native/device';
 
 import { Toast } from '@ionic-native/toast';
@@ -39,6 +38,7 @@ import { FileOpener } from '@ionic-native/file-opener';
 import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-native/file-transfer';
 import { File } from '@ionic-native/file';
 import { SQLite } from '@ionic-native/sqlite';
+import { ThemeableBrowser } from '@ionic-native/themeable-browser';
 
 import { NoticeCreateTimePipe } from '../pipes/notice-create-time/notice-create-time';
 import { SubjectPipe } from '../pipes/subject/subject';
@@ -69,6 +69,7 @@ import { CoremailPage } from '../pages/coremail/coremail';
     SecurityPage,
     CoremailPage,
     DateToLocaleDateStringPipe,
+
     NoticeCreateTimePipe
   ],
   imports: [
@@ -101,7 +102,6 @@ import { CoremailPage } from '../pages/coremail/coremail';
     Device,
     Toast,
     SplashScreen,
-    InAppBrowser,
     { provide: ErrorHandler, useClass: IonicErrorHandler },
     LoginServiceProvider,
     HomeServiceProvider,
@@ -111,6 +111,7 @@ import { CoremailPage } from '../pages/coremail/coremail';
     FileOpener,
     AppVersion,
     FileTransfer,
+    ThemeableBrowser,
     SQLite,
     FileTransferObject,
     File

@@ -1,4 +1,4 @@
-import { InAppBrowser } from '@ionic-native/in-app-browser';
+import { ThemeableBrowser } from '@ionic-native/themeable-browser';
 import { NoRightPage } from '../no-right/no-right';
 import { GlobalVar } from '../../providers/constant/constant';
 import { NcPage } from '../nc/nc';
@@ -9,6 +9,8 @@ import { NavController, NavParams } from 'ionic-angular';
 import { URLSearchParams } from '@angular/http';
 import { ListModifyPage } from '../list-modify/list-modify';
 
+declare var cordova: any;
+
 @Component({
   selector: 'page-list',
   templateUrl: 'list.html'
@@ -18,11 +20,31 @@ export class ListPage {
   icons;
   allIcons;
 
+  browserOption = {
+    statusbar: {
+        color: '#ffffffff'
+    },
+    toolbar: {
+        height: 44,
+        color: '#f0f0f0ff'
+    },
+    title: {
+        color: '#003264ff',
+        showPageTitle: true
+    },
+    closeButton: {
+      wwwImage: 'assests/icon/x.png',
+      wwwImagePressed: 'assests/icon/x.png',
+      wwwImageDensity: 2,
+      align: 'left',
+    },
+    backButtonCanClose: true
+}
+
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
-    public approveService: NcBillsDetailServiceProvider,
-    public iab: InAppBrowser,
+    public approveService: NcBillsDetailServiceProvider
   ) {
 
   }
@@ -49,6 +71,25 @@ export class ListPage {
   }
 
   //打开业务系统
+  // navTo(action, url, label) {
+  //   switch (action) {
+  //     case 'initApprove':
+  //       this.navCtrl.push(NcPage);
+  //       break;
+  //     case 'initH5ApproveSystem':
+  //       if (label == "ＯＡ待办") {
+  //         const browser = this.iab.create(url + '&type=main', '_blank', 'location=no');
+  //       } else if (label == "公告新闻") {
+  //         const browser = this.iab.create(url + '&type=newslist', '_blank', 'location=no');
+  //       } else if (label == "业务审批") {
+  //         const browser = this.iab.create(GlobalVar.bpm_server_address, '_blank', 'location=no');
+  //       }
+  //       break;
+  //     default:
+  //       this.navCtrl.push(NoRightPage);
+  //   };
+  // }
+
   navTo(action, url, label) {
     switch (action) {
       case 'initApprove':
@@ -56,11 +97,11 @@ export class ListPage {
         break;
       case 'initH5ApproveSystem':
         if (label == "ＯＡ待办") {
-          const browser = this.iab.create(url + '&type=main', '_blank', 'location=no');
+          cordova.ThemeableBrowser.open(url + '&type=main', '_blank', this.browserOption);
         } else if (label == "公告新闻") {
-          const browser = this.iab.create(url + '&type=newslist', '_blank', 'location=no');
+          cordova.ThemeableBrowser.open(url + '&type=newslist', '_blank', this.browserOption);
         } else if (label == "业务审批") {
-          const browser = this.iab.create(GlobalVar.bpm_server_address, '_blank', 'location=no');
+          cordova.ThemeableBrowser.open(GlobalVar.bpm_server_address, '_blank', this.browserOption);
         }
         break;
       default:
