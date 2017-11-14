@@ -43,6 +43,7 @@ import { ThemeableBrowser } from '@ionic-native/themeable-browser';
 import { NoticeCreateTimePipe } from '../pipes/notice-create-time/notice-create-time';
 import { SubjectPipe } from '../pipes/subject/subject';
 import { CoremailPage } from '../pages/coremail/coremail';
+import { SqlServiceProvider } from '../providers/sql-service/sql-service';
 
 
 
@@ -114,7 +115,8 @@ import { CoremailPage } from '../pages/coremail/coremail';
     ThemeableBrowser,
     SQLite,
     FileTransferObject,
-    File
+    File,
+    SqlServiceProvider
   ]
 })
 export class AppModule { }

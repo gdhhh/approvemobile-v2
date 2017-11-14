@@ -1,3 +1,4 @@
+import { SqlServiceProvider } from './../../providers/sql-service/sql-service';
 import { ListPage } from '../list/list';
 import { ToastService } from './../../providers/util/toast-service';
 import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer';
@@ -122,6 +123,7 @@ export class HomePage {
     public sqlite: SQLite,
     public events: Events,
     private themeableBrowser: ThemeableBrowser,
+    private sqlService: SqlServiceProvider,
     public modalCtrl: ModalController
   ) {
     events.subscribe('reload:data', () => {
@@ -158,6 +160,48 @@ export class HomePage {
     // }).catch(e => console.log(e))
 
   }
+
+  
+  create(){
+    let obj = {
+      sql: 'CREATE TABLE COMPANY('
+          +'ID integer,'
+          +'NAME TEXT,'
+          +'AGE integer)',
+      desc: '创建表',
+      tableName: 'COMPANY'
+    }
+    this.sqlService.execSql(obj.sql).then(() => {
+      alert(obj.desc+ '表名:'+ obj.tableName+ '创建成功');
+  }).catch(err => {
+      alert("出错了"+ err.error.message);
+  });
+  }
+
+  insert(){
+    let sql =  'insert into company (ID,NAME,AGE)'
+              +' values (1,"test",23)'
+    this.sqlService.execSql(sql).then(() =>{
+      alert('success');
+    }).catch(err => {
+      alert("error"+err)
+    })
+  }
+
+  query(){
+    let output = [];
+    let sql = "select * from COMPANY";
+          this.sqlService.execSql(sql, []).then((data) => {
+              for (let i = 0; i < data.res.rows.length; i++) {
+                  output.push(data.res.rows.item(i));
+              }
+               alert(output);
+          }).catch((err) => {
+              alert(err);
+          });
+  }
+
+
   ionViewDidEnter() {
     this.getMainTodo();
     this.isShowMainItemList = false;
@@ -166,6 +210,7 @@ export class HomePage {
       this.isShowMainItemList = true;
     }, 1000)
   }
+
 
   /**
    * 加载首页待办列表数据
@@ -210,7 +255,7 @@ export class HomePage {
               this.getMainTodo();
             })
             browser.on('loadstart').subscribe((event) => {
-              window['plugins'].toast.showLongCenter("加载系统数据中，请稍候...", 3000);
+              //window['plugins'].toast.showLongCenter("加载系统数据中，请稍候...", 3000);
               let newUrl = event.url;
               const fileTransfer: FileTransferObject = this.transfer.create();
               if (newUrl && newUrl.indexOf("readDownload") > 0) {
@@ -259,7 +304,7 @@ export class HomePage {
           browser.on('exit').subscribe(() => {
             this.getMainTodo();
           })
-        } 
+        }
         // else if (label == "业务审批") {
         //   const browser: ThemeableBrowserObject = this.themeableBrowser.create(url, '_blank', this.browserOption);
         //   // 返回刷新首页数据
@@ -329,7 +374,7 @@ export class HomePage {
             for (var i in this.icons) {
               if (!this.isInitBpm && this.icons[i].lable == "业务审批") {
                 let opt = { hidden: true };
-                const browser: ThemeableBrowserObject = this.themeableBrowser.create(this.icons[i].url, '_blank', this.browserOption);
+                const browser: ThemeableBrowserObject = this.themeableBrowser.create(this.icons[i].url, '_blank', opt);
                 //单点登录处理成功后访问待办
                 browser.on('loadstop').subscribe(() => {
                   this.openBpmTodo(item.itemId);
