@@ -17,7 +17,7 @@ import { File } from '@ionic-native/file';
 import { FileOpener } from '@ionic-native/file-opener';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
 import { ThemeableBrowser, ThemeableBrowserOptions, ThemeableBrowserObject } from '@ionic-native/themeable-browser';
-
+import { Content } from 'ionic-angular';
 import { Events } from 'ionic-angular';
 
 import xml2js from 'xml2js';
@@ -37,7 +37,7 @@ export class HomePage {
   @ViewChild('slider') slider: Slides;
   @ViewChild('noticSlider') noticSlider: Slides;
   @ViewChild('myElement') myElem;
-  @ViewChild('mycontent') scrollArea: any;
+  @ViewChild(Content) scrollArea: Content;
   @ViewChild('expandheader') expandheader: any;
 
   noticeSlide1;
@@ -148,65 +148,13 @@ export class HomePage {
         this.noticeSlide3 = list3;
       }
     });
-
-    //创建sqlite数据库读存用户配置数据
-    // this.sqlite.create({
-    //   name: 'data.db',
-    //   location: 'default'
-    // }).then((db: SQLiteObject) => {
-    //   db.executeSql('create table if not exists UserIcons (actionClick,imageSrc,lable,oSystemUser,tips,url,rightId)', {})
-    //     .then(() => console.log('执行SQL语句'))
-    //     .catch(e => console.log(e))
-    // }).catch(e => console.log(e))
-
   }
 
-  
-  create(){
-    let obj = {
-      sql: 'CREATE TABLE COMPANY('
-          +'ID integer,'
-          +'NAME TEXT,'
-          +'AGE integer)',
-      desc: '创建表',
-      tableName: 'COMPANY'
-    }
-    this.sqlService.execSql(obj.sql).then(() => {
-      alert(obj.desc+ '表名:'+ obj.tableName+ '创建成功');
-  }).catch(err => {
-      alert("出错了"+ err.error.message);
-  });
-  }
-
-  insert(){
-    let sql =  'insert into company (ID,NAME,AGE)'
-              +' values (1,"test",23)'
-    this.sqlService.execSql(sql).then(() =>{
-      alert('success');
-    }).catch(err => {
-      alert("error"+err)
-    })
-  }
-
-  query(){
-    let output = [];
-    let sql = "select * from COMPANY";
-          this.sqlService.execSql(sql, []).then((data) => {
-              for (let i = 0; i < data.res.rows.length; i++) {
-                  output.push(data.res.rows.item(i));
-              }
-               alert(output);
-          }).catch((err) => {
-              alert(err);
-          });
-  }
-
-
-  ionViewDidEnter() {
+  ionViewWillEnter() {
     this.getMainTodo();
     this.isShowMainItemList = false;
     setTimeout(() => {
-      this.scrollArea.resize();
+      //this.scrollArea.resize();
       this.isShowMainItemList = true;
     }, 1000)
   }
@@ -217,17 +165,68 @@ export class HomePage {
    */
   getMainTodo() {
     let params = new URLSearchParams();
-    this.approveService.doGetMainTodoList(params).then(res => {
+    this.approveService.doGetMainAllIcons(params).then(res => {
       let result = res.json() as any;
       //获取按钮权限
       if (result.icons && result.icons.length > 0) {
-        this.icons = result.icons;
-        this.iconsLength = this.icons.length;
+        console.log(result.icons)
+        this.sqlService.execSql('select * from ICONS').then(ico => {
+          console.log(ico)
+          if ((ico && ico.rows.length <= 0) ||ico == undefined) {
+            //没有自定义按钮，使用服务器默认按钮
+            let allIcons = result;
+            let outputIcons = new Array();
+            let outputAllIcons = new Array();
+            if (allIcons && allIcons.icons.length > 0) {
+              let servIcon = allIcons.icons;
+              for (let j = 0; j < allIcons.icons.length; j++) {
+                if (servIcon[j].right == 1) {
+                  outputIcons.push(servIcon[j]);
+                } else {
+                  outputAllIcons.push(servIcon[j]);
+                }
+              }
+              this.icons = outputIcons;
+              this.iconsLength = outputIcons.length;
+            }
+          } else {
+            //有自定义按钮，使用自定义按钮
+            //获取所有按钮，遍历自定义按钮，筛选出显示在首页的按钮。
+            let params = new URLSearchParams();
+            let allIcons = res.json();
+            let outputIcons = new Array();
+            if (allIcons && allIcons.icons.length > 0) {
+              let custIcon = ico.rows as any;
+              let servIcon = allIcons.icons;
+              for (let i = 0; i < custIcon.length; i++) {
+                for (let j = 0; j < allIcons.icons.length; j++) {
+                  if (custIcon.item(i).ID == servIcon[j].id) {
+                    servIcon[j].right = custIcon.item(i).RIGHT
+                    outputIcons.push(servIcon[j]);
+                  }
+                }
+              }
+              this.icons = outputIcons;
+              this.iconsLength = outputIcons.length;
+            }
+          }
+        })
       }
+      
       //获取代办列表
       if (result.dataList && result.dataList.length > 0) {
         this.shortcutList = result.dataList;
         console.log(this.shortcutList)
+      }
+    }).catch(err => {
+      alert("getMainTodo()@home.ts =>" + err);
+    });
+
+  //获取代办列表
+    this.approveService.doGetMainTodoList(params).then(res => {
+      let result = res.json() as any;
+      if (result.dataList && result.dataList.length > 0) {
+        this.shortcutList = result.dataList;
       }
     }).catch(err => {
       alert("getMainTodo()@home.ts =>" + err);
@@ -302,28 +301,11 @@ export class HomePage {
           const browser: ThemeableBrowserObject = this.themeableBrowser.create(url, '_blank', this.browserOption);
           // 返回刷新首页数据
           browser.on('exit').subscribe(() => {
+            this.icons = undefined;
+            this.shortcutList = undefined;
             this.getMainTodo();
           })
         }
-        // else if (label == "业务审批") {
-        //   const browser: ThemeableBrowserObject = this.themeableBrowser.create(url, '_blank', this.browserOption);
-        //   // 返回刷新首页数据
-        //   browser.on('exit').subscribe(() => {
-        //     this.getMainTodo();
-        //   })
-        // } else if (label == "企业邮箱") {
-        //   const browser: ThemeableBrowserObject = this.themeableBrowser.create(url, '_blank', this.browserOption);
-        //   //返回刷新首页数据
-        //   browser.on('exit').subscribe(() => {
-        //     this.getMainTodo();
-        //   })
-        // }else if (label == "总裁桌面") {
-        //   const browser: ThemeableBrowserObject = this.themeableBrowser.create(url, '_blank', this.browserOption);
-        //   //返回刷新首页数据
-        //   browser.on('exit').subscribe(() => {
-        //     this.getMainTodo();
-        //   })
-        // }
         break;
       default:
         this.navCtrl.push(NoRightPage);
@@ -359,12 +341,13 @@ export class HomePage {
           if (this.icons) {
             for (var i in this.icons) {
               if (!this.isInitOa && this.icons[i].lable == "ＯＡ待办") {
-                let opt = { hidden: true };
-                const browser: ThemeableBrowserObject = this.themeableBrowser.create(this.icons[i].url, '_blank', this.browserOption);
-                //单点登录处理成功后访问待办
-                browser.on('loadstop').subscribe(() => {
-                  this.openOaTodo(item.url);
-                })
+                // let opt = { hidden: true };
+                // const browser: ThemeableBrowserObject = this.themeableBrowser.create(this.icons[i].url, '_blank', this.browserOption);
+                // //单点登录处理成功后访问待办
+                // browser.on('loadstop').subscribe(() => {
+                  
+                  this.openOaTodo(this.icons[i].url,item.url);
+                // })
               }
             }
           }
@@ -374,7 +357,7 @@ export class HomePage {
             for (var i in this.icons) {
               if (!this.isInitBpm && this.icons[i].lable == "业务审批") {
                 let opt = { hidden: true };
-                const browser: ThemeableBrowserObject = this.themeableBrowser.create(this.icons[i].url, '_blank', opt);
+                const browser: ThemeableBrowserObject = this.themeableBrowser.create(this.icons[i].url, '_blank', this.browserOption);
                 //单点登录处理成功后访问待办
                 browser.on('loadstop').subscribe(() => {
                   this.openBpmTodo(item.itemId);
@@ -414,10 +397,11 @@ export class HomePage {
   /**
    * 打开OA待办
    * @param url OA待办URL
+   * @param ssoUrl  单点登录URL
    */
-  openOaTodo(url) {
+  openOaTodo(ssoUrl,url) {
     if (this.device.platform == "Android") {
-      const browser: ThemeableBrowserObject = this.themeableBrowser.create(GlobalVar.oa_server_address + url, '_blank', this.browserOption);
+      const browser: ThemeableBrowserObject = this.themeableBrowser.create(ssoUrl+"&type=2&todoURL="+ url, '_blank', this.browserOption);
       browser.on('exit').subscribe(() => {
         this.getMainTodo();
       })
@@ -426,7 +410,6 @@ export class HomePage {
         let newUrl = event.url;
         const fileTransfer: FileTransferObject = this.transfer.create();
         if (newUrl && newUrl.indexOf("readDownload") > 0) {
-          debugger;
           window['plugins'].toast.showLongCenter("加载附件中，请稍候...", 4000);
           this.http.get(newUrl).toPromise().then(response => {
             let res = response as any;
@@ -459,7 +442,7 @@ export class HomePage {
       })
     } else {
       //IOS端 处理方式
-      const browser: ThemeableBrowserObject = this.themeableBrowser.create(GlobalVar.oa_server_address + url, '_blank', this.browserOption);
+      const browser: ThemeableBrowserObject = this.themeableBrowser.create(ssoUrl+"&type=2&todoURL="+ url, '_blank', this.browserOption);
       //返回刷新首页数据
       browser.on('exit').subscribe(() => {
         this.getMainTodo();
@@ -490,6 +473,67 @@ export class HomePage {
   }
   navToMail() {
     this.navCtrl.push(CoremailPage)
+  }
+
+  /**
+  * 创建表
+  */
+  createTable() {
+    this.sqlService.checkIsTableExist('ICONS').then(res => {
+      if (res == false) {
+        let obj = {
+          sql: 'CREATE TABLE ICONS (ID integer,NAME TEXT,RIGHT integer)',
+          desc: '创建表',
+          tableName: 'ICONS'
+        }
+        this.sqlService.execSql(obj.sql).then(() => {
+          console.log(obj.desc + '表名:' + obj.tableName + '创建成功');
+        }).catch(err => {
+          console.log("出错了" + err.error.message);
+        });
+      }
+    })
+  }
+
+  /**
+   * 添加图标显示的权限
+   * @param id 图标ID
+   * @param name 图标名称
+   * @param right 图标权限
+   */
+  addIconRights(id, name, right) {
+    let sql = 'insert into ICON (ID,NAME,AGE) values (' + id + ',' + name + ',' + right + ')';
+    this.sqlService.execSql(sql).then(() => {
+      alert('sql添加ICON执行完毕');
+    }).catch(err => {
+      alert("SQL添加过程中遇到错误：" + err)
+    })
+  }
+
+  query(sql) {
+    let output = [];
+    //let sql = "select * from COMPANY";
+    this.sqlService.execSql(sql).then(data => {
+      let result: any;
+      if (this.device.platform == "iOS" || this.device.platform == "Android") {
+        result = data;
+      } else {
+        result = data.res;
+      }
+      for (let i = 0; i < result.rows.length; i++) {
+        output.push(result.rows.item(i));
+      }
+      console.log(output);
+    }).catch((err) => {
+      console.log(err);
+    });
+  }
+
+  /**
+   * 滚动到最上端
+   */
+  scrollToTop(){
+    this.scrollArea.scrollToTop();
   }
 }
 

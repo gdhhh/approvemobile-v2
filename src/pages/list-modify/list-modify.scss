@@ -1,37 +1,42 @@
 page-list-modify {
-    ion-content{
-        background-color: rgb(235,237,240) !important
-      }
-      color:rgb(82,88,102);
-      .slice{
-        text-align: center;
-        background: rgb(240,242,245);
-      }
-      img{
-        width: 50px;
-      }
-      .loading-container{
-        height: 100px
-      }
-      .title-text{
-        color:rgb(82,88,102);
-        font-size: 1.2em;
-      }
-      .system-entrance{
-        color:rgb(82,88,102);
-        font-size: 1em;
-        border-bottom: solid;
-        border-bottom-width: 1px;
-        border-color: rgb(255,225,230);
-      }
-      .market {
-        margin-top:10px;
-        background-color: #fff;
-        border-bottom: solid;
-        border-bottom-width: 1px;
-        border-bottom-color: rgb(255,225,230);
-        border-top: solid;
-        border-top-width: 1px;
-        border-top-color: rgb(241,243,246);
-      }
+  ion-badge {
+    position: absolute;
+    top: 1px;
+    right: 1px;
+  }
+  ion-content {
+    background-color: rgb(235, 237, 240) !important
+  }
+  color:rgb(82, 88, 102);
+  .slice {
+    text-align: center;
+    background: rgb(240, 242, 245);
+  }
+  img {
+    width: 50px;
+  }
+  .loading-container {
+    height: 100px
+  }
+  .title-text {
+    color: rgb(82, 88, 102);
+    font-size: 1.2em;
+  }
+  .system-entrance {
+    color: rgb(82, 88, 102);
+    font-size: 1em;
+    border-bottom: solid;
+    border-bottom-width: 1px;
+    border-color: rgb(255, 225, 230);
+  }
+  .market {
+    margin-top: 10px;
+    background-color: #fff;
+    border-bottom: solid;
+    border-bottom-width: 1px;
+    border-bottom-color: rgb(255, 225, 230);
+    border-top: solid;
+    border-top-width: 1px;
+    border-top-color: rgb(241, 243, 246);
+  }
 }

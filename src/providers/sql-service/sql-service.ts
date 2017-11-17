@@ -50,6 +50,9 @@ export class SqlServiceProvider {
         location: 'default'
       }).then((db: SQLiteObject) => {
         this._deviceDB = db;
+        // db.executeSql('CREATE TABLE ICONS (ID integer,NAME TEXT,RIGHT integer)', {}).then(() => {
+        //   console.log('执行sql');
+        // }).catch(e => console.log(e))
       });
     } else {
       this._browserDB = sqlite.create({
@@ -67,9 +70,13 @@ export class SqlServiceProvider {
     */
   execSql(sql: string, params = []): Promise<any> {
     if (this.device.platform == "iOS" || this.device.platform == "Android") {
-      this._deviceDB.executeSql(sql,{}).then(() => {
-        console.log('执行sql');
-      }).catch(e => console.log(e))
+      return this._deviceDB.executeSql(sql, {})
+          .then(res => {
+            console.log('执行sql' + res);
+            return res;
+          }).catch(e =>
+            console.log(e)
+          );
     } else {
       return new Promise((resolve, reject) => {
         try {
@@ -86,4 +93,93 @@ export class SqlServiceProvider {
     }
   }
 
+
+  /**
+   * 检查表名是否存在
+   * 存在返回true,不存在返回false
+   * @param tableName 表名
+   */
+  checkIsTableExist(tableName) :Promise<boolean> {
+    let sql = 'SELECT name FROM sqlite_master WHERE type="table" AND name="'+tableName+'"';
+    let db = this._browserDB;
+    //检查表是否存在   
+    if (this.device.platform == "iOS" || this.device.platform == "Android"){
+      db = this._deviceDB
+    }
+
+    return db.executeSql(sql,{}).then(data => {
+      let result: any;
+      if (this.device.platform == "iOS" || this.device.platform == "Android") {
+        result = data;
+      } else {
+        result = data.res;
+      }
+      if(result.rows && result.rows.length > 0){
+        //数据表存在，不需要创建
+        return true;
+      }else{
+        //数据表不存在，创建新表
+        return false;
+      }
+      
+    }).catch((err) => {
+      console.log(err);
+      return false;
+    });   
+  }
+
+  /**
+   * 检查是否有ICON自定义权限
+   * 存在返回true,不存在返回false
+   * @param sql 
+   */
+  checkIsSetIconRights(sql) :Promise<any> {
+    let db = this._browserDB;
+    //检查是否自定义权限   
+    if (this.device.platform == "iOS" || this.device.platform == "Android"){
+      db = this._deviceDB
+    }
+    return db.executeSql(sql,{}).then(data => {
+      let result: any;
+      if (this.device.platform == "iOS" || this.device.platform == "Android") {
+        result = data;
+      } else {
+        result = data.res;
+      }
+      if(result.rows && result.rows.length > 0){
+        //数据表存在，不需要创建
+        return true;
+      }else{
+        //数据表不存在，创建新表
+        return false;
+      }
+      
+    }).catch((err) => {
+      console.log(err);
+      return false;
+    });   
+  }
+
+  query(sql: string, params = []) :Promise<any> {
+    let output = [];
+    if (this.device.platform == "iOS" || this.device.platform == "Android") {
+      return this._deviceDB.executeSql(sql, {})
+          .then(res => {
+            console.log('执行sql' + res);
+            return res;
+          }).catch(e =>
+            console.log(e)
+          );
+    }
+      // if (this.device.platform == "iOS" || this.device.platform == "Android") {
+      //   result = data;
+      // } else {
+      //   result = data.res;
+      // }
+      // for (let i = 0; i < result.rows.length; i++) {
+      //   output.push(result.rows.item(i));
+      // }
+      // return output;
+  
+  }
 }

@@ -56,7 +56,6 @@ export class MyApp {
       // splash
       //let splash = this.modalCtrl.create(SplashPage);
       // splash.present()
-      debugger;
       console.log(this.device.platform)
       if (this.device.platform == "iOS") {
         //苹果设备

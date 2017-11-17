@@ -15,6 +15,7 @@ export class NcBillsDetailServiceProvider {
   private urlActionBpmList = this.serveradd + "ActionBpmList";
   private urlActionMainList = this.serveradd + "ActionMainList";
   private urlActionGetFile = this.serveradd + "ActionGetFile";
+  private urlActionGetIcons = this.serveradd + "ActionIcons";
 
   constructor(public http: Http) {
     this.headers = new Headers();
@@ -74,6 +75,20 @@ export class NcBillsDetailServiceProvider {
       return res;
     })
   }
+  doGetMainAllIcons(params){
+    let userinfo = UserInfo.prototype;
+    params.append("IMEI", userinfo.IMEI);
+    params.append("IP", userinfo.IP);
+    params.append("MAC", userinfo.MAC);
+    params.append("deviceName", userinfo.devicename);
+    params.append("projectId", userinfo.projectId);
+    params.append("token", userinfo.token);
+    params.append("userId", userinfo.userid);
+    return this.http.post(this.urlActionGetIcons, params.toString(),{ headers: this.headers }).toPromise().then(res =>{
+      return res;
+    })
+  }
+
   doApprove(params){
     let userinfo = UserInfo.prototype;
     params.append("IMEI", userinfo.IMEI);

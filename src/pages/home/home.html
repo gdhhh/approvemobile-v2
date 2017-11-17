@@ -65,7 +65,7 @@
       </ng-container>
       <ion-col col-3>
         <div class="wrapper" (click)="navToMoreApp()">
-          <a class="button more" ></a>
+          <a class="button more"></a>
           <label class="icon-label">更多应用</label>
         </div>
       </ion-col>
@@ -85,7 +85,6 @@
     </ion-row>
   </ion-grid>
 
-  <button (click)="navToMail()"></button>
   <ion-row class="notification">
     <ion-col>
       <ion-row>
@@ -98,15 +97,15 @@
       </ion-row>
       <!-- loading -->
       <ion-row class="header-button-area" *ngIf="!noticeSlide1">
-          <ion-col>
-            <div class="loading">
-              <div class="loading-bar"></div>
-              <div class="loading-bar"></div>
-              <div class="loading-bar"></div>
-              <div class="loading-bar"></div>
-            </div>
-          </ion-col>
-        </ion-row>
+        <ion-col>
+          <div class="loading">
+            <div class="loading-bar"></div>
+            <div class="loading-bar"></div>
+            <div class="loading-bar"></div>
+            <div class="loading-bar"></div>
+          </div>
+        </ion-col>
+      </ion-row>
 
       <ion-row *ngIf="noticeSlide1">
         <ion-col col-12 class="scroll-animate-container">
@@ -116,11 +115,11 @@
                 <ion-item *ngFor="let item of noticeSlide1; let i = index" (click)="openNotice(item.fdid)">
                   <ion-icon name="md-flame" item-start color="danger" *ngIf="item.isTop=='1'"></ion-icon>
                   <ion-row>
-                    <ion-col col-10 >
-                        <div class="notice-subject"> ● {{item.subject | subject}}</div>
+                    <ion-col col-10>
+                      <div class="notice-subject"> ● {{item.subject | subject}}</div>
                     </ion-col>
                     <ion-col col-2>
-                        <div class="notice-time">{{item.createTime | noticeCreateTime}}</div>
+                      <div class="notice-time">{{item.createTime | noticeCreateTime}}</div>
                     </ion-col>
                   </ion-row>
                 </ion-item>
@@ -131,13 +130,13 @@
                 <ion-item *ngFor="let item of noticeSlide2; let i = index" (click)="openNotice(item.fdid)">
                   <ion-icon name="md-flame" item-start color="danger" *ngIf="item.isTop=='1'"></ion-icon>
                   <ion-row>
-                      <ion-col col-10 >
-                          <div class="notice-subject"> ● {{item.subject | subject}}</div>
-                      </ion-col>
-                      <ion-col col-2>
-                          <div  class="notice-time">{{item.createTime | noticeCreateTime}}</div>
-                      </ion-col>
-                    </ion-row>
+                    <ion-col col-10>
+                      <div class="notice-subject"> ● {{item.subject | subject}}</div>
+                    </ion-col>
+                    <ion-col col-2>
+                      <div class="notice-time">{{item.createTime | noticeCreateTime}}</div>
+                    </ion-col>
+                  </ion-row>
                 </ion-item>
               </ion-list>
             </ion-slide>
@@ -146,13 +145,13 @@
                 <ion-item *ngFor="let item of noticeSlide3; let i = index" (click)="openNotice(item.fdid)">
                   <ion-icon name="md-flame" item-start color="danger" *ngIf="item.isTop=='1'"></ion-icon>
                   <ion-row>
-                      <ion-col col-10 >
-                          <div class="notice-subject"> ● {{item.subject | subject}}</div>
-                      </ion-col>
-                      <ion-col col-2>
-                          <div  class="notice-time">{{item.createTime | noticeCreateTime}}</div>
-                      </ion-col>
-                    </ion-row>
+                    <ion-col col-10>
+                      <div class="notice-subject"> ● {{item.subject | subject}}</div>
+                    </ion-col>
+                    <ion-col col-2>
+                      <div class="notice-time">{{item.createTime | noticeCreateTime}}</div>
+                    </ion-col>
+                  </ion-row>
                 </ion-item>
               </ion-list>
             </ion-slide>
@@ -161,10 +160,6 @@
       </ion-row>
     </ion-col>
   </ion-row>
-
-  <button (click)="query()">query</button>
-  <button (click)="create()">create</button>
-  <button (click)="insert()">insert</button>
 
   <ion-row class="todolist">
     <ion-col>
@@ -198,6 +193,10 @@
             <ion-note>{{item?.creator}}</ion-note>
             <ion-note style="float:right">{{item?.itemCreateTime | DateToLocaleDateString}}</ion-note>
           </p>
+        </ion-item>
+        <ion-item style="padding: 10px 10px 10px 20px;"  (click)="scrollToTop()">
+          <h3 style="white-space: normal;text-align:center">更多待办请点击顶部图标进入业务系统处理！</h3>
+          <h3 style="white-space: normal;text-align:center;color:blue">点击返回顶部</h3>
         </ion-item>
       </ng-container>
     </ion-list>

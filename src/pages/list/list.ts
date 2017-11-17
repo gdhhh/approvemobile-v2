@@ -1,3 +1,4 @@
+import { SqlServiceProvider } from './../../providers/sql-service/sql-service';
 import { ThemeableBrowser } from '@ionic-native/themeable-browser';
 import { NoRightPage } from '../no-right/no-right';
 import { GlobalVar } from '../../providers/constant/constant';
@@ -18,19 +19,20 @@ declare var cordova: any;
 export class ListPage {
   selectedItem: any;
   icons;
+  iconsLength;
   allIcons;
 
   browserOption = {
     statusbar: {
-        color: '#ffffffff'
+      color: '#ffffffff'
     },
     toolbar: {
-        height: 44,
-        color: '#f0f0f0ff'
+      height: 44,
+      color: '#f0f0f0ff'
     },
     title: {
-        color: '#003264ff',
-        showPageTitle: true
+      color: '#003264ff',
+      showPageTitle: true
     },
     closeButton: {
       wwwImage: 'assests/icon/x.png',
@@ -39,31 +41,74 @@ export class ListPage {
       align: 'left',
     },
     backButtonCanClose: true
-}
+  }
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
+    private sqlService: SqlServiceProvider,
     public approveService: NcBillsDetailServiceProvider
   ) {
 
   }
 
-  ionViewDidLoad() {
+  ionViewDidEnter() {
     this.getIcons();
   }
+  /**
+   * 获取按钮
+   */
   getIcons() {
     let params = new URLSearchParams();
-    this.approveService.doGetMainTodoList(params).then(res => {
+    this.approveService.doGetMainAllIcons(params).then(res => {
       let result = res.json() as any;
+      //获取按钮权限
       if (result.icons && result.icons.length > 0) {
-        if (localStorage.getItem("icons")) {
-          this.icons = localStorage.getItem("icons");
-        } else {
-          localStorage.setItem('icons',result.icons)
-          this.icons = result.icons;
-        }
-        this.allIcons = result.icons;
+        this.sqlService.execSql('select * from ICONS').then(ico => {
+          if ((ico && ico.rows.length <= 0) ||ico == undefined) {
+            //没有自定义按钮，使用服务器默认按钮
+            let allIcons = result;
+            let outputIcons = new Array();
+            let outputAllIcons = new Array();
+            if (allIcons && allIcons.icons.length > 0) {
+              let servIcon = allIcons.icons;
+              for (let j = 0; j < allIcons.icons.length; j++) {
+                if (servIcon[j].right == 1) {
+                  outputIcons.push(servIcon[j]);
+                } else {
+                  outputAllIcons.push(servIcon[j]);
+                }
+              }
+              this.icons = outputIcons;
+              this.allIcons = outputAllIcons;
+              this.iconsLength = outputIcons.length;
+            }
+          } else {
+            //有自定义按钮，使用自定义按钮
+            //获取所有按钮，遍历自定义按钮，筛选出显示在首页的按钮。
+            let allIcons = res.json();
+            let outputIcons = new Array();
+            let outputAllIcons = new Array();
+            if (allIcons && allIcons.icons.length > 0) {
+              let custIcon = ico.rows as any;
+              let servIcon = allIcons.icons;
+              for (let i = 0; i < custIcon.length; i++) {
+                for (let j = 0; j < allIcons.icons.length; j++) {
+                  if (custIcon.item(i).ID == servIcon[j].id) {
+                    servIcon[j].right = custIcon.item(i).RIGHT
+                    outputIcons.push(servIcon[j]);
+                  } else {
+                    outputAllIcons.push(servIcon[j]);
+                  }
+                }
+              }
+              this.icons = outputIcons;
+              this.allIcons = servIcon;
+              this.iconsLength = outputIcons.length;
+            }
+          }
+
+        })
       }
     }).catch(err => {
       alert("getIcons()@list.ts =>" + err);
